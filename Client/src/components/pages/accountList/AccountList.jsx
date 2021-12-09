@@ -1,0 +1,171 @@
+import React from "react";
+import "./accountList.css";
+import { DataGrid } from "@mui/x-data-grid";
+import { useState, useEffect, useContext } from "react";
+import { MdDelete } from "react-icons/md";
+import { Link } from "react-router-dom";
+import SearchBar from "../home/SearchBar";
+import { AuthContext } from "../../../contexts/authContext";
+import Progress from "../login/Progress";
+import { AccContext } from "../../../contexts/accContext";
+
+function AccountList() {
+  const { accState } = useContext(AccContext);
+  const columns = [
+    { field: "id", headerName: "Account ID", width: 240 },
+    { field: "city", headerName: "Tỉnh/Thành phố", width: 250 },
+    { field: "district", headerName: "Quận/Huyện", width: 250 },
+    { field: "xa", headerName: "Xã/Phường", width: 250 },
+    { field: "xom", headerName: "Thôn/Xóm", width: 250 },
+    { field: "status", headerName: "Trạng Thái", width: 250 },
+    {
+      field: "action",
+      headerName: " ",
+      width: 250,
+      renderCell: (params) => {
+        return (
+          <>
+            <Link to={"/account/" + params.row.id}>
+              <button className="btnEdit">Edit</button>
+            </Link>
+            <MdDelete
+              className="iconRemove"
+              onClick={() => handleClick(params.row.id)}
+            />
+          </>
+        );
+      },
+    },
+  ];
+
+  // set up table
+
+  const { authState, getAllSubAccounts } = useContext(AuthContext);
+  const { getSubAccLoading, isGetSubAcc, account } = authState;
+
+  const { id, name, state, role } = account;
+
+  // set up params for table
+  const [users, setUsers] = useState([]);
+  const [isData, setIsData] = useState(true);
+
+  const cols = [
+    columns[0],
+    columns[role + 1],
+    columns[columns.length - 2],
+    columns[columns.length - 1],
+  ];
+  const Getdata = async () => {
+    try {
+      const data = await getAllSubAccounts();
+      if (data.success && data.account.length > 0) {
+        const acc =
+          data.account &&
+          data.account.map((account) => {
+            const entry = new Map([
+              [cols[0].field, account.id],
+              [cols[1].field, account.name],
+              [cols[2].field, account.state ? "Active" : "Disabled"],
+            ]);
+
+            const obj = Object.fromEntries(entry);
+            return obj;
+          });
+
+        setUsers(acc);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    Getdata();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Style csstable
+  const [styleTable, setStyleTable] = useState({
+    marginTop: "100px",
+    // height: 66 * users.length + "px",
+    width: "1150px",
+    display: "flex",
+  });
+
+  useEffect(() => {
+    if (users.length > 0) {
+      const h = 60 * (users.length + 2) + "px";
+      console.log(h);
+      // setStyleTable({ ...styleTable, height: h });
+      setIsData(true);
+    } else {
+      setIsData(false);
+    }
+  }, [users]);
+
+  // hanlde remove Account
+  const handleClick = (id) => {
+    const newUsers = users.filter((user) => user.id !== id);
+    setUsers(newUsers);
+  };
+
+  // Search
+
+  const [input, setInput] = useState("");
+
+  const search = (str) => {
+    setInput(str);
+    // console.log(input);
+  };
+
+  const filterSearch = () => {
+    // const columns = rows[0] && Object.keys(rows[0]);
+    // const newRows = rows.filter((row) =>
+    //   columns.some(
+    //     (column) =>
+    //       row[column].toString().toLowerCase().indexOf(input.toLowerCase()) > -1
+    //   )
+    // );
+    // // console.log(newRows);
+    // if (newRows.length > 0) setUsers(newRows);
+  };
+
+  if (getSubAccLoading) {
+    return <Progress />;
+  }
+
+  return (
+    <div className="accountList">
+      {isData ? (
+        <div className="wrap-container">
+          <div className="top-container">
+            <SearchBar search={() => search} Submit={filterSearch} />
+
+            <Link to="/newAccount">
+              <button className="btnCreateAccount"> New Account</button>
+            </Link>
+          </div>
+          <div id="datatable" style={styleTable}>
+            <DataGrid
+              rows={users}
+              columns={cols}
+              // pageSize={users.length}
+              rowsPerPageOptions={[13]}
+              // checkboxSelection
+              disableSelectionOnClick
+              autoHeight
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="empty-list">
+          <h1> No account was created</h1>
+          <Link to="/newAccount">
+            <button>Create a account</button>
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default AccountList;

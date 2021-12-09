@@ -1,0 +1,28 @@
+.login {
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  position: relative;
+  height: 100vh;
+}
+
+.paperStyle {
+  padding: 20px 32px;
+  height: 55%;
+  width: 280px;
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+}
+
+.btnStyle {
+  margin-top: 20px;
+}
+
+.paperStyle form {
+  margin-top: 20px;
+}
+
+.paperStyle h2 {
+  margin-bottom: 15px;
+}

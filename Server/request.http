@@ -1,0 +1,34 @@
+###
+POST http://localhost:5555/api/auth/login
+content-type: application/json
+
+{
+    "id": "01",
+    "password": "123456"
+}
+
+###
+GET http://localhost:5555/api/auth/01/getAllSubAccounts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiIwMSIsInJvbGUiOjEsInN0YXRlIjp0cnVlLCJkZWFkVGltZSI6IjIwMjEtMTItMTBUMDA6MDA6MDAuMDAwWiIsImlhdCI6MTYzODk4MTg0M30.gh0I5jm63gGx8XWit_CPCMpZrSYyWcer7hREviVmyCE
+
+
+###
+POST http://localhost:5555/api/auth/register
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiIwMSIsInJvbGUiOjEsInN0YXRlIjp0cnVlLCJpYXQiOjE2Mzg4MDMxMTF9.jWnZA3sIMaI0SR7K5kRIucamdyLXrBfaxBtKRG_Qgik
+content-type: application/json
+
+{
+    "id":"0104",
+    "password": "123456",
+    "name": "Xóa cc",
+    "role": "2",
+    "state": "true"
+}
+
+
+###
+GET http://localhost:5555/api/auth/getSubAccount/0101
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiIwMSIsInJvbGUiOjEsInN0YXRlIjp0cnVlLCJkZWFkVGltZSI6IjIwMjEtMTItMTBUMDA6MDA6MDAuMDAwWiIsImlhdCI6MTYzODk4MTg0M30.gh0I5jm63gGx8XWit_CPCMpZrSYyWcer7hREviVmyCE
+
+
+

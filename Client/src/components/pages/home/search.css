@@ -1,0 +1,62 @@
+.form-field {
+  margin: 20px 0 20px 50px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  height: 30px;
+  border-radius: 10px;
+  width: 350px;
+  padding: 5px 50px 5px 20px;
+  transition: 0.25s ease;
+  border: solid;
+  font-size: 20px;
+}
+
+input:focus {
+  border-color: #6a5af9;
+  outline: none;
+}
+
+.label-form {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 21px;
+  user-select: none;
+  color: #999;
+  pointer-events: none;
+  transition: 0.25s ease;
+}
+
+.input:not(:placeholder-shown) + .label-form,
+.input:focus + .label-form {
+  top: 0;
+  display: inline-block;
+  padding: 0 10px;
+  background-color: white;
+  color: #6a5af9;
+}
+
+.search-icon-default {
+  position: relative;
+  font-size: 25px !important;
+  left: -35px;
+}
+
+.search-icon-focus {
+  position: relative;
+  font-size: 25px !important;
+  left: -35px;
+  color: #6a5af9;
+}
+
+/*  placeholder-shown  */
+
+@media screen and (max-width: 600px) {
+  .input {
+    width: 300px;
+  }
+}
