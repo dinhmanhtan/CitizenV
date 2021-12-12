@@ -49,7 +49,7 @@ const NewAccount = () => {
         console.log(accountData);
         if (accountData.success) {
           console.log("success \n");
-          navigate(`/account/${sub_id}`);
+          navigate(`/accounts/${sub_id}`);
         } else {
           setMssg({ type: "", message: accountData.message });
           setForm({ ...form, rePass: "" });
