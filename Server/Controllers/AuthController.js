@@ -62,7 +62,10 @@ class AuthController {
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(req.body.password, salt);
 
-      if (req.authId == "00" || id.startsWith(req.authId)) {
+      if (
+        (req.authId == "00" || id.startsWith(req.authId)) &&
+        id.length === req.authId.length + 2
+      ) {
         const auth = new Auth({
           id: req.body.id,
           name: req.body.name,
@@ -71,12 +74,13 @@ class AuthController {
         });
         const newAuth = await auth.save();
         res.status(200).json({
-          message: req.authId,
+          success: true,
           account: newAuth,
         });
       } else {
         return res.status(400).json({
-          message: "dont have permission",
+          success: false,
+          message: "ID không hợp lệ",
         });
       }
     } catch (err) {
@@ -137,21 +141,27 @@ class AuthController {
   // DELETE api/auth/:subId/deleteAccount
   async destroy(req, res, next) {
     const subId = req.params.subId;
-    if (req.authId === "00" || subId.startsWith(req.authId)) {
+    if (
+      (req.authId === "00" || subId.startsWith(req.authId)) &&
+      subId.length === req.authId.length + 2
+    ) {
       try {
         await Auth.deleteMany({
           id: {
             $regex: `^${subId}`,
           },
         });
-        res.status(200).json({ message: "sussess" });
+        res.status(200).json({ success: true });
       } catch (err) {
         next(err);
       }
     } else {
-      const err = new Error("You dont have permission");
-      err.statusCode = 403;
-      next(err);
+      // const err = new Error("You dont have permission");
+      // err.statusCode = 403;
+      // next(err);
+      res
+        .status(403)
+        .json({ success: false, message: "You don't have permission" });
     }
   }
 

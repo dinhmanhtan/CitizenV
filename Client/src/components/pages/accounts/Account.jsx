@@ -1,20 +1,81 @@
-import React from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import "./account.css";
 import { CalendarToday, PermIdentity, Publish } from "@material-ui/icons";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
 import { AccContext } from "../../../contexts/accContext";
+import AlertDialog from "../accountList/AlertDialog";
+import Button from "@mui/material/Button";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { locations } from "../../../utils/constant";
+import { useNavigate } from "react-router-dom";
+import GppGoodIcon from "@mui/icons-material/GppGood";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
+import ChangePassword from "./ChangePassword/ChangePassword";
+const Account = ({ accountID }) => {
+  const [subAccount, setSubAccount] = useState({
+    id: "",
+    name: "",
+    progress: "",
+    state: "",
+    role: "",
+  });
 
-const Account = () => {
-  const { accState } = useContext(AccContext);
-  console.log(accState);
+  const levels = ["A1", "A2", "A3", "B1", "B2"];
+
+  const { accState, getSubAccount, deleteSubAccount } = useContext(AccContext);
+
+  // Get infor account
+  const GetSubAccount = async () => {
+    const DataSubAccount = await getSubAccount(accountID);
+    if (DataSubAccount.success) {
+      const { name, id, progress, role, state } = DataSubAccount.subAccount;
+      setSubAccount({ ...subAccount, name, id, progress, role, state });
+    }
+  };
+  useEffect(() => {
+    GetSubAccount();
+  }, []);
+
+  // state for dialog
+  const [open, setOpen] = useState(false);
+
+  // func delete account
+  const navigate = useNavigate();
+
+  const handleClickDelBtn = () => {
+    setOpen(true);
+    console.log(accState);
+  };
+
+  const deleteAccount = async () => {
+    try {
+      const reponse = await deleteSubAccount();
+      if (reponse.success) {
+        navigate("/accounts");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Change Password
+  const [formChangePass, setFormChangePass] = useState(false);
 
   return (
     <div className="account">
+      <AlertDialog
+        title={"Xác nhận xóa tài khoản"}
+        content={
+          "Xóa tài khoản này sẽ khiến tất cả tài khoản dưới quyền bị xóa"
+        }
+        open={open}
+        setOpen={setOpen}
+        action={deleteAccount}
+      />
       <div className="accountTitleContainer">
         <h1 className="accountTitle">Edit Account</h1>
         <Link to="/newAccount">
-          <button className="accountAddButton">Create</button>
+          <button className="accountAddButton">New Account</button>
         </Link>
       </div>
       <div className="accountContainer">
@@ -29,41 +90,49 @@ const Account = () => {
               <span className="accountShowUsername">
                 Tài Khoản Điều Tra Dân Số
               </span>
-              <span className="accountShowUserTitle">Xã GG - Huyện YY</span>
+              <span className="accountShowUserTitle"> {subAccount.name}</span>
             </div>
           </div>
           <div className="accountShowBottom">
             <span className="accountShowTitle">Account Details</span>
 
             <div className="accountShowInfo">
-              <PermIdentity className="accountShowIcon" />
-              <span className="accountShowInfoTitle">Account ID: 4912312</span>
-            </div>
-
-            <div className="accountShowInfo">
-              <PermIdentity className="accountShowIcon" />
-              <span className="accountShowInfoTitle">Xã: GG</span>
-            </div>
-
-            <div className="accountShowInfo">
-              <PermIdentity className="accountShowIcon" />
               <span className="accountShowInfoTitle">
-                Thuộc : Huyện YY - Tỉnh ZZ
+                <PermIdentity className="accountShowIcon" />
+                <span> Account ID:</span>
               </span>
+              <span>{subAccount.id}</span>
             </div>
 
             <div className="accountShowInfo">
-              <CalendarToday className="accountShowIcon" />
               <span className="accountShowInfoTitle">
-                Ngày Tạo : 10.12.1999
+                <PermIdentity className="accountShowIcon" />
+                <span> {`${locations[subAccount.role - 1]}:`} </span>
               </span>
+              <span> {subAccount.name}</span>
             </div>
 
             <div className="accountShowInfo">
-              <CalendarToday className="accountShowIcon" />
               <span className="accountShowInfoTitle">
-                Cấp bậc tài khoản : B1
+                <PermIdentity className="accountShowIcon" />
+                <span>Thuộc :</span>
               </span>
+              <span>Tỉnh ZZ</span>
+            </div>
+
+            <div className="accountShowInfo">
+              <span className="accountShowInfoTitle">
+                <CalendarToday className="accountShowIcon" />
+                <span>Cấp bậc tài khoản :</span>
+              </span>
+              <span> {levels[subAccount.role - 1]}</span>
+            </div>
+            <div className="accountShowInfo">
+              <span className="accountShowInfoTitle">
+                <CalendarToday className="accountShowIcon" />
+                <span>Quyền khai báo:</span>{" "}
+              </span>
+              <span>{subAccount.state ? "Active" : "Disabled"}</span>
             </div>
           </div>
         </div>
@@ -76,15 +145,15 @@ const Account = () => {
                 <label>Account ID</label>
                 <input
                   type="text"
-                  placeholder="4912312"
+                  placeholder={subAccount.id}
                   className="accountUpdateInput"
                 />
               </div>
               <div className="accountUpdateItem">
-                <label>Xã</label>
+                <label>{locations[subAccount.role - 1]}</label>
                 <input
                   type="text"
-                  placeholder="GG"
+                  placeholder={subAccount.name}
                   className="accountUpdateInput"
                 />
               </div>
@@ -106,6 +175,38 @@ const Account = () => {
           </form>
         </div>
       </div>
+      <div className="containerButton">
+        <Button
+          variant="contained"
+          size="large"
+          startIcon={<DeleteIcon />}
+          onClick={handleClickDelBtn}
+        >
+          Xóa Tài Khoản
+        </Button>
+
+        <Button
+          variant="contained"
+          size="large"
+          startIcon={<GppGoodIcon />}
+          onClick={() => setFormChangePass(true)}
+        >
+          Đổi Mật Khẩu
+        </Button>
+        <Button
+          variant="contained"
+          size="large"
+          startIcon={<AssignmentIndIcon />}
+        >
+          Mở khai báo dân số
+        </Button>
+      </div>
+
+      {formChangePass && (
+        <div className="change-password">
+          <ChangePassword open={formChangePass} setOpen={setFormChangePass} />
+        </div>
+      )}
     </div>
   );
 };

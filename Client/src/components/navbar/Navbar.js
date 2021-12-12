@@ -27,7 +27,7 @@ function Navbar(props) {
           <Link to="#" className="menu-bars">
             <FaIcons.FaBars onClick={showSidebar} />
           </Link>
-          c
+
           <div className="topbarWrapper">
             <div className="topLeft">
               <span className="logo">CitizenV</span>

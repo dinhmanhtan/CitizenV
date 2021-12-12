@@ -8,9 +8,11 @@ import SearchBar from "../home/SearchBar";
 import { AuthContext } from "../../../contexts/authContext";
 import Progress from "../login/Progress";
 import { AccContext } from "../../../contexts/accContext";
+import { useNavigate } from "react-router-dom";
 
 function AccountList() {
-  const { accState } = useContext(AccContext);
+  const navigate = useNavigate();
+  const { setIdSubAccount } = useContext(AccContext);
   const columns = [
     { field: "id", headerName: "Account ID", width: 240 },
     { field: "city", headerName: "Tỉnh/Thành phố", width: 250 },
@@ -25,13 +27,14 @@ function AccountList() {
       renderCell: (params) => {
         return (
           <>
-            <Link to={"/account/" + params.row.id}>
-              <button className="btnEdit">Edit</button>
+            <Link to={"/accounts/" + params.row.id}>
+              <button
+                className="btnEdit"
+                onClick={() => setIdSubAccount(params.row.id)}
+              >
+                Edit
+              </button>
             </Link>
-            <MdDelete
-              className="iconRemove"
-              onClick={() => handleClick(params.row.id)}
-            />
           </>
         );
       },
@@ -87,26 +90,9 @@ function AccountList() {
   const [styleTable, setStyleTable] = useState({
     marginTop: "100px",
     // height: 66 * users.length + "px",
-    width: "1150px",
+    width: "1000px",
     display: "flex",
   });
-
-  useEffect(() => {
-    if (users.length > 0) {
-      const h = 60 * (users.length + 2) + "px";
-      console.log(h);
-      // setStyleTable({ ...styleTable, height: h });
-      setIsData(true);
-    } else {
-      setIsData(false);
-    }
-  }, [users]);
-
-  // hanlde remove Account
-  const handleClick = (id) => {
-    const newUsers = users.filter((user) => user.id !== id);
-    setUsers(newUsers);
-  };
 
   // Search
 
@@ -153,6 +139,11 @@ function AccountList() {
               // checkboxSelection
               disableSelectionOnClick
               autoHeight
+              density="comfortable"
+              onRowClick={(param, event) => {
+                setIdSubAccount(param.id);
+                navigate(`/accounts/${param.id}`);
+              }}
             />
           </div>
         </div>

@@ -12,6 +12,7 @@
 .newUserForm {
   margin: 40px;
   box-sizing: border-box;
+  width: 400px;
 }
 
 .newUserItem {
@@ -19,7 +20,6 @@
   display: flex;
   flex-direction: column;
   margin-top: 10px;
-  margin-right: 20px;
 }
 
 .newUserItem > label {

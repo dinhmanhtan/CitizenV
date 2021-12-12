@@ -130,3 +130,9 @@ span {
   justify-content: center;
   font-size: 10px;
 }
+
+@media screen and (max-width: 426px) {
+  .logo {
+    display: none;
+  }
+}

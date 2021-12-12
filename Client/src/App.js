@@ -12,6 +12,7 @@ import AuthContextProvider from "./contexts/authContext";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
 import AccContextProvider from "./contexts/accContext";
 import Population from "./components/pages/population/Population";
+import ContainerAccount from "./components/pages/accounts/ContainerAccount";
 
 function App() {
   const [success, setSuccess] = useState(true);
@@ -24,20 +25,20 @@ function App() {
             <Route exact path="/login" element={<Login />} />
           </Routes>
           {success && (
-            <div>
-              {/* <Navbar /> */}
-              <div className="container">
-                <Routes>
-                  <Route exact path="/" element={<ProtectedRoute />}>
-                    <Route exact path="home" element={<Home />} />
-                    <Route path="account" element={<AccountList />} />
-                    <Route path="account/:accountID" element={<Account />} />
-                    <Route path="newAccount" element={<NewAccount />} />
-                    <Route exact path="analytics" element={<Chart />} />
-                    <Route exact path="population" element={<Population />} />
-                  </Route>
-                </Routes>
-              </div>
+            <div className="container">
+              <Routes>
+                <Route exact path="/" element={<ProtectedRoute />}>
+                  <Route exact path="home" element={<Home />} />
+                  <Route path="accounts" element={<AccountList />} />
+                  <Route
+                    path="accounts/:accountID"
+                    element={<ContainerAccount />}
+                  />
+                  <Route path="newAccount" element={<NewAccount />} />
+                  <Route exact path="analytics" element={<Chart />} />
+                  <Route exact path="population" element={<Population />} />
+                </Route>
+              </Routes>
             </div>
           )}
         </Router>

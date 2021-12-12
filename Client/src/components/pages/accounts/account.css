@@ -14,7 +14,7 @@
 }
 
 .accountAddButton {
-  width: 80px;
+  width: 130px;
   border: none;
   padding: 5px;
   background-color: teal;
@@ -22,11 +22,13 @@
   cursor: pointer;
   color: white;
   font-size: 16px;
+  padding: 8px 18px;
 }
 
 .accountContainer {
   display: flex;
-  margin-top: 20px;
+
+  margin: 30px 0 50px 0;
 }
 
 .accountShow {
@@ -82,10 +84,10 @@
 }
 
 .accountShowInfo {
-  display: flex;
-  align-items: center;
   margin: 20px 0px;
   color: #444;
+  display: flex;
+  align-items: center;
 }
 
 .accountShowIcon {
@@ -93,8 +95,19 @@
 }
 
 .accountShowInfoTitle {
-  margin-left: 10px;
+  display: flex;
+  align-items: center;
+
+  margin-left: 0;
+  color: black;
+  width: 150px;
 }
+
+.accountShowInfoTitle span {
+  margin-left: 6px;
+}
+
+/* ----- Update Form CSS ------  */
 
 .accountUpdateTitle {
   font-size: 24px;
@@ -151,7 +164,7 @@
 .accountUpdateButton {
   border-radius: 5px;
   border: none;
-  padding: 5px;
+
   cursor: pointer;
   background-color: darkblue;
   color: white;
@@ -160,5 +173,75 @@
   bottom: 20px;
   right: 40px;
   font-size: 18px;
-  padding: 5px;
+  padding: 5px 30px;
+}
+
+.containerButton {
+  display: flex;
+  justify-content: center;
+
+  padding: 40px 0 30px 0;
+}
+.containerButton button {
+  margin-right: 100px;
+}
+
+/* ----- */
+div.change-password {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+@media screen and (max-width: 768px) {
+  .accountContainer {
+    display: block;
+  }
+  .accountUpdate {
+    margin: 30px 0;
+  }
+
+  .accountUpdateForm {
+    display: block;
+  }
+  .accountUpdateUpload {
+    margin-top: 20px;
+  }
+  .accountUpdateImg {
+    width: 50px;
+    height: 50px;
+  }
+
+  .accountUpdateInput {
+    width: 80%;
+  }
+
+  .accountUpdateButton {
+    padding: 5px 10px;
+  }
+
+  .containerButton button {
+    margin: auto;
+    padding: 8px 15px;
+  }
+}
+
+@media screen and (max-width: 426px) {
+  .accountTitleContainer {
+    display: block;
+    margin-bottom: 30px;
+  }
+  .accountTitle {
+    margin: 0 0 45px 0;
+  }
+
+  .containerButton {
+    flex-direction: column;
+    padding: 10px 0 30px 0;
+  }
+  .containerButton button {
+    margin: 30px 0 0 0;
+    padding: 8px 2px;
+  }
 }
