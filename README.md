@@ -1,9 +1,9 @@
 # CitizenV
 
 # server
- npm i
+ npm i \n
  npm start
  
 # client
-npm i
+npm i \n
 npm start
