@@ -1,9 +1,7 @@
 # CitizenV
 
 # server
- ## npm i 
- ## npm start
+npm i ; npm start
  
 # client
- ## npm i \n
- ## npm start
+  npm i ; npm start
