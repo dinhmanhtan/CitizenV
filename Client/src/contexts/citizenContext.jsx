@@ -1,5 +1,4 @@
-import { createContext, useReducer, useEffect } from "react";
-import { LOCAL_STORAGE_TOKEN_NAME } from "../utils/constant";
+import { createContext, useReducer } from "react";
 import  citizenReducer  from "../reducers/citizenReducer";
 
 export const CitizenContext = createContext();

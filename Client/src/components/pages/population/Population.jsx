@@ -42,7 +42,7 @@ const Population = () => {
       })
       .catch( (err) => console.log(err))
 
-  }, [idAddress])
+  }, [idAddress, citizenDispatch])
 
   return (
     <div>
@@ -50,7 +50,7 @@ const Population = () => {
       <button>Add person</button>
       <ul className="a">
         { popList && popList.map( (person) => (
-          <li> 
+          <li key={person._id}> 
               <Person person= { person }/>
           </li>
         ))}
