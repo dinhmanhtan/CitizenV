@@ -11,7 +11,7 @@ module.exports = function (req, res, next) {
   }
 
   const token = Authorization && Authorization.split(" ")[1];
-  const { authId, role, state, deadTime } = jwt.verify(
+  const { authId, role, state, deadTime, name, address } = jwt.verify(
     token,
     process.env.TOKEN_SECRET
   );
@@ -22,5 +22,7 @@ module.exports = function (req, res, next) {
   req.role = role;
   req.state = state;
   req.deadTime = deadTime;
+  req.name = name;
+  req.address = address;
   next();
 };

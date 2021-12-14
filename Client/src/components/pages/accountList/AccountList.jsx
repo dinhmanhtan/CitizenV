@@ -1,6 +1,6 @@
 import React from "react";
 import "./accountList.css";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, getGridNumericColumnOperators } from "@mui/x-data-grid";
 import { useState, useEffect, useContext } from "react";
 import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -62,7 +62,7 @@ function AccountList() {
     try {
       const data = await getAllSubAccounts();
       if (data.success && data.account.length > 0) {
-        const acc =
+        var acc =
           data.account &&
           data.account.map((account) => {
             const entry = new Map([
@@ -74,7 +74,10 @@ function AccountList() {
             const obj = Object.fromEntries(entry);
             return obj;
           });
-
+        if (role === 0) {
+          for (let i = 0; i < acc.length - 1; i++) acc[i] = acc[i + 1];
+          acc.pop();
+        }
         setUsers(acc);
       }
     } catch (error) {

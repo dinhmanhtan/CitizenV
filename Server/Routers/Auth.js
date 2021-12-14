@@ -13,6 +13,11 @@ router.patch(
   AuthController.changeStatus
 );
 router.patch("/changePassword", verifyToken, AuthController.changePassword);
+router.patch(
+  "/changeSubPassword/:id",
+  verifyToken,
+  AuthController.changeSubPassword
+);
 router.post("/login", AuthController.login);
 router.get("/:id/getAllSubAccounts", verifyToken, AuthController.getAccounts);
 router.post("/register", verifyToken, AuthController.register);

@@ -1,17 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import TextField from "@mui/material/TextField";
 import { Button, Paper } from "@mui/material";
 import "./ChangePassword.css";
 import CloseIcon from "@mui/icons-material/Close";
-const ChangePassword = ({ setOpen }) => {
+import { AccContext } from "../../../../contexts/accContext";
+
+const ChangeSubPassword = ({ setOpen }) => {
   const [form, setForm] = useState({ pass: "", repass: "" });
   const { pass, repass } = form;
   const [isError, setIsError] = useState(false);
-  const submit = (e) => {
+
+  const { changeSubPassword } = useContext(AccContext);
+  const submit = async (e) => {
     e.preventDefault();
 
     if (pass !== repass) {
       setIsError(true);
+    } else {
+      try {
+        const respone = await changeSubPassword({ password: pass });
+        if (respone.success) {
+          setOpen(false);
+          console.log("success", pass);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -69,4 +83,4 @@ const ChangePassword = ({ setOpen }) => {
   );
 };
 
-export default ChangePassword;
+export default ChangeSubPassword;

@@ -10,6 +10,7 @@ const Auth = new Schema(
     role: { type: Number, require: [true] },
     state: { type: Boolean, require: [true], default: false },
     deadTime: { type: Date, default: Date.now() },
+    address: { type: String },
   },
   {
     timestamps: true,

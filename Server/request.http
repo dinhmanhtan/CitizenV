@@ -3,13 +3,13 @@ POST http://localhost:5555/api/auth/login
 content-type: application/json
 
 {
-    "id": "0102",
+    "id": "01",
     "password": "123456"
 }
 
 ###
 GET http://localhost:5555/api/auth/01/getAllSubAccounts
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiIwMSIsInJvbGUiOjEsInN0YXRlIjp0cnVlLCJkZWFkVGltZSI6IjIwMjEtMTItMTBUMDA6MDA6MDAuMDAwWiIsImlhdCI6MTYzODk4MTg0M30.gh0I5jm63gGx8XWit_CPCMpZrSYyWcer7hREviVmyCE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiIwMSIsInJvbGUiOjEsInN0YXRlIjp0cnVlLCJkZWFkVGltZSI6IjIwMjEtMTItMTBUMDA6MDA6MDAuMDAwWiIsImlhdCI6MTYzOTM2NTU3MH0.QOZ3B8SrD1vsWAbtOHMH8R6jARjQsYPNvfoBwj7s9-U
 
 
 ###
@@ -34,3 +34,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiIwMSIsI
 DELETE http://localhost:5555/api/auth/0102/deleteAccount
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiIwMSIsInJvbGUiOjEsInN0YXRlIjp0cnVlLCJkZWFkVGltZSI6IjIwMjEtMTItMTBUMDA6MDA6MDAuMDAwWiIsImlhdCI6MTYzOTE4OTE4N30.JJbWkxrYIPCrOOgwgAAc8IDk48Sp7SBR9UFRXg8w1uE
 
+###
+PATCH http://localhost:5555/api/auth/changeSubPassword/0102
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiIwMSIsInJvbGUiOjEsInN0YXRlIjp0cnVlLCJkZWFkVGltZSI6IjIwMjEtMTItMTBUMDA6MDA6MDAuMDAwWiIsImlhdCI6MTYzOTM2NTE3OX0.mFixaJTKaQyKS5AOFRqbVbYWdJbxy6W7NUn7BogB3Yo 
+content-type: application/json
+
+{
+    "password": "123"
+}

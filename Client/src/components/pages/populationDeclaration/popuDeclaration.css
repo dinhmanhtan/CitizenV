@@ -1,0 +1,156 @@
+.container-declaration {
+  border: solid 1px black;
+  max-width: 700px;
+  width: 100%;
+  background: #ffff;
+  padding: 25px 30px;
+  border-radius: 5px;
+  margin: auto;
+}
+
+.container-declaration .title {
+  text-align: center;
+  font-size: 25px;
+  font-weight: 500;
+  position: relative;
+}
+
+.container-declaration .title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 30px;
+}
+
+.container-declaration form .info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 0 12px 0;
+}
+
+form .info .inputBox {
+  margin-bottom: 15px;
+  width: calc(100% / 2 - 20px);
+}
+
+.info .inputBox .details {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.info .inputBox input {
+  height: 45px;
+  width: 100%;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  padding-left: 15px;
+  font-size: 16px;
+  border-bottom-width: 2px;
+}
+
+.info .inputBox input:focus,
+.info .inputBox input:valid {
+  border-color: #9b59b6;
+}
+
+form .gender-info .title {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+form .gender-info .option {
+  display: flex;
+  width: 80%;
+  margin: 14px 0;
+  justify-content: space-between;
+}
+
+.gender-info .option label {
+  display: flex;
+  align-items: center;
+}
+
+.gender-info .option .dot {
+  height: 18px;
+  width: 18px;
+  background: #d9d9d9;
+  border-radius: 50%;
+  margin-right: 10px;
+  border: 5px solid transparent;
+  transition: all 0.3 ease;
+}
+
+.gender-info .option .dot:hover {
+  cursor: pointer;
+}
+
+#dot1:checked ~ .option .one,
+#dot2:checked ~ .option .two {
+  border-color: #d9d9d9;
+  background: #2691d9;
+}
+
+.form-declaration input[type="radio"] {
+  display: none;
+}
+
+.form-declaration .button {
+  height: 45px;
+  margin: 45px 0;
+}
+
+.form-declaration .button input {
+  margin-bottom: 10px;
+  height: 100%;
+  width: 100%;
+  outline: none;
+  color: #fff;
+  border: none;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: 5px;
+  letter-spacing: 1px;
+  background: #3487be;
+}
+
+.form-declaration .button input:hover {
+  background: #342fbf;
+  cursor: pointer;
+}
+
+.session {
+  color: white;
+  background: #3386c1;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100px;
+  height: 50px;
+  border: none;
+  border-radius: 5px;
+}
+
+#logout-button {
+  color: white;
+  background: #3386c1;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100px;
+  height: 50px;
+  border: none;
+  border-radius: 5px;
+}
+
+#logout-button:hover {
+  cursor: pointer;
+  background: #003cff;
+  transition: 0.5s;
+}

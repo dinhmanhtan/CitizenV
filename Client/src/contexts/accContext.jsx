@@ -62,12 +62,25 @@ const AccContextProvider = ({ children }) => {
     }
   };
 
+  const changeSubPassword = async (password) => {
+    try {
+      const respone = await axios.patch(
+        `${apiURL}/auth/changeSubPassword/${accState.Id_Sub_Account}`,
+        password
+      );
+      return respone.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const accContextData = {
     accState,
     getSubAccount,
     setIdSubAccount,
     createNewAccount,
     deleteSubAccount,
+    changeSubPassword,
   };
   return (
     <AccContext.Provider value={accContextData}>{children}</AccContext.Provider>

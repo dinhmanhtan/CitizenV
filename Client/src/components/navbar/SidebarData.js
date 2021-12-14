@@ -1,9 +1,9 @@
 import React from "react";
-import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
 import { MdAccountBox } from "react-icons/md";
 import { IoAnalyticsSharp } from "react-icons/io5";
+import GroupsIcon from "@mui/icons-material/Groups";
 
 export const SidebarData = [
   {
@@ -28,7 +28,7 @@ export const SidebarData = [
   {
     title: "Population",
     path: "/population",
-    icon: <IoIcons.IoMdHelpCircle />,
+    icon: <GroupsIcon />,
     cName: "nav-text",
   },
 ];

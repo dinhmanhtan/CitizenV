@@ -66,11 +66,16 @@ class AuthController {
         (req.authId == "00" || id.startsWith(req.authId)) &&
         id.length === req.authId.length + 2
       ) {
+        const addr =
+          !req.address || req.address === undefined
+            ? `${req.name}`
+            : `${req.name}-${req.address}`;
         const auth = new Auth({
           id: req.body.id,
           name: req.body.name,
           password: hashPassword,
           role: req.body.role, // 0 1 2 3 4
+          address: addr,
         });
         const newAuth = await auth.save();
         res.status(200).json({
@@ -114,6 +119,8 @@ class AuthController {
           role: auth.role,
           state: auth.state,
           deadTime: auth.deadTime,
+          name: auth.name,
+          address: auth.address,
         },
         process.env.TOKEN_SECRET
       );
@@ -127,6 +134,7 @@ class AuthController {
           role: auth.role,
           state: auth.state,
           deadTime: auth.deadTime,
+          address: auth.address,
         },
       });
     } catch (err) {
@@ -168,7 +176,20 @@ class AuthController {
   // GET api/auth/:id/getAllSubAccounts
   getAccounts(req, res, next) {
     const idFiled = req.params.id;
-    if (idFiled.startsWith(req.authId)) {
+    if (req.authId === "00") {
+      Auth.find({
+        id: {
+          $regex: `^[0-9][0-9]$`,
+        },
+      })
+        .then((data) => {
+          res.status(200).json({
+            success: true,
+            account: data,
+          });
+        })
+        .catch((err) => next(err));
+    } else if (idFiled.startsWith(req.authId)) {
       Auth.find({
         id: {
           $regex: `^${idFiled}[0-9][0-9]$`, // id gốc 01 -> 01xx
@@ -193,7 +214,7 @@ class AuthController {
 
   async getSubAccount(req, res, next) {
     const idFiled = req.params.id;
-    if (idFiled.startsWith(req.authId)) {
+    if (req.role === 0 || idFiled.startsWith(req.authId)) {
       try {
         const subAccount = await Auth.findOne({ id: idFiled }).select(
           "-password"
@@ -218,16 +239,40 @@ class AuthController {
     }
   }
 
-  // PATCH api/auth/changePassword
+  // PATCH api/auth/changePassword/
   async changePassword(req, res, next) {
     try {
       const salt = await bcrypt.genSalt(10);
       const hashNewPassword = await bcrypt.hash(req.body.password, salt);
 
       await Auth.updateOne({ id: req.authId }, { password: hashNewPassword });
-      res.status(200).json({ message: "sussess" });
+      res.status(200).json({ success: true });
     } catch (err) {
       next(err);
+    }
+  }
+
+  // PATCH api/auth/changeSubPassword/:id
+  async changeSubPassword(req, res, next) {
+    const idFiled = req.params.id;
+    if (
+      idFiled.startsWith(req.authId) &&
+      idFiled.length === req.authId.length + 2
+    ) {
+      try {
+        const salt = await bcrypt.genSalt(10);
+        const hashNewPassword = await bcrypt.hash(req.body.password, salt);
+
+        await Auth.updateOne({ id: idFiled }, { password: hashNewPassword });
+        res.status(200).json({ success: true });
+      } catch (err) {
+        console.log(err);
+        next(err);
+      }
+    } else {
+      res
+        .status(403)
+        .json({ success: false, message: "You don't have permission" });
     }
   }
 

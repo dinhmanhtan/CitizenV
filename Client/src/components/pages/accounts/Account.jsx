@@ -10,7 +10,7 @@ import { locations } from "../../../utils/constant";
 import { useNavigate } from "react-router-dom";
 import GppGoodIcon from "@mui/icons-material/GppGood";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
-import ChangePassword from "./ChangePassword/ChangePassword";
+import ChangePassword from "./ChangeSubPassword/ChangeSubPassword";
 const Account = ({ accountID }) => {
   const [subAccount, setSubAccount] = useState({
     id: "",
@@ -18,6 +18,7 @@ const Account = ({ accountID }) => {
     progress: "",
     state: "",
     role: "",
+    address: "",
   });
 
   const levels = ["A1", "A2", "A3", "B1", "B2"];
@@ -26,10 +27,25 @@ const Account = ({ accountID }) => {
 
   // Get infor account
   const GetSubAccount = async () => {
-    const DataSubAccount = await getSubAccount(accountID);
-    if (DataSubAccount.success) {
-      const { name, id, progress, role, state } = DataSubAccount.subAccount;
-      setSubAccount({ ...subAccount, name, id, progress, role, state });
+    try {
+      const DataSubAccount = await getSubAccount(accountID);
+      if (DataSubAccount.success) {
+        const { name, id, progress, role, state, address } =
+          DataSubAccount.subAccount;
+        const addr = address && address.split("-");
+
+        setSubAccount({
+          ...subAccount,
+          name,
+          id,
+          progress,
+          role,
+          state,
+          address,
+        });
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
   useEffect(() => {
@@ -111,26 +127,26 @@ const Account = ({ accountID }) => {
               </span>
               <span> {subAccount.name}</span>
             </div>
-
-            <div className="accountShowInfo">
-              <span className="accountShowInfoTitle">
-                <PermIdentity className="accountShowIcon" />
-                <span>Thuộc :</span>
-              </span>
-              <span>Tỉnh ZZ</span>
-            </div>
-
+            {subAccount.role > 1 && (
+              <div className="accountShowInfo">
+                <span className="accountShowInfoTitle">
+                  <PermIdentity className="accountShowIcon" />
+                  <span>Thuộc :</span>
+                </span>
+                <span>{subAccount.address}</span>
+              </div>
+            )}
             <div className="accountShowInfo">
               <span className="accountShowInfoTitle">
                 <CalendarToday className="accountShowIcon" />
                 <span>Cấp bậc tài khoản :</span>
               </span>
-              <span> {levels[subAccount.role - 1]}</span>
+              <span> {levels[subAccount.role]}</span>
             </div>
             <div className="accountShowInfo">
               <span className="accountShowInfoTitle">
                 <CalendarToday className="accountShowIcon" />
-                <span>Quyền khai báo:</span>{" "}
+                <span>Quyền khai báo:</span>
               </span>
               <span>{subAccount.state ? "Active" : "Disabled"}</span>
             </div>

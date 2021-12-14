@@ -6,7 +6,6 @@ import Account from "./components/pages/accounts/Account";
 import NewAccount from "./components/pages/newAccount/NewAccount";
 import Chart from "./components/pages/analytics/Chart";
 import Login from "./components/pages/login/Login";
-import Navbar from "./components/navbar/Navbar";
 import { useState } from "react";
 import AuthContextProvider from "./contexts/authContext";
 import ProtectedRoute from "./components/routing/ProtectedRoute";
@@ -15,10 +14,10 @@ import CitizenContextProvider from "./contexts/citizenContext";
 import Population from "./components/pages/population/Population";
 import Individual from "./components/pages/population/Individual";
 import ContainerAccount from "./components/pages/accounts/ContainerAccount";
-
+import PopulationDeclaration from "./components/pages/populationDeclaration/PopulationDeclaration";
+import NotFound from "./components/pages/NotFound404/NotFound";
 
 function App() {
-  const [success, setSuccess] = useState(true);
   return (
     <AuthContextProvider>
       <AccContextProvider>
@@ -28,24 +27,28 @@ function App() {
               <Route exact path="/" element={<Login />} />
               <Route exact path="/login" element={<Login />} />
             </Routes>
-            {success && (
-              <div className="container">
-                <Routes>
-                  <Route exact path="/" element={<ProtectedRoute />}>
-                    <Route exact path="home" element={<Home />} />
-                    <Route path="accounts" element={<AccountList />} />
-                    <Route
-                      path="accounts/:accountID"
-                      element={<ContainerAccount />}
-                    />
-                    <Route path="newAccount" element={<NewAccount />} />
-                    <Route exact path="analytics" element={<Chart />} />
-                    <Route exact path="population" element={<Population />} />
-                    <Route path="population/:personID" element={<Individual />} />
-                  </Route>
-                </Routes>
-              </div>
-            )}
+
+            <div className="container">
+              <Routes>
+                <Route exact path="/" element={<ProtectedRoute />}>
+                  <Route exact path="home" element={<Home />} />
+                  <Route path="accounts" element={<AccountList />} />
+                  <Route
+                    path="accounts/:accountID"
+                    element={<ContainerAccount />}
+                  />
+                  <Route path="newAccount" element={<NewAccount />} />
+                  <Route exact path="analytics" element={<Chart />} />
+                  <Route exact path="population" element={<Population />} />
+                  <Route path="population/:personID" element={<Individual />} />
+                  <Route
+                    path="declaration"
+                    element={<PopulationDeclaration />}
+                  />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
           </Router>
         </CitizenContextProvider>
       </AccContextProvider>

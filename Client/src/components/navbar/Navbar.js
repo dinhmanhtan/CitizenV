@@ -12,13 +12,37 @@ import { IoMdSettings } from "react-icons/io";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { AuthContext } from "../../contexts/authContext";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { useNavigate } from "react-router-dom";
+import { AccContext } from "../../contexts/accContext";
+import NoteAltIcon from "@mui/icons-material/NoteAlt";
 
 function Navbar(props) {
   const [sidebar, setSidebar] = useState(false);
 
   const showSidebar = () => setSidebar(!sidebar);
 
-  const { logOut } = useContext(AuthContext);
+  const {
+    logOut,
+    authState: {
+      account: { role },
+    },
+  } = useContext(AuthContext);
+
+  // menu-item for icon profile
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const open = Boolean(anchorEl);
+
+  const handleClickProfile = () => {
+    navigate("/profile");
+  };
+  const handleClickLogOut = () => {
+    // setAnchorEl(null);
+    logOut();
+  };
 
   return (
     <>
@@ -42,7 +66,55 @@ function Navbar(props) {
               </div>
 
               <div className="topbarIconContainer">
-                <AccountCircleIcon className="icon" />
+                <AccountCircleIcon
+                  className="icon"
+                  aria-controls="basic-menu"
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                  onClick={(event) => setAnchorEl(event.currentTarget)}
+                  id="icon-profile"
+                />
+                <Menu
+                  // sx={{ mt: "33px" }}
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={() => setAnchorEl(null)}
+                  MenuListProps={{
+                    "aria-labelledby": "icon-profile",
+                  }}
+                  // anchorOrigin={{
+                  //   vertical: "top",
+                  //   horizontal: "right",
+                  // }}
+                  // keepMounted
+                  // transformOrigin={{
+                  //   vertical: "top",
+                  //   horizontal: "right",
+                  // }}
+                >
+                  <MenuItem
+                    sx={{
+                      width: "110px",
+                      height: "40px",
+                      justifyContent: "center",
+                    }}
+                    onClick={handleClickProfile}
+                  >
+                    Profile
+                  </MenuItem>
+
+                  <MenuItem
+                    sx={{
+                      width: "110px",
+                      height: "40px",
+                      justifyContent: "center",
+                    }}
+                    onClick={handleClickLogOut}
+                  >
+                    Logout
+                  </MenuItem>
+                </Menu>
               </div>
 
               <div className="topbarIconContainer">
@@ -68,6 +140,15 @@ function Navbar(props) {
                 </li>
               );
             })}
+            {(role === 3 || role === 4) && (
+              <li className="nav-text">
+                <Link to="/declaration" className="row-nav">
+                  <NoteAltIcon />
+                  <span>Declaration</span>
+                </Link>
+              </li>
+            )}
+
             <li className="nav-text">
               <div className="row-nav" onClick={logOut}>
                 <ExitToAppIcon />
