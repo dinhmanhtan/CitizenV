@@ -1,12 +1,30 @@
-import { useContext } from "react";
+import { useContext, useState, useRef } from "react";
 import "./popuDeclaration.css";
+import { apiURLCitizen, LOCAL_STORAGE_TOKEN_NAME } from "../../../utils/constant";
 import { AuthContext } from "../../../contexts/authContext";
+import { CitizenContext } from "../../../contexts/citizenContext";
 import NotFound from "../NotFound404/NotFound";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+
 const PopulationDeclaration = () => {
+  const navigate = useNavigate();
   const {
     authState: { account },
   } = useContext(AuthContext);
+  
+  const [citizenDispatch] = useContext(CitizenContext);
+
+
+  const [data, setData] = useState({
+    name : "",
+    CCCD : "",
+    DOB : "",
+    idAddress : account.id,
+    academicLevel : "",
+    job : "",
+    religion : "",
+    sex : "",
+  });
 
   const { role } = account;
 
@@ -14,55 +32,121 @@ const PopulationDeclaration = () => {
     return <Navigate to="/%2Fdeclaration%5E%25" />;
   }
 
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    async function createNewPerson(data) {
+      const dataResult = await fetch(`${apiURLCitizen}/addPerson`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME)
+        },
+        body: JSON.stringify(data),
+      })
+
+      return dataResult.json();
+    }
+    
+    createNewPerson(data)
+      .then(response => {
+        console.log(response);
+        if (response.message === 'success') {
+          navigate("/population");
+        }
+        else {
+          alert(response.message);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      })
+  }
+
+  const handleClose = () => {
+    navigate("/population");
+  }
+
+  
+
   return (
     <div className="container-declaration">
       <div className="title"> Nhập liệu về dân số</div>
-      <form className="form-declaration">
+      <form className="form-declaration" onSubmit={(e) => handleSubmit(e)}>
         <div className="info">
           <div className="inputBox">
             <span className="details"> Họ và tên</span>
-            <input type="text" id="fullname" required />
+            <input 
+              name="name" type="text" required 
+              value={data.name}
+              onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
+            />
           </div>
 
           <div className="inputBox">
             <span className="details"> Ngày sinh</span>
-            <input type="text" id="dob" required />
+            <input 
+              name="DOB" type="date" required 
+              value={data.DOB}
+              onChange={(e) => setData({...data, [e.target.name]: e.target.valueAsDate})}
+            />
           </div>
 
           <div className="inputBox">
             <span className="details"> Số CCCD</span>
-            <input type="text" id="person_id" required />
-          </div>
-
-          <div className="inputBox">
-            <span className="details"> Tỉnh/Thành phố</span>
-            <input type="text" id="province/city" required />
-          </div>
-
-          <div className="inputBox">
-            <span className="details"> Quận/Huyện</span>
-            <input type="text" id="district" required />
-          </div>
-
-          <div className="inputBox">
-            <span className="details"> Xã/Phường</span>
-            <input type="text" id="village/neighbourhood" required />
+            <input 
+              name="CCCD" type="text" required 
+              value={data.CCCD}
+              onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
+            />
           </div>
 
           <div className="inputBox">
             <span className="details"> Địa chỉ</span>
-            <input type="text" id="address" required />
+            <input 
+              name="idAddress" type="text" required 
+              value={data.idAddress}
+              onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
+            />
           </div>
 
           <div className="inputBox">
-            <span className="details"> SĐT</span>
-            <input type="text" id="phone" required />
+            <span className="details">Trình độ học vấn</span>
+            <input 
+              name="academicLevel" type="text" required 
+              value={data.academicLevel}
+              onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
+            />
+          </div>
+
+          <div className="inputBox">
+            <span className="details"> Công việc</span>
+            <input 
+              name="job" type="text" required 
+              onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
+            />
+          </div>
+
+          <div className="inputBox">
+            <span className="details"> Tôn giáo</span>
+            <input 
+              name="religion" type="text" required 
+              value={data.religion}
+              onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
+            />
           </div>
         </div>
 
         <div className="gender-info">
-          <input type="radio" name="gender" id="dot1" />
-          <input type="radio" name="gender" id="dot2" />
+          <input 
+            type="radio" name="sex" id="dot1" value="nam" 
+            onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
+          />
+          <input 
+            type="radio" name="sex" id="dot2" value="nữ"
+            onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
+          />
           <span className="title"> Giới tính</span>
           <div className="option">
             <label htmlFor="dot1">
@@ -79,7 +163,7 @@ const PopulationDeclaration = () => {
 
         <div className="button">
           <input type="submit" value="Nhập" />
-          <input type="button" value="Hủy" />
+          <input type="button" value="Hủy" onClick={handleClose} />
         </div>
       </form>
     </div>

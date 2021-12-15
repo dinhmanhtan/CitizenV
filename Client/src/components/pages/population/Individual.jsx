@@ -24,7 +24,7 @@ function Individual() {
                 console.log(data)
             })
             .catch((err) => console.error(err));
-    }, [])
+    }, [personID])
 
     return (
         <div>
