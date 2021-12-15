@@ -88,8 +88,8 @@ const PopulationDeclaration = () => {
             <span className="details"> Ngày sinh</span>
             <input 
               name="DOB" type="date" required 
-              value={data.DOB}
-              onChange={(e) => setData({...data, [e.target.name]: e.target.valueAsDate})}
+              value={null}
+              onChange={(e) => setData({...data, [e.target.name]: e.currentTarget.valueAsDate})}
             />
           </div>
 
