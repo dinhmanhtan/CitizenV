@@ -1,11 +1,12 @@
 .container-declaration {
   border: solid 1px black;
   max-width: 700px;
-  width: 100%;
+
   background: #ffff;
   padding: 25px 30px;
   border-radius: 5px;
   margin: auto;
+  margin-top: 40px;
 }
 
 .container-declaration .title {
@@ -15,19 +16,10 @@
   position: relative;
 }
 
-.container-declaration .title::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 3px;
-  width: 30px;
-}
-
 .container-declaration form .info {
-  display: flex;
+  /* display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-between; */
   margin: 20px 0 12px 0;
 }
 

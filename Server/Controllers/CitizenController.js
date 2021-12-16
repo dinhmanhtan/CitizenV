@@ -26,16 +26,20 @@ class citizenController {
         });
 
         return res.status(200).json({
-          message: "success",
+          success: true,
           data: people,
         });
       } else {
-        const err = new Error("You dont have permission");
-        err.statusCode = 403;
-        return next(err);
+        // const err = new Error("You dont have permission");
+        // err.statusCode = 403;
+        // return next(err);
+        return res.status(403).json({
+          success: fale,
+          message: "You dont have permission",
+        });
       }
     } catch (err) {
-      // next(err);
+      next(err);
     }
   }
 

@@ -1,3 +1,29 @@
-.person {
-    text-decoration: none;
+.popu-container {
+  margin: 20px;
+}
+.popu-container h1 {
+  margin: 0;
+}
+
+.select-mode-option {
+  width: 200px;
+  margin: 30px;
+}
+
+.location-options {
+  display: flex;
+  align-items: center;
+}
+
+.add-icon {
+  padding: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.438);
+  border-radius: 3px;
+}
+.add-icon:hover {
+  cursor: pointer;
+  border-color: black;
+}
+.popu-container button {
+  margin-left: 30px;
 }

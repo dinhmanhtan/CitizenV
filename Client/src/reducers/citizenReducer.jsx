@@ -1,16 +1,15 @@
-
 function citizenReducer(state, action) {
-    switch (action.type) {
-        case "GET_DATA" :
-            console.log(action.payload);
-            return {
-                ...state,
-                popList: [...action.payload],
-            }
+  const { type, payload } = action;
+  switch (type) {
+    case "GET_ALL_POPULATION":
+      return {
+        ...state,
+        popList: payload,
+      };
 
-        default:
-            return state
-    }
+    default:
+      return state;
+  }
 }
 
-export default citizenReducer
+export default citizenReducer;

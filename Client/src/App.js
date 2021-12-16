@@ -23,13 +23,10 @@ function App() {
       <AccContextProvider>
         <CitizenContextProvider>
           <Router>
-            <Routes>
-              <Route exact path="/" element={<Login />} />
-              <Route exact path="/login" element={<Login />} />
-            </Routes>
-
             <div className="container">
               <Routes>
+                <Route exact path="/" element={<Login />} />
+                <Route exact path="/login" element={<Login />} />
                 <Route exact path="/" element={<ProtectedRoute />}>
                   <Route exact path="home" element={<Home />} />
                   <Route path="accounts" element={<AccountList />} />
