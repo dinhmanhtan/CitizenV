@@ -117,12 +117,12 @@ class AuthController {
         {
           authId: auth.id,
           role: auth.role,
-          state: auth.state,
-          deadTime: auth.deadTime,
           name: auth.name,
           address: auth.address,
         },
-        process.env.TOKEN_SECRET
+        process.env.TOKEN_SECRET, {
+          expiresIn: '2h',
+        }
       );
 
       res.status(200).json({
@@ -132,8 +132,6 @@ class AuthController {
           id: auth.id,
           name: auth.name,
           role: auth.role,
-          state: auth.state,
-          deadTime: auth.deadTime,
           address: auth.address,
         },
       });
@@ -142,6 +140,7 @@ class AuthController {
       res.json(err);
     }
   }
+
 
   // DELETE api/auth/logout
   async logout(req, res, next) {}
@@ -310,6 +309,18 @@ class AuthController {
     } catch (err) {
       next(err);
     }
+  }
+
+  changeProgress (req, res, next) {
+    Auth.updateOne( {id : req.authId}, { progress : req.body.progress})
+      .then( () => {
+        return res.status(200).json({
+          success: true
+        })
+      })
+      .catch (err => {
+        next(err)
+      })
   }
 }
 

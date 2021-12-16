@@ -24,8 +24,8 @@
 }
 
 form .info .inputBox {
+  width: 95%;
   margin-bottom: 15px;
-  width: calc(100% / 2 - 20px);
 }
 
 .info .inputBox .details {

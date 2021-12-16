@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const Auth = require("../Models/Auth")
 
-module.exports = function (req, res, next) {
+module.exports = async function (req, res, next) {
   const Authorization = req.headers["authorization"];
 
   if (!Authorization) {
@@ -11,18 +12,25 @@ module.exports = function (req, res, next) {
   }
 
   const token = Authorization && Authorization.split(" ")[1];
-  const { authId, role, state, deadTime, name, address } = jwt.verify(
-    token,
-    process.env.TOKEN_SECRET
-  );
-
-  //  console.log(deadTime);
-
-  req.authId = authId;
-  req.role = role;
-  req.state = state;
-  req.deadTime = deadTime;
-  req.name = name;
-  req.address = address;
-  next();
+  try {
+    const { authId, role, name, address } = jwt.verify(
+      token,
+      process.env.TOKEN_SECRET,
+    );
+    
+    const authData = await Auth.findOne({ id: authId});
+    //  console.log(deadTime);
+  
+    req.authId = authId;
+    req.role = role;
+    req.state = authData.state;
+    req.deadTime = authData.deadTime;
+    req.name = name;
+    req.address = address;
+    return next();
+  }
+  catch (err) {
+    err.statusCode = 403;
+    return next(err);
+  }
 };

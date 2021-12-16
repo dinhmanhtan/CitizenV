@@ -34,7 +34,7 @@ class citizenController {
         // err.statusCode = 403;
         // return next(err);
         return res.status(403).json({
-          success: fale,
+          success: false,
           message: "You dont have permission",
         });
       }
@@ -60,7 +60,7 @@ class citizenController {
         return next(err);
       }
     } catch (err) {
-      // next(err);
+      next(err);
     }
   }
 

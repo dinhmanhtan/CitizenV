@@ -11,6 +11,7 @@ const Auth = new Schema(
     state: { type: Boolean, require: [true], default: false },
     deadTime: { type: Date, default: Date.now() },
     address: { type: String },
+    progress: { type : Boolean, default: false}
   },
   {
     timestamps: true,

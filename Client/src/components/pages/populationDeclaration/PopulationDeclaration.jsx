@@ -2,22 +2,15 @@ import { useContext, useState, useRef } from "react";
 import "./popuDeclaration.css";
 import { apiURLCitizen, LOCAL_STORAGE_TOKEN_NAME } from "../../../utils/constant";
 import { AuthContext } from "../../../contexts/authContext";
-<<<<<<< HEAD
-import { Navigate } from "react-router-dom";
-import TextField from "@mui/material/TextField";
-=======
 import { CitizenContext } from "../../../contexts/citizenContext";
 import NotFound from "../NotFound404/NotFound";
 import { Navigate, useNavigate } from "react-router-dom";
->>>>>>> refs/remotes/origin/main
 
 const PopulationDeclaration = () => {
   const navigate = useNavigate();
   const {
     authState: { account },
   } = useContext(AuthContext);
-  
-  const [citizenDispatch] = useContext(CitizenContext);
 
 
   const [data, setData] = useState({
@@ -80,20 +73,14 @@ const PopulationDeclaration = () => {
       <div className="title"> Nhập liệu về dân số</div>
       <form className="form-declaration" onSubmit={(e) => handleSubmit(e)}>
         <div className="info">
-          {/* <div className="inputBox">
+          <div className="inputBox">
             <span className="details"> Họ và tên</span>
-<<<<<<< HEAD
-            <input type="text" id="fullname" required />
-          </div> */}
-          <TextField id="standard-basic" variant="filled" />
-=======
             <input 
               name="name" type="text" required 
               value={data.name}
               onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
             />
           </div>
->>>>>>> refs/remotes/origin/main
 
           <div className="inputBox">
             <span className="details"> Ngày sinh</span>
@@ -106,38 +93,6 @@ const PopulationDeclaration = () => {
 
           <div className="inputBox">
             <span className="details"> Số CCCD</span>
-<<<<<<< HEAD
-            <input type="text" id="person_id" required />
-          </div>
-
-          <div className="inputBox">
-            <span className="details"> Quê Quán</span>
-            <input type="text" id="province/city" required />
-          </div>
-
-          <div className="inputBox">
-            <span className="details"> Địa chỉ thường trú</span>
-            <input type="text" id="district" required />
-          </div>
-
-          <div className="inputBox">
-            <span className="details"> Địa chỉ tạm trú</span>
-            <input type="text" id="village/neighbourhood" required />
-          </div>
-
-          <div className="inputBox">
-            <span className="details"> Tôn giáo</span>
-            <input type="text" id="address" required />
-          </div>
-
-          <div className="inputBox">
-            <span className="details"> Trình độ văn hóa</span>
-            <input type="text" id="phone" required />
-          </div>
-          <div className="inputBox">
-            <span className="details"> Nghề nghiệp</span>
-            <input type="text" id="phone" required />
-=======
             <input 
               name="CCCD" type="text" required 
               value={data.CCCD}
@@ -178,7 +133,6 @@ const PopulationDeclaration = () => {
               value={data.religion}
               onChange={(e) => setData({...data, [e.target.name]: e.target.value})}
             />
->>>>>>> refs/remotes/origin/main
           </div>
         </div>
 
