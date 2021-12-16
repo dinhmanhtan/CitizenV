@@ -44,12 +44,14 @@ const Population = () => {
   const { id1, id2, id3, id4 } = idOption;
   const [isOptionsOne, setIsOptionsOne] = useState([true, false, false, false]);
   const [numOfOptions, setNumOfOptions] = useState(1);
-  const [defaultOptionOne, setDefaultOptionOne] = useState({
-    defaultOpt1: "Toàn vùng",
-    defaultOpt2: "",
-    defaultOpt3: "",
-    defaultOpt4: "",
+
+  const [valueOptOne, setValueOptOne] = useState({
+    value1: null,
+    value2: null,
+    value3: null,
+    value4: null,
   });
+  const { value1, value2, value3, value4 } = valueOptOne;
 
   //
 
@@ -80,11 +82,11 @@ const Population = () => {
   useEffect(() => {
     getInForLocations(idAddress, 1);
   }, []);
-
+  // set options cho option2
   useEffect(() => {
     if (id1 !== 0 && isOptionsOne[1]) {
       getInForLocations(id1, 2);
-      setDefaultOptionOne({ ...defaultOptionOne, defaultOpt2: option2[0] });
+      setValueOptOne({ ...valueOptOne, value2: null });
     }
   }, [id1, isOptionsOne[1]]);
 
@@ -118,19 +120,17 @@ const Population = () => {
           defaultValue={option1[0]}
           onChange={(target) => {
             setIdOption({ ...idOption, id1: target.id });
-            setDefaultOptionOne({
-              ...defaultOptionOne,
-              defaultOpt2: null,
-            });
-            console.log(defaultOptionOne);
           }}
         />
         {isOptionsOne[1] && (
           <Select
             options={option2}
             className="select-mode-option"
-            defaultValue={defaultOptionOne.defaultOpt2}
-            onChange={(target) => setIdOption({ ...idOption, id2: target.id })}
+            value={value2}
+            onChange={(target) => {
+              setIdOption({ ...idOption, id2: target.id });
+              setValueOptOne({ ...valueOptOne, value2: target });
+            }}
           />
         )}
         <AddIcon className="add-icon" onClick={handleAddOptionsOne} />
