@@ -1,6 +1,6 @@
 import React from "react";
 import "./accountList.css";
-import { DataGrid, getGridNumericColumnOperators } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { useState, useEffect, useContext } from "react";
 import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";

@@ -21,7 +21,7 @@ class citizenController {
       ) {
         const people = await Citizen.find({
           idAddress: {
-            $regex: `^${idArea}`,
+            $regex: idArea !== "00" ? `^${idArea}` : `^0`,
           },
         });
 

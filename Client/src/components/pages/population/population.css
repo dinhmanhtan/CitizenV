@@ -19,6 +19,7 @@
   padding: 5px;
   border: 1px solid rgba(0, 0, 0, 0.438);
   border-radius: 3px;
+  margin-left: 35px;
 }
 .add-icon:hover {
   cursor: pointer;
@@ -26,4 +27,33 @@
 }
 .popu-container button {
   margin-left: 30px;
+}
+
+.remove-select-icon {
+  position: absolute;
+  border: 1px solid rgba(0, 0, 0, 0.438);
+  border-radius: 3px;
+  padding: 5px;
+  right: -6px;
+}
+.remove-select-icon:hover {
+  cursor: pointer;
+  border-color: black;
+}
+
+.popu-table {
+  width: 1000px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+.btnEditPopu {
+  margin: 0;
+  text-decoration: none;
+}
+
+.circular-progress {
+  width: 200px;
+  margin: auto;
+  margin-top: 150px;
 }

@@ -120,8 +120,9 @@ class AuthController {
           name: auth.name,
           address: auth.address,
         },
-        process.env.TOKEN_SECRET, {
-          expiresIn: '2h',
+        process.env.TOKEN_SECRET,
+        {
+          expiresIn: "2h",
         }
       );
 
@@ -140,7 +141,6 @@ class AuthController {
       res.json(err);
     }
   }
-
 
   // DELETE api/auth/logout
   async logout(req, res, next) {}
@@ -178,7 +178,7 @@ class AuthController {
     if (req.authId === "00") {
       Auth.find({
         id: {
-          $regex: `^[0-9][0-9]$`,
+          $regex: idFiled === "00" ? `^[0-9][0-9]$` : `^${idFiled}[0-9][0-9]$`,
         },
       })
         .then((data) => {
@@ -311,16 +311,16 @@ class AuthController {
     }
   }
 
-  changeProgress (req, res, next) {
-    Auth.updateOne( {id : req.authId}, { progress : req.body.progress})
-      .then( () => {
+  changeProgress(req, res, next) {
+    Auth.updateOne({ id: req.authId }, { progress: req.body.progress })
+      .then(() => {
         return res.status(200).json({
-          success: true
-        })
+          success: true,
+        });
       })
-      .catch (err => {
-        next(err)
-      })
+      .catch((err) => {
+        next(err);
+      });
   }
 }
 

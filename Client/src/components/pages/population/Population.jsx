@@ -1,16 +1,46 @@
 import React, { useEffect, useContext, useState } from "react";
 import { AuthContext } from "../../../contexts/authContext";
 import { CitizenContext } from "../../../contexts/citizenContext";
-import SearchBar from "../home/SearchBar";
-import Person from "./Person";
 import "./population.css";
 import Select from "react-select";
 import AddIcon from "@mui/icons-material/Add";
 import { Button } from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
+import { DataGrid } from "@mui/x-data-grid";
+import { Link } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
+import SelectModeOne from "./selectMode/SelectModeOne";
 
 const ModeOptions = [
   { id: 0, value: "One", label: "Theo từng vùng" },
   { id: 1, value: "More", label: "Theo nhóm vùng" },
+];
+
+const columns = [
+  { field: "fullName", headerName: "Họ và tên", width: 200 },
+  { field: "DOB", headerName: "Ngày sinh", width: 200 },
+  { field: "address", headerName: "Quê quán", width: 200 },
+  { field: "sex", headerName: "Giới tính", width: 100 },
+  {
+    field: "action",
+    headerName: " ",
+    width: 200,
+    renderCell: (params) => {
+      return (
+        <>
+          <Link to={"/population/" + params.row.id} className="btnEditPopu">
+            <Button
+              variant="contained"
+
+              // onClick={() => {}}
+            >
+              Xem thông tin
+            </Button>
+          </Link>
+        </>
+      );
+    },
+  },
 ];
 
 const Population = () => {
@@ -23,85 +53,60 @@ const Population = () => {
 
   const { citizenState, getAllPopulation, getInforSubAccount } =
     useContext(CitizenContext);
-  const { popList } = citizenState;
+  const { popList, isLoading } = citizenState;
 
   const idAddress = account.id;
 
+  const [PopuRows, setPopuRows] = useState([]);
+
+  const getPoPuById = (id) => {
+    getAllPopulation(id);
+  };
+
+  useEffect(() => {
+    var personRows = popList.map((person) => {
+      // const date = new Date(person.DOB);
+      // console.log(date, Date.parse(person.DOB));
+      const entry = new Map([
+        ["id", person._id],
+        [columns[0].field, person.name],
+        [columns[1].field, person.DOB.toString()],
+        [columns[2].field, person.thuongtru],
+        [
+          columns[3].field,
+          `${person.sex[0].toUpperCase()}${person.sex.slice(1)}`,
+        ],
+        [("idAdress", person.idAddress)],
+      ]);
+
+      const obj = Object.fromEntries(entry);
+      return obj;
+    });
+    setPopuRows(personRows);
+  }, [popList]);
+
+  // Chose mode option (one - many)
+
+  const [ID_MODE, setID_MODE] = useState(0);
+  const [isHiddenData, setisHiddenData] = useState(true);
+
   /// Mode 1 -----------------------------------------------------------------------------------
-  // set params for selecting option
-  const [option1, setOption1] = useState([
-    { id: 0, value: "all", label: "Toàn vùng" },
-  ]);
-  const [option2, setOption2] = useState([{ id: "", value: "", label: "" }]);
-  // Id được chọn cho mỗi option
-  const [idOption, setIdOption] = useState({
-    id1: 0,
-    id2: null,
-    id3: null,
-    id4: null,
-  });
 
-  const { id1, id2, id3, id4 } = idOption;
-  const [isOptionsOne, setIsOptionsOne] = useState([true, false, false, false]);
-  const [numOfOptions, setNumOfOptions] = useState(1);
-
-  const [valueOptOne, setValueOptOne] = useState({
-    value1: null,
-    value2: null,
-    value3: null,
-    value4: null,
-  });
-  const { value1, value2, value3, value4 } = valueOptOne;
-
-  //
-
-  useEffect(() => {
-    getAllPopulation(idAddress);
-  }, []);
-
-  const getInForLocations = async (id, num) => {
-    try {
-      const response = await getInforSubAccount(id);
-      var opt = num === 1 ? [option1[0]] : [];
-      if (response.success) {
-        const names = response.account.map((acc) => {
-          opt.push({ id: acc.id, value: acc.name, label: acc.name });
-          return;
-        });
-        if (num === 1) setOption1(opt);
-        else if (num === 2) setOption2(opt);
-        else if (num === 3) setOption2(opt);
-        else if (num === 4) setOption2(opt);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // set options cho option1 - Mode One
-  useEffect(() => {
-    getInForLocations(idAddress, 1);
-  }, []);
-  // set options cho option2
-  useEffect(() => {
-    if (id1 !== 0 && isOptionsOne[1]) {
-      getInForLocations(id1, 2);
-      setValueOptOne({ ...valueOptOne, value2: null });
-    }
-  }, [id1, isOptionsOne[1]]);
-
-  //
-  const handleAddOptionsOne = () => {
-    if (id1 !== 0 && numOfOptions <= 4 - account.role) {
-      var isOpt = isOptionsOne;
-      isOpt[numOfOptions] = true;
-      setIsOptionsOne(isOpt);
-      setNumOfOptions(numOfOptions + 1);
-    }
-    console.log(option2);
-  };
+  const [IdModeOne, setIdModOne] = useState(0);
 
   /// Mode More -----------------------------------------------------------------------------
+  const [option1, setOption1] = useState([{ id: "", value: "", label: "" }]);
+  const [option2, setOption2] = useState([{ id: "", value: "", label: "" }]);
+  const [option3, setOption3] = useState([{ id: "", value: "", label: "" }]);
+  const [option4, setOption4] = useState([{ id: "", value: "", label: "" }]);
+  ///////
+  const showPopuTable = () => {
+    setisHiddenData(false);
+    if (ID_MODE === 0) {
+      console.log(IdModeOne);
+      getPoPuById(IdModeOne === 0 ? idAddress : IdModeOne);
+    }
+  };
 
   return (
     <div className="popu-container">
@@ -110,35 +115,54 @@ const Population = () => {
         <Select
           options={ModeOptions}
           className="select-mode-option"
-          defaultValue={ModeOptions[0]}
+          defaultValue={ModeOptions[1]}
+          onChange={(target) => setID_MODE(target.id)}
         />
       </div>
-      <div className="location-options">
-        <Select
-          options={option1}
-          className="select-mode-option"
-          defaultValue={option1[0]}
-          onChange={(target) => {
-            setIdOption({ ...idOption, id1: target.id });
-          }}
+      {ID_MODE === 0 ? (
+        <SelectModeOne
+          IdModeOne={IdModeOne}
+          setIdModOne={setIdModOne}
+          idAddress={idAddress}
+          role={account.role}
         />
-        {isOptionsOne[1] && (
+      ) : (
+        <div className="location-options">
           <Select
-            options={option2}
             className="select-mode-option"
-            value={value2}
-            onChange={(target) => {
-              setIdOption({ ...idOption, id2: target.id });
-              setValueOptOne({ ...valueOptOne, value2: target });
-            }}
+            isMulti
+            // options={}
+            // className="basic-multi-select"
+            classNamePrefix="select"
           />
-        )}
-        <AddIcon className="add-icon" onClick={handleAddOptionsOne} />
-      </div>
+        </div>
+      )}
 
-      <Button variant="contained" color="success">
+      <Button variant="contained" color="success" onClick={showPopuTable}>
         Xem dữ liệu
       </Button>
+      {!isHiddenData && isLoading && (
+        <div className="circular-progress">
+          <CircularProgress />
+        </div>
+      )}
+      {!isHiddenData && !isLoading && (
+        <div className="popu-table">
+          <DataGrid
+            rows={PopuRows}
+            columns={columns}
+            // pageSize={users.length}
+            rowsPerPageOptions={[20]}
+            // checkboxSelection
+            disableSelectionOnClick
+            autoHeight
+            density="comfortable"
+            // onRowClick={(param, event) => {
+
+            // }}
+          />
+        </div>
+      )}
     </div>
   );
 };

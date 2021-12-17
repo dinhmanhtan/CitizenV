@@ -8,9 +8,16 @@ export const CitizenContext = createContext();
 const CitizenContextProvider = ({ children }) => {
   const [citizenState, citizenDispatch] = useReducer(citizenReducer, {
     popList: [], // danh sách dân số
+    isLoading: true,
   });
 
+  const { popList } = { citizenState };
+
   const getAllPopulation = async (idAddress) => {
+    citizenDispatch({
+      type: "SET_IS_LOADING",
+      payload: { isLoading: true },
+    });
     async function fetchData() {
       const data = await fetch(`${apiURL}/citizen/${idAddress}/population`, {
         headers: {
@@ -28,7 +35,7 @@ const CitizenContextProvider = ({ children }) => {
         if (data.success) {
           citizenDispatch({
             type: "GET_ALL_POPULATION",
-            payload: data.data,
+            payload: { popList: data.data, isLoading: false },
           });
         }
       })
@@ -46,11 +53,11 @@ const CitizenContextProvider = ({ children }) => {
     }
   };
 
-
   const citizenContextData = {
     citizenState,
     getAllPopulation,
     getInforSubAccount,
+    citizenDispatch,
   };
   return (
     <CitizenContext.Provider value={citizenContextData}>

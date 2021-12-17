@@ -12,7 +12,7 @@ import ProtectedRoute from "./components/routing/ProtectedRoute";
 import AccContextProvider from "./contexts/accContext";
 import CitizenContextProvider from "./contexts/citizenContext";
 import Population from "./components/pages/population/Population";
-import Individual from "./components/pages/population/Individual";
+import Individual from "./components/pages/population/individual/Individual";
 import ContainerAccount from "./components/pages/accounts/ContainerAccount";
 import PopulationDeclaration from "./components/pages/populationDeclaration/PopulationDeclaration";
 import NotFound from "./components/pages/NotFound404/NotFound";

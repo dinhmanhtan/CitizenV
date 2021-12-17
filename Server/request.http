@@ -3,7 +3,7 @@ POST http://localhost:5555/api/auth/login
 content-type: application/json
 
 {
-    "id": "01",
+    "id": "00",
     "password": "123456"
 }
 
@@ -42,3 +42,7 @@ content-type: application/json
 {
     "password": "123"
 }
+
+###
+GET http://localhost:5555/api/citizen/0101/population
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiIwMCIsInJvbGUiOjAsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTYzOTczNDk1OCwiZXhwIjoxNjM5NzQyMTU4fQ.39f_HKVJLMCMOaDkpEpAwDE2rhWIUhnkt8mqeUWMDyo
