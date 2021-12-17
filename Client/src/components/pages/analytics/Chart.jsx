@@ -1,212 +1,142 @@
 import "./chart.css";
-import React from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from "recharts";
+import React, { useState, useContext, useEffect } from "react";
+import { CitizenContext } from "../../../contexts/citizenContext";
+import { AuthContext } from "../../../contexts/authContext";
 
-// import { FaCaretDown } from "react-icons/fa";
-import { useState, useEffect, useReducer } from "react";
-import { HuyenXX } from "./data";
 
-import CustomSelect from "./CustomSelect/CustomSelect";
-import { Grid } from "@material-ui/core";
-
-const Options = [
-  { id: 0, value: "All", label: "Phân Tích Chung" },
-  { id: 1, value: "SoLuong", label: "Theo Số Lượng Dân Số" },
-  { id: 2, value: "Tuoi", label: "Theo Độ Tuổi" },
-  { id: 3, value: "GoiTinh", label: "Theo Giới Tính" },
-];
-
-const sdo = HuyenXX.map((Xa) => {
-  return { id: Xa.id, value: Xa.name, label: Xa.name };
-});
-
-const firstOptions = [
-  { id: 0, value: "Toàn Huyện", label: "Toàn Huyện" },
-  ...sdo,
-];
-
-const defaultState = {
-  firstOption: firstOptions[0],
-  secondOption: {},
-  thirdOption: {},
-  fourthOption: {},
-  hidden2: true,
-  hidden3: true,
-  hidden4: true,
-};
+function getAge( age ) {
+  if (age < 20) {
+    return "0-20";
+  }
+  else if (age < 40) {
+    return "20-40";
+  }
+  else if (age < 60) {
+    return "40-60";
+  }
+  else {
+    return "hon60";
+  }
+}
 
 function Chart() {
-  const [Option, setOption] = useState(Options[0]);
-  const [firstOption, setFirstOption] = useState(firstOptions[0]);
+  const { citizenState, getAllPopulation } = useContext(CitizenContext);
+  const { authState } =  useContext(AuthContext);
 
-  const [secondOptions, setSecondOptions] = useState([]);
-  const [thirdOptions, setThirdOptions] = useState([]);
-  const [fourthOptions, setFourthOptions] = useState([]);
-  const [showChart, setShowChart] = useState(false);
-  const [data, setData] = useState([
-    { name: "Xã A", sl: 100 },
-    { name: "Xã B", sl: 154 },
-    { name: "Xã C", sl: 207 },
-    { name: "Xã D", sl: 122 },
-    { name: "Xã E", sl: 341 },
-    { name: "Xã F", sl: 178 },
-  ]);
+  const popList = citizenState.popList;
+  const [options, setOptions] = useState({
+    option : 'all',
+    properties: 'all'
+  })
 
-  const MaxOfOptions = 2;
+  // console.log(authState);
 
-  const reducer = (state, action) => {
-    if (action.TYPE === "OPTION 1") {
-      const op1 = HuyenXX.filter((XA) => XA.id === action.payload.id); // Lấy dữ liệu option1 được chọn
+  const [isAnalytics, setIsAnalytics] = useState(false);
 
-      // Lấy dữ liệu con , do filter trả về mảng -> index 0
-      const sub = op1[0].sub;
-      var temp = [{ id: 0, value: "None", label: "None" }];
-      const x = sub.map((obj) => {
-        return { id: obj.id, value: obj.name, label: obj.name }; // Tạo ra object cho option mới
-      });
-      temp = [...temp, ...x];
+  const [data, setData] = useState({});
+  const [dataAge, setDataAge] = useState({});
 
-      // set dữ liệu cho option 2
+  // console.log(data)
+  // console.log(dataAge)
+  
+  const handleSubmit = () => {
+    // console.log(options)  
+    // console.log(popList)
+    // console.log(dataAge)
+    setIsAnalytics(true);
 
-      if (MaxOfOptions > 1) {
-        setSecondOptions(temp);
-        console.log(temp);
+    
+    const newData = {}
+    let dataTest = [];
+
+    const newDataAge = {
+      '0-20' : 0,
+      '20-40' : 0,
+      '40-60' : 0,
+      'hon60' : 0,
+    };
+
+    for (var i of popList) {
+      console.log(i.sex)
+      if (!newData[i.idAddress]) {
+        newData[i.idAddress] = {
+          soluong: 0,
+          nam: 0,
+          nữ: 0,
+        }
       }
+      newData[i.idAddress].soluong++;
+      newData[i.idAddress][i.sex]++;
 
-      return { ...state, hidden2: false, firstOption: action.payload };
+      const DOB = new Date(i.DOB);
+      const currentYear = new Date();
+      const age = currentYear.getFullYear() - DOB.getFullYear();
+      // console.log(age);
+      const doTuoi = getAge(age);
+      newDataAge[doTuoi]++;
     }
+    console.log(newDataAge);
 
-    if (action.TYPE === "OPTION 2") {
+    // xử lý dữ liệu theo dân số từng vùng, giới tính
+    for (var i in newData) {
+      dataTest = [...dataTest, {
+        address : i,
+        ...newData[i],
+      }]
     }
+    setData(dataTest);
 
-    return state;
-  };
+    // xử lý dữ liệu theo tuổi
+    setDataAge(newDataAge)
 
-  const [state, dispatch] = useReducer(reducer, defaultState);
+  }
+  
 
-  const choseOption = (target) => {
-    setOption(target);
-  };
-
-  const choseLocationOptions = (target) => {
-    if (target.id !== 0) {
-      if (target.id.toString().length === 2 && MaxOfOptions >= 1)
-        dispatch({ TYPE: "OPTION 1", payload: target });
-
-      if (target.id.toString().length === 4 && MaxOfOptions >= 2)
-        dispatch({ TYPE: "OPTION 2", payload: target });
-
-      if (target.id.toString().length === 6 && MaxOfOptions >= 3)
-        dispatch({ TYPE: "OPTION 3", payload: target });
-
-      if (target.id.toString().length === 8 && MaxOfOptions >= 4)
-        dispatch({ TYPE: "OPTION 3", payload: target });
-    }
-  };
-
-  useEffect(() => {}, []);
-
-  // const SL_DS = [{name:}]
-
-  const handleClickPT = () => {
-    if (Option.id === 0) {
-      if (firstOption.id === 0) {
-        const name_arr = HuyenXX.map((obj) => obj.name);
-        // console.log(name_arr);
-
-        setShowChart(true);
-      }
-    }
-  };
+  useEffect(() => {
+    getAllPopulation(authState.account.id);
+  }, [])
 
   return (
     <div className="analytic">
-      <h1> Phân Tích Dữ Liệu </h1>
+      <select name="option" id="" onChange={(e) => setOptions({...options, [e.target.name] : e.target.value})} value={options.option}>
+        <option value="all">Phân tích chung</option>
+        <option value="Location">Phân tích theo vùng</option>
+      </select>
 
-      <CustomSelect
-        options={Options}
-        style={{ width: "250px", margin: "1.5rem" }}
-        onChange={choseOption}
-        defaultValue={Options[0]}
-      />
+      <select name="properties" id="" onChange={(e) => setOptions({...options, [e.target.name] : e.target.value})} value={options.properties}>
+        <option value="all">Phân tích chung</option>
+        <option value="population">Theo lượng dân số</option>
+        <option value="sex">Theo giới tính</option>
+        <option value="age">theo độ tuổi</option>
+      </select>
 
-      <div className="container-select">
-        <CustomSelect
-          options={firstOptions}
-          style={{ width: "250px", margin: "1.5rem" }}
-          onChange={choseLocationOptions}
-          defaultValue={firstOptions[0]}
-        />
+      <button onClick={handleSubmit}>Phân tích</button>
 
-        {!state.hidden2 && (
-          <CustomSelect
-            options={secondOptions}
-            style={{ width: "250px", margin: "1.5rem" }}
-            onChange={choseLocationOptions}
-            defaultValue={secondOptions[0]}
-          />
-        )}
-
-        {!state.hidden2 && !state.hidden3 && (
-          <CustomSelect
-            options={thirdOptions}
-            style={{ width: "250px", margin: "1.5rem" }}
-            onChange={choseLocationOptions}
-            // defaultValue={secondOptions[0]}
-          />
-        )}
-        {!state.hidden2 && !state.hidden3 && !state.hidden4 && (
-          <CustomSelect
-            options={fourthOptions}
-            style={{ width: "250px", margin: "1.5rem" }}
-            onChange={choseLocationOptions}
-            // defaultValue={secondOptions[0]}
-          />
-        )}
-      </div>
-
-      <button className="btnPT" onClick={handleClickPT}>
-        Phân Tích
-      </button>
-
-      {showChart && (
-        <Grid container>
-          <Grid item xs={12} md={10} lg={8}>
-            <BarChart
-              className="bar-chart"
-              width={600}
-              height={400}
-              data={data}
-              margin={{
-                top: 5,
-                right: 15,
-                left: 15,
-                bottom: 55,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="sl" fill="#8884d8" />
-            </BarChart>
-          </Grid>
-          <Grid item xs={12} md={2} lg={4}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora,
-            laudantium ducimus. Saepe, animi explicabo unde quae necessitatibus
-            vitae adipisci ipsam inventore, assumenda quasi qui. Explicabo nemo
-            eius adipisci necessitatibus id!
-          </Grid>
-        </Grid>
+      { isAnalytics && (
+        <>
+          <h2>Phân tích chung</h2>
+          <ul>
+            {data.map(dt => (
+              <li key={dt.address}>
+                <p>Địa chỉ: {dt.address}</p>
+                <p>số lượng : {dt.soluong}</p>
+                <p>nam : {dt.nam}</p>
+                <p>nữ : {dt.nữ}</p>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+      { isAnalytics && (
+        <>
+          <h2>Phân tích theo tuổi</h2>
+          <ul>
+            <li>0-20 : {dataAge['0-20']} </li>
+            <li>20-40 : {dataAge['20-40']}</li>
+            <li>40-60 : {dataAge['40-60']}</li>
+            <li>Hơn 60 : {dataAge['hon60']}</li>
+          </ul>
+        </>
       )}
     </div>
   );

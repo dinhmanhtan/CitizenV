@@ -46,6 +46,7 @@ const CitizenContextProvider = ({ children }) => {
     }
   };
 
+
   const citizenContextData = {
     citizenState,
     getAllPopulation,
