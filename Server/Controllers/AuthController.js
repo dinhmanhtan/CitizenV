@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const Auth = require("../Models/Auth");
+const Notifications = require("../Models/Notification")
 const jwt = require("jsonwebtoken");
 
 class AuthController {
@@ -280,18 +281,22 @@ class AuthController {
     try {
       if (req.body.state === false) {
         if (req.authId === "00") {
-          await Auth.updateMany({}, { state: false, dateTime: Date.now() });
+          await Auth.updateMany({
+            id: {
+              $regex: `[^00]`,
+            }
+          }, { state: false, deadTime: Date.now() });
         } else {
           await Auth.updateMany(
             {
               id: {
-                $regex: `^${req.authId}`,
+                $regex: `^${req.authId}[0-9][0-9]`,
               },
             },
-            { state: false, dateTime: Date.now() }
+            { state: false, deadTime: Date.now() }
           );
         }
-      } else {
+      } else {    // state = true
         console.log(req.requestTime);
         await Auth.updateOne(
           {
@@ -299,8 +304,17 @@ class AuthController {
               $regex: `^${req.authId}[0-9]`,
             },
           },
-          { state: req.body.state, deadTime: req.requestTime }
+          {state: req.body.state, deadTime: req.requestTime }
         );
+
+        const notify = new Notifications({
+          type: 1,
+          idAddress : req.authId,
+          content: 'Mở quyền truy cập',
+          date : req.requestTime,
+        })
+
+        await notify.save();
       }
 
       res.status(200).json({
@@ -311,16 +325,29 @@ class AuthController {
     }
   }
 
-  changeProgress(req, res, next) {
-    Auth.updateOne({ id: req.authId }, { progress: req.body.progress })
-      .then(() => {
-        return res.status(200).json({
-          success: true,
-        });
+  // PATCH api/auth/changeProgress
+  async changeProgress(req, res, next) {
+    try {
+      await Auth.updateOne({ id: req.authId }, { progress: req.body.progress })
+
+      const content = req.body.progress === true ? 'Thành công' : 'Thất bại';
+
+      const notify = new Notifications({
+        type: 2,
+        idAddress : req.authId,
+        content: content,
+        date : Date.now(),
       })
-      .catch((err) => {
-        next(err);
-      });
+
+      await notify.save();
+
+      res.status(200).json({
+        success: true,
+      })
+
+    } catch (err) {
+      return next(err);
+    }
   }
 }
 

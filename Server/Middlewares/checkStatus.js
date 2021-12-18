@@ -6,25 +6,28 @@ module.exports = async function (req, res, next) {
       return next();
     }
 
-    let parentId = "";
+    // let parentId = "";
     let isCheck = true;
 
-    const adminAuth = await Auth.findOne({ id: "00" });
-    if (adminAuth.state === false) {
-      const err = new Error("You are not allowed to access");
-      err.statusCode = 403;
-      return next(err);
+    if (req.state === false) {
+      isCheck = false;
     }
+    // const adminAuth = await Auth.findOne({ id: "00" });
+    // if (adminAuth.state === false) {
+    //   const err = new Error("You are not allowed to access");
+    //   err.statusCode = 403;
+    //   return next(err);
+    // }
 
-    for (var i = 0; i < req.role - 1; i++) {
-      parentId += req.authId[2 * i] + req.authId[2 * i + 1];
-      console.log(parentId);
-      const parent = await Auth.findOne({ id: parentId });
-      if (parent.state === false) {
-        isCheck = false;
-        break;
-      }
-    }
+    // for (var i = 0; i < req.role - 1; i++) {
+    //   parentId += req.authId[2 * i] + req.authId[2 * i + 1];
+    //   console.log(parentId);
+    //   const parent = await Auth.findOne({ id: parentId });
+    //   if (parent.state === false) {
+    //     isCheck = false;
+    //     break;
+    //   }
+    // }
 
     if (isCheck === false) {
       const err = new Error("You are not allowed to access");

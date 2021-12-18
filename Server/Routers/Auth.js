@@ -18,7 +18,7 @@ router.patch(
   verifyToken,
   AuthController.changeSubPassword
 );
-router.post("/changeProgress", verifyToken, AuthController.changeProgress);
+router.patch("/changeProgress", verifyToken, AuthController.changeProgress);
 router.post("/login", AuthController.login);
 router.get("/:id/getAllSubAccounts", verifyToken, AuthController.getAccounts);
 router.post("/register", verifyToken, AuthController.register);
