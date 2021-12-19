@@ -56,7 +56,8 @@ const PopulationDeclaration = () => {
         if (response.message === "success") {
           navigate("/population");
         } else {
-          alert(response.message);
+          // alert(response.message);
+          console.log(response);
         }
       })
       .catch((err) => {

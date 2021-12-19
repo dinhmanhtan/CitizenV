@@ -5,6 +5,14 @@
   margin: 0;
 }
 
+.select-mode-container {
+  display: flex;
+}
+
+.select-box {
+  margin-left: 30px;
+}
+
 .select-mode-option {
   width: 200px;
   margin: 30px;
@@ -13,6 +21,7 @@
 .location-options {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .add-icon {
@@ -56,4 +65,18 @@
   width: 200px;
   margin: auto;
   margin-top: 150px;
+}
+
+/* -------------------- */
+
+.select-mode-option-many {
+  margin: 30px;
+  min-width: 200px;
+  max-width: 700px;
+}
+
+@media screen and (max-width: 700px) {
+  .select-mode-container {
+    display: block;
+  }
 }

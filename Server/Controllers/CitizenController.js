@@ -67,6 +67,7 @@ class citizenController {
   // POST api/citizen/addPerson
   async addPerson(req, res, next) {
     const person = new Citizen(req.body);
+
     try {
       const newPerson = await person.save();
       res.status(200).json({

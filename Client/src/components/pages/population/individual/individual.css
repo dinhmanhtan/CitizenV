@@ -1,0 +1,48 @@
+.wrapper {
+  width: 90%;
+  background: #fff;
+  padding: 30px;
+  margin: auto;
+  margin-top: 30px;
+  position: relative;
+  padding-right: 0;
+}
+
+.wrapper .title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 20px 0 60px 0;
+  color: black;
+  text-transform: uppercase;
+}
+
+.wrapper .avatar {
+  padding: 15px;
+  justify-content: center;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  position: absolute;
+  top: 30px;
+  right: 50px;
+}
+
+.wrapper .form {
+  width: 100%;
+}
+
+.wrapper .form .specific-info {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.wrapper .form .specific-info label {
+  width: 150px;
+  color: #757575;
+  margin-right: 15px;
+  font-size: 14px;
+}
+
+.wrapper .form .specific-info span {
+  width: 300px;
+}
