@@ -146,6 +146,12 @@ const Population = () => {
     if (ID_MODE_MANY !== null) setAlert(false);
   }, [ID_MODE_MANY]);
 
+  //
+
+  const setValueModeMany = (a) => {
+    return a;
+  };
+
   return (
     <div className="popu-container">
       <h1> Dữ liệu dân số</h1>
@@ -201,6 +207,7 @@ const Population = () => {
           ID_Select_Box={iDSelectBox}
           ID_MODE_MANY={ID_MODE_MANY}
           setID_MODE_MANY={setID_MODE_MANY}
+          setValueModeMany={setValueModeMany}
         />
       )}
       {ID_MODE === 1 && alert && (

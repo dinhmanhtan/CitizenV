@@ -6,7 +6,13 @@ import Select from "react-select";
 import "../population.css";
 
 const SelectModeMany = (props) => {
-  const { idAddress, ID_Select_Box, ID_MODE_MANY, setID_MODE_MANY } = props;
+  const {
+    idAddress,
+    ID_Select_Box,
+    ID_MODE_MANY,
+    setID_MODE_MANY,
+    setValueModeMany,
+  } = props;
 
   const { getInforSubAccount } = useContext(CitizenContext);
 
@@ -171,10 +177,22 @@ const SelectModeMany = (props) => {
   // };
 
   useEffect(() => {
-    if (ID_Select_Box === 0) setID_MODE_MANY(id0);
-    if (ID_Select_Box === 1) setID_MODE_MANY(id1);
-    if (ID_Select_Box === 2) setID_MODE_MANY(id2);
-    if (ID_Select_Box === 3) setID_MODE_MANY(id3);
+    if (ID_Select_Box === 0) {
+      setID_MODE_MANY(id0);
+      setValueModeMany(value0);
+    }
+    if (ID_Select_Box === 1) {
+      setID_MODE_MANY(id1);
+      setValueModeMany(value1);
+    }
+    if (ID_Select_Box === 2) {
+      setID_MODE_MANY(id2);
+      setValueModeMany(value2);
+    }
+    if (ID_Select_Box === 3) {
+      setID_MODE_MANY(id3);
+      setValueModeMany(value3);
+    }
   }, [idOption]);
 
   return (

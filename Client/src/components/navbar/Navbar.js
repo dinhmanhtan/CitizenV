@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { AccContext } from "../../contexts/accContext";
 import NoteAltIcon from "@mui/icons-material/NoteAlt";
 import NotifiList from "./NotifiList";
-import { apiURL, LOCAL_STORAGE_TOKEN_NAME} from "../../utils/constant"
+import { apiURL, LOCAL_STORAGE_TOKEN_NAME } from "../../utils/constant";
 import socketIOClient from "socket.io-client";
 
 function Navbar(props) {
@@ -28,6 +28,7 @@ function Navbar(props) {
 
   const [dataOne, setDataOne] = useState();
   const [dataTwo, setDataTwo] = useState();
+<<<<<<< HEAD
   const [id1, setId1] = useState();
   const [noti , setNoti] = useState();
   const [data, setData] = useState([]);
@@ -36,6 +37,15 @@ function Navbar(props) {
 
   console.log(id1);
   console.log(noti, '123');
+=======
+  const [id, setId] = useState();
+  const [noti, setNoti] = useState();
+
+  const socketRef = useRef();
+
+  console.log(id);
+  console.log(noti, "123");
+>>>>>>> 8a4f1ac3f4b80ed2350d4bad2ce7e448d29087ba
   console.log(isHidden);
   console.log(data)
 
@@ -55,6 +65,7 @@ function Navbar(props) {
   const open = Boolean(anchorEl);
 
   const handleClickProfile = () => {
+    setAnchorEl(null);
     navigate("/profile");
   };
   const handleClickLogOut = () => {
@@ -64,6 +75,7 @@ function Navbar(props) {
 
 
   useEffect(() => {
+<<<<<<< HEAD
     socketRef.current = socketIOClient.connect('http://localhost:5555')
 
     socketRef.current.on('getId', data => {
@@ -73,6 +85,15 @@ function Navbar(props) {
     socketRef.current.on(`getNoti${id}`, data => setData(d => [...d, data]));
 
   }, [])
+=======
+    socketRef.current = socketIOClient.connect("http://localhost:5555");
+    socketRef.current.on("getId", (data) => {
+      setId(data);
+    });
+
+    socketRef.current.on("getNoti", (data) => setNoti(data));
+  }, []);
+>>>>>>> 8a4f1ac3f4b80ed2350d4bad2ce7e448d29087ba
 
   useEffect(() => {
     async function fetchData() {
@@ -87,12 +108,12 @@ function Navbar(props) {
     }
 
     fetchData()
-    .then( data => {
-      console.log(data);
-      setDataOne(data.data);
-    })
-    .catch(err => console.error(err))
-  }, [])
+      .then((data) => {
+        console.log(data);
+        setDataOne(data.data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -107,14 +128,12 @@ function Navbar(props) {
     }
 
     fetchData()
-      .then( data => {
+      .then((data) => {
         console.log(data);
         setDataTwo(data.data);
       })
-      .catch(err => console.error(err))
-    
-  }, [])
-
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
     <>
@@ -130,35 +149,49 @@ function Navbar(props) {
               <span className="title-name">Tài khoản {name}</span>
             </div>
             <div className="topRight">
-              <div className="topbarIconContainer" >
-                <RiNotification4Fill className="icon" onClick={() => setIsHidden(data => !data)}/>
-                <span className="topIconBadge" onClick={() => setIsHidden(data => !data)}>!</span>
+              <div className="topbarIconContainer">
+                <RiNotification4Fill
+                  className="icon"
+                  onClick={() => setIsHidden((data) => !data)}
+                />
+                <span
+                  className="topIconBadge"
+                  onClick={() => setIsHidden((data) => !data)}
+                >
+                  !
+                </span>
                 {/* <Badge badgeContent={2} color="error">
                   <NotificationsIcon className="icon" />
                 </Badge> */}
-              { !isHidden && (
-                <div className="wrap-notify" onClick={(e)=> console.log(e.target)}>
-                  <div className="header-notify">
-                    <span
-                      style={ sideNoti === 1 ? {backgroundColor: '#ccc'} : {}}
-                      onClick={()=> setSideNoti(1)}
-                      >Cấp trên
-                    </span>
-                    <span
-                      style={ sideNoti === 2 ? {backgroundColor: '#ccc'} : {}}
-                      onClick={()=> setSideNoti(2)}
-                    >
-                      Cấp dưới
-                    </span>
+                {!isHidden && (
+                  <div
+                    className="wrap-notify"
+                    onClick={(e) => console.log(e.target)}
+                  >
+                    <div className="header-notify">
+                      <span
+                        style={
+                          sideNoti === 1 ? { backgroundColor: "#ccc" } : {}
+                        }
+                        onClick={() => setSideNoti(1)}
+                      >
+                        Cấp trên
+                      </span>
+                      <span
+                        style={
+                          sideNoti === 2 ? { backgroundColor: "#ccc" } : {}
+                        }
+                        onClick={() => setSideNoti(2)}
+                      >
+                        Cấp dưới
+                      </span>
+                    </div>
+                    {sideNoti === 1 ? (
+                      <NotifiList datas={dataOne} />
+                    ) : (
+                      <NotifiList datas={dataTwo} />
+                    )}
                   </div>
-                  { sideNoti === 1 ? (
-                    <NotifiList datas={dataOne}/>
-                  ) : 
-                  (
-                    <NotifiList datas={dataTwo}/>
-                  )}
-                  
-                </div>
                 )}
               </div>
 
@@ -232,7 +265,7 @@ function Navbar(props) {
                 <li key={index} className={item.cName}>
                   <Link to={item.path} className="row-nav">
                     {item.icon}
-                    <span>{item.title}</span>
+                    <span className="title-span">{item.title}</span>
                   </Link>
                 </li>
               );
@@ -241,7 +274,7 @@ function Navbar(props) {
               <li className="nav-text">
                 <Link to="/declaration" className="row-nav">
                   <NoteAltIcon />
-                  <span>Declaration</span>
+                  <span className="title-span">Declaration</span>
                 </Link>
               </li>
             )}
@@ -249,7 +282,7 @@ function Navbar(props) {
             <li className="nav-text">
               <div className="row-nav" onClick={logOut}>
                 <ExitToAppIcon />
-                <span>Log Out</span>
+                <span className="title-span">Log Out</span>
               </div>
             </li>
           </ul>
