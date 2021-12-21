@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import { Link } from "react-router-dom";
@@ -17,9 +17,25 @@ import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
 import { AccContext } from "../../contexts/accContext";
 import NoteAltIcon from "@mui/icons-material/NoteAlt";
+import NotifiList from "./NotifiList";
+import { apiURL, LOCAL_STORAGE_TOKEN_NAME} from "../../utils/constant"
+import socketIOClient from "socket.io-client";
 
 function Navbar(props) {
   const [sidebar, setSidebar] = useState(false);
+  const [isHidden, setIsHidden] = useState(true);
+  const [sideNoti, setSideNoti] = useState(1);
+
+  const [dataOne, setDataOne] = useState();
+  const [dataTwo, setDataTwo] = useState();
+  const [id, setId] = useState();
+  const [noti , setNoti] = useState();
+
+  const socketRef = useRef();
+
+  console.log(id);
+  console.log(noti, '123');
+  console.log(isHidden);
 
   const showSidebar = () => setSidebar(!sidebar);
 
@@ -44,6 +60,58 @@ function Navbar(props) {
     logOut();
   };
 
+  useEffect(() => {
+    socketRef.current = socketIOClient.connect('http://localhost:5555')
+    socketRef.current.on('getId', data => {
+      setId(data)
+    })
+
+    socketRef.current.on('getNoti', data => setNoti(data))
+
+  }, [])
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetch(`${apiURL}/notify/typeOne`, {
+        headers: {
+          Authorization:
+            "Bearer " + localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME),
+        },
+      });
+
+      return data.json();
+    }
+
+    fetchData()
+    .then( data => {
+      console.log(data);
+      setDataOne(data.data);
+    })
+    .catch(err => console.error(err))
+  }, [])
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await fetch(`${apiURL}/notify/typeTwo`, {
+        headers: {
+          Authorization:
+            "Bearer " + localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME),
+        },
+      });
+
+      return data.json();
+    }
+
+    fetchData()
+      .then( data => {
+        console.log(data);
+        setDataTwo(data.data);
+      })
+      .catch(err => console.error(err))
+    
+  }, [])
+
+
   return (
     <>
       <IconContext.Provider value={{ color: "#fff" }}>
@@ -57,12 +125,36 @@ function Navbar(props) {
               <span className="logo">CitizenV</span>
             </div>
             <div className="topRight">
-              <div className="topbarIconContainer">
-                <RiNotification4Fill className="icon" />
-                <span className="topIconBadge">2</span>
+              <div className="topbarIconContainer" >
+                <RiNotification4Fill className="icon" onClick={() => setIsHidden(data => !data)}/>
+                <span className="topIconBadge" onClick={() => setIsHidden(data => !data)}>!</span>
                 {/* <Badge badgeContent={2} color="error">
                   <NotificationsIcon className="icon" />
                 </Badge> */}
+              { !isHidden && (
+                <div className="wrap-notify" onClick={(e)=> console.log(e.target)}>
+                  <div className="header-notify">
+                    <span
+                      style={ sideNoti === 1 ? {backgroundColor: '#ccc'} : {}}
+                      onClick={()=> setSideNoti(1)}
+                      >Cấp trên
+                    </span>
+                    <span
+                      style={ sideNoti === 2 ? {backgroundColor: '#ccc'} : {}}
+                      onClick={()=> setSideNoti(2)}
+                    >
+                      Cấp dưới
+                    </span>
+                  </div>
+                  { sideNoti === 1 ? (
+                    <NotifiList datas={dataOne}/>
+                  ) : 
+                  (
+                    <NotifiList datas={dataTwo}/>
+                  )}
+                  
+                </div>
+                )}
               </div>
 
               <div className="topbarIconContainer">

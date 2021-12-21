@@ -25,6 +25,7 @@ class AuthController {
           .status(400)
           .json({ success: false, message: "User not found" });
       }
+
       res.json({ success: true, account });
     } catch (error) {
       console.log(error);
@@ -279,6 +280,8 @@ class AuthController {
   // PATCH api/auth/changeStatus
   async changeStatus(req, res, next) {
     try {
+      let notiSocket;
+
       if (req.body.state === false) {
         if (req.authId === "00") {
           await Auth.updateMany({
@@ -296,12 +299,22 @@ class AuthController {
             { state: false, deadTime: Date.now() }
           );
         }
+
+        const notify = new Notifications({
+          type: 1,
+          name: req.name,
+          idAddress : req.authId,
+          content: 'Tắt quyền khai báo',
+          date : Date.now(),
+        })
+
+        notiSocket = await notify.save();
       } else {    // state = true
         console.log(req.requestTime);
         await Auth.updateOne(
           {
             id: {
-              $regex: `^${req.authId}[0-9]`,
+              $regex: `^${req.authId}[0-9][0-9]$`,
             },
           },
           {state: req.body.state, deadTime: req.requestTime }
@@ -309,13 +322,30 @@ class AuthController {
 
         const notify = new Notifications({
           type: 1,
+          name: req.name,
           idAddress : req.authId,
-          content: 'Mở quyền truy cập',
+          content: 'Mở quyền khai báo',
           date : req.requestTime,
         })
 
-        await notify.save();
+        notiSocket = await notify.save();
       }
+
+      console.log(notiSocket);
+      req.io.on("connection", (socket) => {
+        console.log("Connect " + socket.id);
+      
+        socket.emit("getId", socket.id);
+
+        socket.on('sendDataClient', () => {
+          console.log('data');
+          req.io.emit('getNoti', notiSocket)
+        })
+      
+        socket.on('disconnect', () => {
+          console.log("Disconnect" + socket.id);
+        })
+      })
 
       res.status(200).json({
         message: "sucessfully",
@@ -328,21 +358,38 @@ class AuthController {
   // PATCH api/auth/changeProgress
   async changeProgress(req, res, next) {
     try {
+      let notiSocket;
       await Auth.updateOne({ id: req.authId }, { progress: req.body.progress })
 
       const content = req.body.progress === true ? 'Thành công' : 'Thất bại';
 
       const notify = new Notifications({
         type: 2,
+        name : req.name,
         idAddress : req.authId,
         content: content,
         date : Date.now(),
       })
 
-      await notify.save();
+      notiSocket = await notify.save();
 
       res.status(200).json({
         success: true,
+      })
+
+      req.io.on("connection", (socket) => {
+        console.log("Connect " + socket.id);
+      
+        socket.emit("getId", socket.id);
+
+        socket.on('sendDataClient', (data) => {
+          console.log(data);
+          req.io.emit('getNoti', data)
+        })
+      
+        socket.on('disconnect', () => {
+          console.log("Disconnect" + socket.id);
+        })
       })
 
     } catch (err) {
