@@ -8,6 +8,9 @@ class notificationController {
             type: 1,
             idAddress : subStr,
         })
+            .sort({
+                createdAt : -1
+            })
             .then( (data) => {
                 res.json({
                     success : true,
@@ -21,7 +24,7 @@ class notificationController {
         Notifications.find({
             type: 2,
             idAddress : {
-                $regex : `${req.authId}[0-9][0-9]$`,
+                $regex : `^${req.authId}[0-9][0-9]$`,
             }
         })
             .then( (data) => {

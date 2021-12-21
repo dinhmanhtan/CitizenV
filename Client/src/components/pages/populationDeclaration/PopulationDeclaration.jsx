@@ -1,4 +1,4 @@
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import "./popuDeclaration.css";
 import {
   apiURLCitizen,
@@ -9,8 +9,12 @@ import { AuthContext } from "../../../contexts/authContext";
 import { CitizenContext } from "../../../contexts/citizenContext";
 // import NotFound from "../NotFound404/NotFound";
 import { Navigate, useNavigate } from "react-router-dom";
+import socketIOClient from "socket.io-client";
+
+const socketIO = socketIOClient('http://localhost:5555');
 
 const PopulationDeclaration = () => {
+  
   const navigate = useNavigate();
   const {
     authState: { account },
@@ -33,6 +37,7 @@ const PopulationDeclaration = () => {
     return <Navigate to="/%2Fdeclaration%5E%25" />;
   }
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -54,6 +59,7 @@ const PopulationDeclaration = () => {
       .then((response) => {
         console.log(response);
         if (response.message === "success") {
+          socketIO.emit('sendDataClient', response);
           navigate("/population");
         } else {
           // alert(response.message);

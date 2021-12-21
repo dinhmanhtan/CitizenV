@@ -74,6 +74,21 @@ class citizenController {
         message: "success",
         data: newPerson,
       });
+
+      req.io.on("connection", (socket) => {
+        console.log("Connect " + socket.id);
+      
+        socket.emit("getId", socket.id);
+
+        socket.on('sendDataClient', (data) => {
+          console.log('data');
+          req.io.emit('getNoti', data)
+        })
+      
+        socket.on('disconnect', () => {
+          console.log("Disconnect" + socket.id);
+        })
+      })
     } catch (err) {
       return next(err);
     }
