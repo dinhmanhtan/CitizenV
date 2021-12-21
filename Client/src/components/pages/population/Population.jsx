@@ -73,9 +73,8 @@ const Population = () => {
   useEffect(() => {
     var personRows = popList.map((person) => {
       // const dob = getDOB(new Date(person.DOB));
-      const arr_dob = person.DOB.substring(0, 10).split("-");
-      const dob = arr_dob[2] + "/" + arr_dob[1] + "/" + arr_dob[0];
 
+      const dob = getDOB(person.DOB);
       const entry = new Map([
         ["id", person._id],
         [columns[0].field, person.idAddress],
@@ -141,7 +140,6 @@ const Population = () => {
 
         getPoPuById(idAddress);
       }
-      console.log(ID_MODE_MANY);
     }
   };
   useEffect(() => {

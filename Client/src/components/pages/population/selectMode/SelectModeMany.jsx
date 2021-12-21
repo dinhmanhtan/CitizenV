@@ -148,8 +148,6 @@ const SelectModeMany = (props) => {
     setIdOption({ ...idOption, id3: target.length > 0 ? arr_ID : null });
   };
 
-  console.log(id0, id1, id2, id3);
-
   // set ID_MODE_MANY
 
   // style

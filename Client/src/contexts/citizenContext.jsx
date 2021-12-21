@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createContext, useReducer } from "react";
 import citizenReducer from "../reducers/citizenReducer";
-import { LOCAL_STORAGE_TOKEN_NAME, apiURL } from "../utils/constant";
+import { LOCAL_STORAGE_TOKEN_NAME, apiURL, getDOB } from "../utils/constant";
 
 export const CitizenContext = createContext();
 
@@ -9,6 +9,7 @@ const CitizenContextProvider = ({ children }) => {
   const [citizenState, citizenDispatch] = useReducer(citizenReducer, {
     popList: [], // danh sách dân số
     isLoading: true,
+    isGetSuccess: false,
   });
 
   const { popList } = { citizenState };
@@ -16,7 +17,7 @@ const CitizenContextProvider = ({ children }) => {
   const getAllPopulation = async (idAddress) => {
     citizenDispatch({
       type: "SET_IS_LOADING",
-      payload: { isLoading: true },
+      payload: { isLoading: true, isGetSuccess: false },
     });
     async function fetchData() {
       const data = await fetch(`${apiURL}/citizen/${idAddress}/population`, {
@@ -35,11 +36,24 @@ const CitizenContextProvider = ({ children }) => {
         if (data.success) {
           citizenDispatch({
             type: "GET_ALL_POPULATION",
-            payload: { popList: data.data, isLoading: false },
+            payload: {
+              popList: data.data,
+              isLoading: false,
+              isGetSuccess: true,
+            },
           });
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        citizenDispatch({
+          type: "GET_ALL_POPULATION",
+          payload: {
+            isLoading: false,
+            isGetSuccess: false,
+          },
+        });
+      });
   };
 
   const getInforSubAccount = async (id) => {
@@ -53,11 +67,83 @@ const CitizenContextProvider = ({ children }) => {
     }
   };
 
+  const getInforPerson = (infor, setInfor, setTemptValues, personID) => {
+    async function fetchDataPerson() {
+      const data = await fetch(`${apiURL}/citizen/${personID}/infomation`, {
+        headers: {
+          Authorization:
+            "Bearer " + localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME),
+        },
+      });
+
+      return data.json();
+    }
+
+    fetchDataPerson()
+      .then((data) => {
+        console.log(data);
+        if (data.message === "success") {
+          const Infor = data.data;
+
+          setInfor({
+            ...infor,
+            name: Infor.name,
+            DOB: getDOB(Infor.DOB),
+            CCCD: Infor.CCCD,
+            sex: Infor.sex[0].toUpperCase() + Infor.sex.slice(1),
+            religion: Infor.religion,
+            academicLevel: Infor.academicLevel,
+            job: Infor.job,
+            tamTru: Infor.tamTru,
+            thuongTru: Infor.thuongTru,
+            idAddress: Infor.idAddress,
+          });
+          setTemptValues(infor);
+        }
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const updateInforPerson = (data, _id, setIsEdit) => {
+    async function createNewPerson(data) {
+      const dataResult = await fetch(
+        `${apiURL}/citizen/${_id}/changeInfoPerson`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "Bearer " + localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME),
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      return dataResult.json();
+    }
+
+    createNewPerson(data)
+      .then((response) => {
+        console.log(response);
+        if (response.message === "success") {
+          alert("success");
+          setIsEdit(false);
+        } else {
+          alert("failed");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   const citizenContextData = {
     citizenState,
     getAllPopulation,
     getInforSubAccount,
     citizenDispatch,
+    getInforPerson,
+    updateInforPerson,
   };
   return (
     <CitizenContext.Provider value={citizenContextData}>

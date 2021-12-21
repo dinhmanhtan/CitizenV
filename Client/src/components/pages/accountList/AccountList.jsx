@@ -2,7 +2,6 @@ import React from "react";
 import "./accountList.css";
 import { DataGrid } from "@mui/x-data-grid";
 import { useState, useEffect, useContext } from "react";
-import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
 import SearchBar from "../home/SearchBar";
 import { AuthContext } from "../../../contexts/authContext";
@@ -44,8 +43,8 @@ function AccountList() {
   // set up table
 
   const { authState, getAllSubAccounts } = useContext(AuthContext);
-  const { getSubAccLoading, isGetSubAcc, account } = authState;
-
+  const { getSubAccLoading, account } = authState;
+  // eslint-disable-next-line
   const { id, name, state, role } = account;
 
   // set up params for table
@@ -137,7 +136,7 @@ function AccountList() {
             <DataGrid
               rows={users}
               columns={cols}
-              // pageSize={users.length}
+              // eslint-disable-next-line
               rowsPerPageOptions={[13]}
               // checkboxSelection
               disableSelectionOnClick

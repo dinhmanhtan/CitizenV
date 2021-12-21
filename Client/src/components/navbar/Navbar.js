@@ -6,7 +6,7 @@ import { SidebarData } from "./SidebarData";
 import "./Navbar.css";
 import { IconContext } from "react-icons";
 import { RiNotification4Fill } from "react-icons/ri";
-import { IoMdSettings } from "react-icons/io";
+// import { IoMdSettings } from "react-icons/io";
 // import NotificationsIcon from "@mui/icons-material/Notifications";
 // import Badge from "@mui/material/Badge";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -26,7 +26,7 @@ function Navbar(props) {
   const {
     logOut,
     authState: {
-      account: { role },
+      account: { role, name },
     },
   } = useContext(AuthContext);
 
@@ -55,6 +55,7 @@ function Navbar(props) {
           <div className="topbarWrapper">
             <div className="topLeft">
               <span className="logo">CitizenV</span>
+              <span className="title-name">Tài khoản {name}</span>
             </div>
             <div className="topRight">
               <div className="topbarIconContainer">
@@ -117,9 +118,9 @@ function Navbar(props) {
                 </Menu>
               </div>
 
-              <div className="topbarIconContainer">
+              {/* <div className="topbarIconContainer">
                 <IoMdSettings className="icon" />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

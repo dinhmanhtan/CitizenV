@@ -16,6 +16,7 @@ import Individual from "./components/pages/population/individual/Individual";
 import ContainerAccount from "./components/pages/accounts/ContainerAccount";
 import PopulationDeclaration from "./components/pages/populationDeclaration/PopulationDeclaration";
 import NotFound from "./components/pages/NotFound404/NotFound";
+import Profile from "./components/pages/profile/Profile";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
                   <Route exact path="analytics" element={<Chart />} />
                   <Route exact path="population" element={<Population />} />
                   <Route path="population/:personID" element={<Individual />} />
+                  <Route path="profile" element={<Profile />} />
                   <Route
                     path="declaration"
                     element={<PopulationDeclaration />}

@@ -6,40 +6,10 @@
   margin: 0;
   box-sizing: border-box;
 }
-
-.bar-chart {
-  margin-top: 4rem;
-  position: absolute;
-  left: 10px;
-}
-h1 {
-  width: 100%;
-  margin-left: 2rem;
+.analytic h1 {
+  margin: 20px;
 }
 
-.rechart-suface {
-  width: 500px;
-  height: 250px;
-}
-
-/* --- Selecte Box -------- */
-
-.container-select {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.btnPT {
-  width: 150px;
-  margin-left: 1.5rem;
-  border-radius: 4px;
-  border: none;
-  background-color: rgb(59, 103, 185);
-  height: 40px;
-  font-size: 20px;
-  color: whitesmoke;
-}
-.btnPT:hover {
-  background-color: cornflowerblue;
+.analytic button {
+  margin-left: 30px;
 }

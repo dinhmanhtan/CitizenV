@@ -86,7 +86,7 @@ class citizenController {
     Citizen.updateOne({ _id: idPerson }, req.body)
       .then((data) =>
         res.status(200).json({
-          message: "Updated",
+          message: "success",
           data: data,
         })
       )

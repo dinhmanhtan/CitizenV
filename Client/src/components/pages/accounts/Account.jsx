@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState, useContext, useEffect, useRef } from "react";
 import "./account.css";
 import { CalendarToday, PermIdentity, Publish } from "@material-ui/icons";

@@ -75,7 +75,7 @@
   align-items: center;
 }
 
-span {
+.navbar .span {
   margin-left: 16px;
 }
 
@@ -94,6 +94,13 @@ span {
   font-weight: bold;
   font-size: 30px;
   color: whitesmoke;
+}
+.title-name {
+  font-size: 15px;
+  color: whitesmoke;
+  margin-left: 30px;
+  position: relative;
+  top: 14px;
 }
 
 .topRight {

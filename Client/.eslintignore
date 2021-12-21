@@ -1,0 +1,3 @@
+build/*.jsx
+src/component/*.jsx
+config/*.js
