@@ -28,6 +28,8 @@ const CustomSelect = (props) => {
     ID_MODE_MANY,
     setID_MODE_MANY,
     alert,
+    setAlert,
+    setValueModeMany,
   } = props;
 
   // Chose mode option (one - many)
@@ -104,6 +106,7 @@ const CustomSelect = (props) => {
           ID_Select_Box={iDSelectBox}
           ID_MODE_MANY={ID_MODE_MANY}
           setID_MODE_MANY={setID_MODE_MANY}
+          setValueModeMany={setValueModeMany}
         />
       )}
       {ID_MODE === 1 && alert && (

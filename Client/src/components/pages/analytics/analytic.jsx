@@ -29,7 +29,7 @@ export const analytic = (id, popList) => {
 
     filteredData = id === "00" ? popList : filteredData;
 
-    console.log(Array.isArray(id), filteredData);
+    // console.log(Array.isArray(id), filteredData);
 
     // Lấy địa chỉ id của các vùng con
 
@@ -50,51 +50,49 @@ export const analytic = (id, popList) => {
       }
       arrSubID = [...setSubID];
     } else arrSubID = id;
-    console.log(arrSubID);
+    // console.log(arrSubID);
 
     //
 
     const newData = {};
     let dataTest = [];
 
-    const newDataAge = {
-      "0-20": 0,
-      "20-40": 0,
-      "40-60": 0,
-      hon60: 0,
-    };
+    var Analytic = [];
 
-    for (var i of filteredData) {
-      // console.log(i.sex);
-      if (!newData[i.idAddress]) {
-        newData[i.idAddress] = {
-          soluong: 0,
-          nam: 0,
-          nữ: 0,
+    // MODE 1
+
+    if (!Array.isArray(id)) {
+      Analytic = arrSubID.map((subID) => {
+        var quantity = 0;
+        var male = 0;
+        var female = 0;
+        var DataAge = {
+          "0-20": 0,
+          "20-40": 0,
+          "40-60": 0,
+          hon60: 0,
         };
-      }
-      newData[i.idAddress].soluong++;
-      newData[i.idAddress][i.sex]++;
 
-      const DOB = new Date(i.DOB);
-      const currentYear = new Date();
-      const age = currentYear.getFullYear() - DOB.getFullYear();
-      // console.log(age);
-      const doTuoi = getAge(age);
-      newDataAge[doTuoi]++;
+        for (var person of filteredData) {
+          if (person.idAddress.startsWith(subID)) {
+            const { DOB, sex } = person;
+            quantity++;
+            if (sex === "nam" || sex === "Nam") male++;
+            if (sex === "nữ" || sex === "Nữ") female++;
+
+            const dob = new Date(DOB);
+            const currentYear = new Date();
+            const age = currentYear.getFullYear() - dob.getFullYear();
+            // console.log(age);
+            const doTuoi = getAge(age);
+            DataAge[doTuoi]++;
+          }
+        }
+
+        return { id: subID, quantity, male, female, DataAge };
+      });
+      // console.log(Analytic);
+      return Analytic;
     }
-
-    // // xử lý dữ liệu theo dân số từng vùng, giới tính
-    // for (var i in newData) {
-    //   dataTest = [
-    //     ...dataTest,
-    //     {
-    //       address: i,
-    //       ...newData[i],
-    //     },
-    //   ];
-    // }
-
-    // xử lý dữ liệu theo tuổi
   }
 };
