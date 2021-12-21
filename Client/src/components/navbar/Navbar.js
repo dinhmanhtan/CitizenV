@@ -28,21 +28,23 @@ function Navbar(props) {
 
   const [dataOne, setDataOne] = useState();
   const [dataTwo, setDataTwo] = useState();
-  const [id, setId] = useState();
+  const [id1, setId1] = useState();
   const [noti , setNoti] = useState();
+  const [data, setData] = useState([]);
 
   const socketRef = useRef();
 
-  console.log(id);
+  console.log(id1);
   console.log(noti, '123');
   console.log(isHidden);
+  console.log(data)
 
   const showSidebar = () => setSidebar(!sidebar);
 
   const {
     logOut,
     authState: {
-      account: { role, name },
+      account: { role, name, id },
     },
   } = useContext(AuthContext);
 
@@ -60,13 +62,15 @@ function Navbar(props) {
     logOut();
   };
 
+
   useEffect(() => {
     socketRef.current = socketIOClient.connect('http://localhost:5555')
+
     socketRef.current.on('getId', data => {
-      setId(data)
+      setId1(data)
     })
 
-    socketRef.current.on('getNoti', data => setNoti(data))
+    socketRef.current.on(`getNoti${id}`, data => setData(d => [...d, data]));
 
   }, [])
 

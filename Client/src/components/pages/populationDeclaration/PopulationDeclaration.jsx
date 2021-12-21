@@ -59,7 +59,7 @@ const PopulationDeclaration = () => {
       .then((response) => {
         console.log(response);
         if (response.message === "success") {
-          socketIO.emit('sendDataClient', response);
+          socketIO.emit('sendDataClient', {id : account.id});
           navigate("/population");
         } else {
           // alert(response.message);
