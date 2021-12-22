@@ -78,6 +78,7 @@ const Account = ({ accountID }) => {
 
   // Change Password
   const [formChangePass, setFormChangePass] = useState(false);
+  const [formChangeStatus , setFormChangeStatus] = useState(false);
 
   return (
     <div className="account">
@@ -207,7 +208,10 @@ const Account = ({ accountID }) => {
           variant="contained"
           size="large"
           startIcon={<GppGoodIcon />}
-          onClick={() => setFormChangePass(true)}
+          onClick={() => {
+            setFormChangePass(true);
+            setFormChangeStatus(false);
+          }}
         >
           Đổi Mật Khẩu
         </Button>
@@ -215,6 +219,10 @@ const Account = ({ accountID }) => {
           variant="contained"
           size="large"
           startIcon={<AssignmentIndIcon />}
+          onClick={() => {
+            setFormChangePass(false);
+            setFormChangeStatus(true);
+          }}
         >
           Mở khai báo dân số
         </Button>
@@ -226,7 +234,8 @@ const Account = ({ accountID }) => {
         </div>
       )}
 
-      <ChangeSubStatus />
+      { formChangeStatus &&  <ChangeSubStatus subId={subAccount.id} setOpen={setFormChangeStatus}/> }
+     
     </div>
   );
 };

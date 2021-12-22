@@ -8,6 +8,7 @@ const Notifications = new Schema(
     name : {type : String, require},
     idAddress : {type : String, require},
     content : {type : String, require},
+    subId : {type : String},
     date : {type : Date},
   },
   {

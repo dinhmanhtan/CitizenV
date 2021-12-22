@@ -5,6 +5,14 @@ const checkStatus = require("../Middlewares/checkStatus");
 const checkRequestTime = require("../Middlewares/checkRequestTime");
 
 router.delete("/:subId/deleteAccount", verifyToken, AuthController.destroy);
+
+router.patch(
+  "/changeStatus/:id",
+  verifyToken,
+  checkStatus,
+  checkRequestTime,
+  AuthController.changeSubStatus
+);
 router.patch(
   "/changeStatus",
   verifyToken,

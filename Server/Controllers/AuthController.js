@@ -355,6 +355,61 @@ class AuthController {
     }
   }
 
+  async changeSubStatus(req, res, next) {
+    try {
+      if (req.body.state === false) {
+        if (req.authId === "00") {
+          await Auth.updateOne({
+            id: req.params.id,
+          }, { state: false, deadTime: Date.now() });
+        } else {
+          await Auth.updateOne(
+            {
+              id: req.params.id
+            },
+            { state: false, deadTime: Date.now() }
+          );
+        }
+
+        const notify = new Notifications({
+          type: 3,
+          name: req.name,
+          idAddress : req.authId,
+          subId : req.params.id,
+          content: 'Tắt quyền khai báo',
+          date : Date.now(),
+        })
+
+        await notify.save();
+      } else {    // state = true
+        console.log(req.requestTime);
+        await Auth.updateOne(
+          {
+            id: req.params.id,
+          },
+          {state: req.body.state, deadTime: req.requestTime }
+        );
+
+        const notify = new Notifications({
+          type: 1,
+          name: req.name,
+          idAddress : req.authId,
+          subId : req.params.id,
+          content: 'Mở quyền khai báo',
+          date : req.requestTime,
+        })
+
+        await notify.save();
+      }
+
+      res.status(200).json({
+        message: "sucessfully",
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   // PATCH api/auth/changeProgress
   async changeProgress(req, res, next) {
     try {
@@ -377,20 +432,20 @@ class AuthController {
         success: true,
       })
 
-      req.io.on("connection", (socket) => {
-        console.log("Connect " + socket.id);
+      // req.io.on("connection", (socket) => {
+      //   console.log("Connect " + socket.id);
       
-        socket.emit("getId", socket.id);
+      //   socket.emit("getId", socket.id);
 
-        socket.on('sendDataClient', (data) => {
-          console.log(data);
-          req.io.emit('getNoti', data)
-        })
+      //   socket.on('sendDataClient', (data) => {
+      //     console.log(data);
+      //     req.io.emit('getNoti', data)
+      //   })
       
-        socket.on('disconnect', () => {
-          console.log("Disconnect" + socket.id);
-        })
-      })
+      //   socket.on('disconnect', () => {
+      //     console.log("Disconnect" + socket.id);
+      //   })
+      // })
 
     } catch (err) {
       return next(err);

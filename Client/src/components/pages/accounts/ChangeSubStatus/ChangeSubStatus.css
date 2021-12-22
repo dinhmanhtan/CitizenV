@@ -71,8 +71,14 @@ form input[type="radio"] {
 
 .status-date {
     width: 80%;
-    height: 26px;
+    height: 40px;
     margin: 20px 0;
+    font-size: 16px;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
 }
 
 .status-button {
