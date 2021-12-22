@@ -51,11 +51,27 @@ socketIO.on("connection", (socket) => {
 
   socket.emit("getId", socket.id);
 
-  socket.on('sendDataClient', (data) => {
-    console.log(data.id);
-    const subId = data.id.substring(0, data.id.length - 2)
-    socketIO.emit(`getNoti${subId}`, data);
+  socket.on("sendSubNoti", data => {
+    console.log(data);
+    const dt = {
+      type : 3,
+      name : data.name,
+      content : data.state ? "Mở quyền khai báo" : "Tắt quyền khai báo",
+      date : data.deadTime || Date.now(),
+      createdAt : Date.now(), 
+    }
+    socketIO.emit(`sendNoti${data.subId}`, dt)
   })
+
+  socket.on("sendAllSubNoti", data => {
+    socketIO.emit(`sendAllNoti${data.id}`, data)
+  })
+
+  // socket.on('sendDataClient', (data) => {
+  //   console.log(data.id);
+  //   const subId = data.id.substring(0, data.id.length - 2)
+  //   socketIO.emit(`getNoti${subId}`, data);
+  // })
 
   socket.on('disconnect', () => {
     console.log("Disconnect" + socket.id);

@@ -26,18 +26,16 @@ function Navbar(props) {
   const [isHidden, setIsHidden] = useState(true);
   const [sideNoti, setSideNoti] = useState(1);
 
-  const [dataOne, setDataOne] = useState();
-  const [dataTwo, setDataTwo] = useState();
+  const [dataOne, setDataOne] = useState([]);
+  const [dataTwo, setDataTwo] = useState([]);
   const [id1, setId1] = useState();
   const [noti , setNoti] = useState();
-  const [data, setData] = useState([]);
 
   const socketRef = useRef();
 
   console.log(id1);
   console.log(noti, '123');
   console.log(isHidden);
-  console.log(data)
 
   const showSidebar = () => setSidebar(!sidebar);
 
@@ -71,7 +69,7 @@ function Navbar(props) {
       setId1(data)
     })
 
-    socketRef.current.on(`getNoti${id}`, data => setData(d => [...d, data]));
+    socketRef.current.on(`sendNoti${id}`, data => setDataOne(d => [...d,data]));
 
   }, [])
 

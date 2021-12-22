@@ -2,8 +2,10 @@ import React, { useState, useContext } from 'react';
 import './ChangeSubStatus.css';
 import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "@mui/material";
-import { apiURL, LOCAL_STORAGE_TOKEN_NAME } from '../../../../utils/constant';
+import { apiURL, LOCAL_STORAGE_TOKEN_NAME, socketIO } from '../../../../utils/constant';
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../../contexts/authContext";
+
 
 function ChangeSubStatus({ subId, setOpen }) {
     const [valueStatus, setValueStatus] = useState(false);
@@ -12,6 +14,11 @@ function ChangeSubStatus({ subId, setOpen }) {
 
     const navigate = useNavigate();
 
+    const {
+        authState: { account },
+      } = useContext(AuthContext);
+
+    const { name } = account;
 
     console.log(date, valueStatus);
     console.log(subId);
@@ -43,6 +50,12 @@ function ChangeSubStatus({ subId, setOpen }) {
                     setIsError(true);
                 }else if (data.message === 'sucessfully') {
                     setOpen(false);
+                    socketIO.emit("sendSubNoti", {
+                        name : name,
+                        subId : subId,
+                        state : valueStatus,
+                        deadTime : date,
+                    });
                     navigate(`/accounts/`)
                 }
             })

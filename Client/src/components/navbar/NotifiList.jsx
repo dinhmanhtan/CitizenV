@@ -15,12 +15,12 @@ export default function NotifiList({ datas }) {
     return (
         <>
             <ul className="list-notify">
-                {datas.map( data => {
+                {datas.map( (data, index) => {
                     const time = getDOB(data.createdAt);
                     const time2 = getDOB(data.date);
-                    const isType = data.type === 1;
+                    const isType = data.type === 1 || data.type === 3;
                     return (
-                        <li key={data._id} className="item-notify">
+                        <li key={index} className="item-notify">
                             <p className="noti-address">{data.name}</p>
                             <h4 className="noti-content">{data.content}</h4>
                             { isType  && 

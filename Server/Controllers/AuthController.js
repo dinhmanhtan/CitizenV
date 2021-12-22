@@ -391,7 +391,7 @@ class AuthController {
         );
 
         const notify = new Notifications({
-          type: 1,
+          type: 3,
           name: req.name,
           idAddress : req.authId,
           subId : req.params.id,
