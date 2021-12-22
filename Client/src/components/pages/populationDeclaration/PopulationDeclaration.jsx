@@ -3,15 +3,13 @@ import "./popuDeclaration.css";
 import {
   apiURLCitizen,
   LOCAL_STORAGE_TOKEN_NAME,
+  socketIO
 } from "../../../utils/constant";
 import { AuthContext } from "../../../contexts/authContext";
 // import TextField from "@mui/material/TextField";
 import { CitizenContext } from "../../../contexts/citizenContext";
 // import NotFound from "../NotFound404/NotFound";
 import { Navigate, useNavigate } from "react-router-dom";
-import socketIOClient from "socket.io-client";
-
-const socketIO = socketIOClient('http://localhost:5555');
 
 const PopulationDeclaration = () => {
   

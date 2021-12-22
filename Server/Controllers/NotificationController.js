@@ -9,7 +9,7 @@ class notificationController {
             subId : req.authId,
         })
         .sort({
-            createdAt : -1
+            createdAt : 1
         })
 
         const typeOne =  Notifications.find({
@@ -17,11 +17,10 @@ class notificationController {
             idAddress : subStr,
         })
         .sort({
-            createdAt : -1
+            createdAt : 1
         })
 
         Promise.all([ typeOne, typeThree ])
-            
             .then(([dataOne, dataThree]) => {
                 const data = [...dataOne, ...dataThree];
                 res.json({

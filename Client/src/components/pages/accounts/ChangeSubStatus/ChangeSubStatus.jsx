@@ -26,7 +26,11 @@ function ChangeSubStatus({ subId, setOpen }) {
                     "Content-Type": "application/json",
                     Authorization:
                         "Bearer " + localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME),
-                }
+                },
+                body : JSON.stringify({
+                    state : valueStatus,
+                    deadTime : date,
+                })
             });
 
             return data.json();
@@ -35,11 +39,11 @@ function ChangeSubStatus({ subId, setOpen }) {
         changeSubStatus()
             .then( data => {
                 console.log(data);
-                if (!data.success) {
+                if (data.success === false) {
                     setIsError(true);
-                }else {
+                }else if (data.message === 'sucessfully') {
                     setOpen(false);
-                    navigate(`/accounts/${subId}`)
+                    navigate(`/accounts/`)
                 }
             })
             .catch( err => console.error(err))
