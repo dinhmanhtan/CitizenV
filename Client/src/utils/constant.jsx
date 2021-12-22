@@ -1,6 +1,6 @@
 import socketIOClient from "socket.io-client";
 
-export const socketIO = socketIOClient('http://localhost:5555');
+export const socketIO = socketIOClient("http://localhost:5555");
 export const apiURL = "http://localhost:5555/api";
 export const apiURLCitizen = "http://localhost:5555/api/citizen";
 export const LOCAL_STORAGE_TOKEN_NAME = "LOCAL_TOKEN";
@@ -15,9 +15,11 @@ export const locations = [
 
 export const getDOB = (dateTest) => {
   const date = new Date(dateTest);
-  console.log(date);
+  // console.log(date);
   const day =
-    date.getDate().toString().length === 2 ? date.getDate() : `0${date.getDate()}`;
+    date.getDate().toString().length === 2
+      ? date.getDate()
+      : `0${date.getDate()}`;
   const month =
     date.getMonth().toString().length === 2
       ? date.getMonth() + 1

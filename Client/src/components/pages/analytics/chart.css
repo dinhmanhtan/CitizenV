@@ -13,3 +13,69 @@
 .analytic button {
   margin-left: 30px;
 }
+
+/*  ----------- Chart --------------  */
+
+.container-quantity {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.quantity-chart {
+  height: 400px;
+  width: 500px;
+  padding: 40px 0 0 40px;
+  margin: 30px 0 40px 0;
+}
+
+.quantity-chart h3 {
+  margin: 0 auto 10px;
+  width: 280px;
+}
+
+.warraper-table-quan {
+  margin-top: 70px;
+}
+
+.warraper-table-quan h3 {
+  margin: 20px auto;
+  width: 250px;
+}
+
+@media screen and (max-width: 1250px) {
+  .warraper-table-quan .container-table {
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .analytic {
+    width: 100%;
+  }
+
+  .container-quantity {
+    display: block;
+  }
+  .warraper-table-quan .container-table {
+    width: 500px;
+    margin: auto;
+  }
+  .warraper-table-quan {
+    margin-top: 70px;
+    margin-bottom: 30px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .quantity-chart {
+    height: 300px;
+    width: 98%;
+    padding: 0;
+    margin: 40px 0;
+  }
+  .warraper-table-quan .container-table {
+    width: 90%;
+    margin: auto;
+  }
+}

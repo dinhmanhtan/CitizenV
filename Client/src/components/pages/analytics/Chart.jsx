@@ -8,15 +8,18 @@ import { Button } from "@mui/material";
 import {
   BarChart,
   Bar,
-  Cell,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Label,
+  PieChart,
+  Pie,
+  Sector,
+  Cell,
 } from "recharts";
+import BasicTable from "./CustomSelect/BasicTable";
+import { COLORS, renderCustomizedLabel } from "./CustomSelect/BasicTable";
 
 const Chart = () => {
   const {
@@ -42,7 +45,13 @@ const Chart = () => {
   // Click Phân tích
   const showPopuTable = () => {
     if (ID_MODE === 0) {
-      // setIsClickPT(true);
+      if (IdModeOne !== null) {
+        const ID = IdModeOne === 0 ? account.id : IdModeOne;
+        console.log(ID);
+        getInForLocations(ID);
+        //  const data = analytic(ID, popList);
+        //  setAnalyticData(data);
+      }
     } else if (ID_MODE === 1) {
       if (!ID_MODE_MANY) {
         setAlert(true);
@@ -52,29 +61,34 @@ const Chart = () => {
       }
     }
     // console.log(subLocations, analyticData);
+    // console.log(dataQuantity);
   };
 
   // Lấy dữ liệu mặc định khi tải trang
 
-  const [subLocations, setSubLocations] = useState(null);
+  // const [subLocations, setSubLocations] = useState(null);
   const [analyticData, setAnalyticData] = useState(null);
   const { isClickPT, setIsClickPT } = useState(false);
+
+  // Mode 1
   const [nameLocations, setNameLocations] = useState(null);
-  // const idAddress = account.id;
+  const [idSubLocation1, setIdSubLocation1] = useState(null);
 
   const getInForLocations = async (id) => {
     const response = await getInforSubAccount(id);
     if (response.success) {
       const ACC = id === "00" ? response.account.slice(1) : response.account;
-      setSubLocations(ACC);
-
+      // setSubLocations(ACC);
+      const arr_ID = [];
       const arr =
         ACC &&
         ACC.map((acc) => {
+          arr_ID.push(acc.id);
           return [acc.id, acc.name];
         });
       const x = Object.fromEntries(arr);
       setNameLocations(x);
+      setIdSubLocation1(arr_ID);
     }
   };
 
@@ -82,31 +96,106 @@ const Chart = () => {
     getInForLocations(account.id);
   }, []);
 
-  const [dataQuantity, setDataQuantity] = useState(null);
+  // biến lưu dữ liệu pt số lượng
+  const [dataQuantity, setDataQuantity] = useState({
+    tableQuan: null,
+    chartQuan: null,
+  });
+  const { tableQuan, chartQuan } = dataQuantity;
+
+  //biến lưu dữ liệu pt giới tính
+
+  const [dataGT, setDataGT] = useState({
+    tableGT: null,
+    chartGT: null,
+  });
+  const { tableGT, chartGT } = dataGT;
+
   useEffect(() => {
-    if (isGetSuccess) {
-      const data = analytic(account.id, popList);
+    if (ID_MODE === 0 && isGetSuccess && idSubLocation1) {
+      const ID = IdModeOne === 0 ? account.id : IdModeOne;
+      const data = analytic(ID, popList, idSubLocation1);
       setAnalyticData(data);
     }
-  }, [isGetSuccess]);
+  }, [isGetSuccess, idSubLocation1]);
 
   // Mode ONE
 
   useEffect(() => {
-    if (analyticData && nameLocations) {
+    if (ID_MODE === 0 && analyticData && nameLocations) {
       // console.log(analyticData);
-      var quanti = [];
-      for (let i = 0; i < analyticData.length; i++) {
-        quanti.push({
-          name: nameLocations[analyticData[i].id],
-          quantity: analyticData[i].quantity,
+      const perData = analyticData[1];
+      const totalData = analyticData[0];
+      var quantiChart = [];
+      var quantiTable = [];
+      var gtChart = [];
+      var gtTable = [];
+      for (let i = 0; i < perData.length; i++) {
+        quantiChart.push({
+          name: nameLocations[perData[i].id],
+          quantity: analyticData[1][i].quantity,
         });
+        quantiTable.push([
+          nameLocations[perData[i].id],
+          perData[i].quantity,
+          perData[i].percent,
+        ]);
+
+        gtTable.push([
+          nameLocations[perData[i].id],
+          perData[i].male,
+          perData[i].female,
+        ]);
       }
 
-      setDataQuantity(quanti);
-      console.log(dataQuantity);
+      gtChart.push([
+        { name: "Nam", value: totalData.totalMale },
+        { name: "Nữ", value: totalData.totalFemale },
+      ]);
+      gtChart = gtChart[0];
+
+      gtTable.push(["Tổng", totalData.totalMale, totalData.totalFemale]);
+      gtTable.push([
+        "Phần trăm",
+        totalData.percentMale,
+        totalData.percentFemale,
+      ]);
+      console.log(gtTable);
+      setDataGT({ ...dataGT, chartGT: gtChart, tableGT: gtTable });
+
+      //
+      quantiTable.push(["Tổng", totalData.totalQuantity, "100%"]);
+      setDataQuantity({
+        ...dataQuantity,
+        tableQuan: quantiTable,
+        chartQuan: quantiChart,
+      });
     }
   }, [analyticData, nameLocations]);
+
+  //// GET SIZE WINDOWS
+  const getSize = () => {
+    return {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
+  };
+  const [outerRadius, setRadius] = useState(130);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const size = getSize();
+      // console.log(size.width);
+      if (size.width > 610) {
+        setRadius(130);
+      } else {
+        setRadius(100);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  ///
 
   return (
     <div className="analytic">
@@ -125,36 +214,79 @@ const Chart = () => {
       <Button variant="contained" color="success" onClick={showPopuTable}>
         Phân tích
       </Button>
-      <div style={{ padding: "40px", width: "500px", height: "350px" }}>
-        {dataQuantity && (
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              width={500}
-              height={400}
-              data={dataQuantity}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 50,
-              }}
-              barSize={60}
-            >
-              {/* <CartesianGrid strokeDasharray="3 3" /> */}
-              <XAxis dataKey="name" fontSize={15}>
-                <Label
-                  value="Biểu đồ dân số"
-                  offset={-30}
-                  position="insideBottom"
-                  fontSize={25}
-                />
-              </XAxis>
-              <YAxis />
-              <Tooltip />
-              {/* <Legend /> */}
-              <Bar dataKey="quantity" fill="#8884d8" />
-            </BarChart>
-          </ResponsiveContainer>
+      <h2 style={{ margin: "40px 0 20px 20px" }}>Phân tích theo số lượng</h2>
+      <div className="container-quantity">
+        {chartQuan && (
+          <div className="quantity-chart">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                width={500}
+                height={400}
+                data={chartQuan}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 20,
+                }}
+                maxBarSize={60}
+              >
+                {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+
+                <Bar dataKey="quantity" fill="#8884d8" />
+              </BarChart>
+            </ResponsiveContainer>
+            <h3> Biểu đồ biểu diễn số lượng dân số </h3>
+          </div>
+        )}
+
+        {tableQuan && (
+          <div className="warraper-table-quan">
+            <BasicTable
+              headers={["Địa điểm ", "Số Lượng ", "Phần Trăm"]}
+              rows={tableQuan}
+            />
+            <h3> Bảng thể hiện số lượng dân số </h3>
+          </div>
+        )}
+      </div>
+      <h2 style={{ margin: "40px 0 20px 20px" }}>Phân tích theo giới tính</h2>
+      <div>
+        {chartGT && (
+          <div className="quantity-chart">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart width={400} height={400}>
+                <Pie
+                  data={chartGT}
+                  // cx="50%"
+                  // cy="50%"
+                  labelLine={false}
+                  label={renderCustomizedLabel}
+                  outerRadius={outerRadius}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {chartGT.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+            <h3> Biểu đồ Giới Tính </h3>
+          </div>
+        )}
+        {tableGT && (
+          <div className="warraper-table-quan">
+            <BasicTable headers={["Địa điểm ", "Nam ", "Nữ"]} rows={tableGT} />
+            <h3> Bảng thể hiện giới tính </h3>
+          </div>
         )}
       </div>
     </div>

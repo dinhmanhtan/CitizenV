@@ -10,7 +10,7 @@ function getAge(age) {
   }
 }
 
-export const analytic = (id, popList) => {
+export const analytic = (id, popList, arrSubID) => {
   // console.log(popList);
 
   if (id && popList) {
@@ -29,43 +29,26 @@ export const analytic = (id, popList) => {
 
     filteredData = id === "00" ? popList : filteredData;
 
-    // console.log(Array.isArray(id), filteredData);
-
-    // Lấy địa chỉ id của các vùng con
-
-    var arrSubID;
-    if (!Array.isArray(id)) {
-      const setSubID = new Set();
-
-      for (let i = 0; i < filteredData.length; i++) {
-        if (id === "00") {
-          const subID = filteredData[i].idAddress.toString().substring(0, 2);
-          setSubID.add(subID);
-        } else {
-          const subID = filteredData[i].idAddress
-            .toString()
-            .substring(0, id.length + 2);
-          setSubID.add(subID);
-        }
-      }
-      arrSubID = [...setSubID];
-    } else arrSubID = id;
-    // console.log(arrSubID);
-
     //
 
     const newData = {};
     let dataTest = [];
 
     var Analytic = [];
-
+    var percent;
+    const totalQuantity = filteredData.length;
+    var percentFemale = 0,
+      percentMale = 0;
     // MODE 1
 
     if (!Array.isArray(id)) {
-      Analytic = arrSubID.map((subID) => {
+      var totalMale = 0;
+      var totalFemale = 0;
+      var Analytic = arrSubID.map((subID) => {
         var quantity = 0;
         var male = 0;
         var female = 0;
+
         var DataAge = {
           "0-20": 0,
           "20-40": 0,
@@ -77,8 +60,14 @@ export const analytic = (id, popList) => {
           if (person.idAddress.startsWith(subID)) {
             const { DOB, sex } = person;
             quantity++;
-            if (sex === "nam" || sex === "Nam") male++;
-            if (sex === "nữ" || sex === "Nữ") female++;
+            if (sex === "nam" || sex === "Nam") {
+              male++;
+              totalMale++;
+            }
+            if (sex === "nữ" || sex === "Nữ") {
+              female++;
+              totalFemale++;
+            }
 
             const dob = new Date(DOB);
             const currentYear = new Date();
@@ -89,10 +78,36 @@ export const analytic = (id, popList) => {
           }
         }
 
-        return { id: subID, quantity, male, female, DataAge };
+        const p = ((1.0 * quantity) / filteredData.length) * 100;
+        percent = Math.round(p * 100) / 100 + "%";
+
+        //
+        percentMale =
+          Math.round(((1.0 * totalMale) / totalQuantity) * 100) + "%";
+        percentFemale =
+          Math.round(((1.0 * totalFemale) / totalQuantity) * 100) + "%";
+
+        return {
+          id: subID,
+          quantity,
+          male,
+          female,
+          DataAge,
+          percent,
+          totalQuantity,
+        };
       });
-      // console.log(Analytic);
-      return Analytic;
     }
+
+    const total = {
+      totalQuantity,
+      totalFemale,
+      totalMale,
+      percentMale,
+      percentFemale,
+    };
+    // console.log(total);
+
+    return [total, Analytic];
   }
 };
