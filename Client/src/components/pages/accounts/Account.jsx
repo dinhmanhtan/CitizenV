@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import GppGoodIcon from "@mui/icons-material/GppGood";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import ChangePassword from "./ChangeSubPassword/ChangeSubPassword";
+import ChangeSubStatus from "./ChangeSubStatus/ChangeSubStatus";
 const Account = ({ accountID }) => {
   const [subAccount, setSubAccount] = useState({
     id: "",
@@ -224,6 +225,8 @@ const Account = ({ accountID }) => {
           <ChangePassword open={formChangePass} setOpen={setFormChangePass} />
         </div>
       )}
+
+      <ChangeSubStatus />
     </div>
   );
 };

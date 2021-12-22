@@ -28,7 +28,6 @@ function Navbar(props) {
 
   const [dataOne, setDataOne] = useState();
   const [dataTwo, setDataTwo] = useState();
-<<<<<<< HEAD
   const [id1, setId1] = useState();
   const [noti , setNoti] = useState();
   const [data, setData] = useState([]);
@@ -37,15 +36,6 @@ function Navbar(props) {
 
   console.log(id1);
   console.log(noti, '123');
-=======
-  const [id, setId] = useState();
-  const [noti, setNoti] = useState();
-
-  const socketRef = useRef();
-
-  console.log(id);
-  console.log(noti, "123");
->>>>>>> 8a4f1ac3f4b80ed2350d4bad2ce7e448d29087ba
   console.log(isHidden);
   console.log(data)
 
@@ -75,7 +65,6 @@ function Navbar(props) {
 
 
   useEffect(() => {
-<<<<<<< HEAD
     socketRef.current = socketIOClient.connect('http://localhost:5555')
 
     socketRef.current.on('getId', data => {
@@ -85,15 +74,6 @@ function Navbar(props) {
     socketRef.current.on(`getNoti${id}`, data => setData(d => [...d, data]));
 
   }, [])
-=======
-    socketRef.current = socketIOClient.connect("http://localhost:5555");
-    socketRef.current.on("getId", (data) => {
-      setId(data);
-    });
-
-    socketRef.current.on("getNoti", (data) => setNoti(data));
-  }, []);
->>>>>>> 8a4f1ac3f4b80ed2350d4bad2ce7e448d29087ba
 
   useEffect(() => {
     async function fetchData() {
