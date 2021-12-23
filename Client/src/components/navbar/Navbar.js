@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { AccContext } from "../../contexts/accContext";
 import NoteAltIcon from "@mui/icons-material/NoteAlt";
 import NotifiList from "./NotifiList";
-import { apiURL, LOCAL_STORAGE_TOKEN_NAME } from "../../utils/constant";
+import { apiURL, LOCAL_STORAGE_TOKEN_NAME, compare } from "../../utils/constant";
 import socketIOClient from "socket.io-client";
 
 function Navbar(props) {
@@ -28,14 +28,16 @@ function Navbar(props) {
 
   const [dataOne, setDataOne] = useState([]);
   const [dataTwo, setDataTwo] = useState([]);
-  const [id1, setId1] = useState();
-  const [noti , setNoti] = useState();
 
   const socketRef = useRef();
 
-  console.log(id1);
-  console.log(noti, '123');
-  console.log(isHidden);
+  const [id1 , setId1] = useState();
+
+  // console.log(id1);
+  // console.log(noti, '123');
+  // console.log(isHidden);
+
+  console.log(dataOne.sort(compare), dataTwo.sort(compare));
 
   const showSidebar = () => setSidebar(!sidebar);
 
@@ -124,7 +126,7 @@ function Navbar(props) {
           <div className="topbarWrapper">
             <div className="topLeft">
               <span className="logo">CitizenV</span>
-              <span className="title-name">Tài khoản {name}</span>
+              <span className="title-name"> {name}</span>
             </div>
             <div className="topRight">
               <div className="topbarIconContainer">
@@ -165,9 +167,9 @@ function Navbar(props) {
                       </span>
                     </div>
                     {sideNoti === 1 ? (
-                      <NotifiList datas={dataOne} />
+                      <NotifiList datas={dataOne.sort(compare)} />
                     ) : (
-                      <NotifiList datas={dataTwo} />
+                      <NotifiList datas={dataTwo.sort(compare)} />
                     )}
                   </div>
                 )}

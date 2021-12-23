@@ -2,7 +2,6 @@ import React from 'react'
 import { getDOB } from '../../utils/constant' 
 
 export default function NotifiList({ datas }) {
-
     if (datas.length === 0) {
         return (
             <>

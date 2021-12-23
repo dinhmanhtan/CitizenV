@@ -29,6 +29,16 @@ export const getDOB = (dateTest) => {
   return day + "/" + month + "/" + year;
 };
 
+export const compare = (a, b) => {
+  const date1 = new Date(a.createdAt);
+  const date2 = new Date(b.createdAt);
+
+  if (date1.getTime() < date2.getTime()) {
+    return 1;
+  }
+  else return -1;
+}
+
 // 2001-11-06T00:00:00.000Z
 // export const getDOB = (dateStr) => {
 //   const arr_dob = dateStr.substring(0, 10).split("-");
