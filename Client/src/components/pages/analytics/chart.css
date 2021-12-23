@@ -9,6 +9,10 @@
 .analytic h1 {
   margin: 20px;
 }
+.analytic h2 {
+  margin: 40px 0 20px 20px;
+  color: rgb(3, 43, 119);
+}
 
 .analytic button {
   margin-left: 30px;
@@ -24,7 +28,7 @@
 
 .quantity-chart {
   height: 400px;
-  width: 500px;
+  width: 600px;
   padding: 40px 0 0 40px;
   margin: 30px 0 40px 0;
 }
@@ -32,6 +36,7 @@
 .quantity-chart h3 {
   margin: 0 auto 10px;
   width: 280px;
+  text-align: center;
 }
 
 .warraper-table-quan {
@@ -41,6 +46,7 @@
 .warraper-table-quan h3 {
   margin: 20px auto;
   width: 250px;
+  text-align: center;
 }
 
 @media screen and (max-width: 1250px) {

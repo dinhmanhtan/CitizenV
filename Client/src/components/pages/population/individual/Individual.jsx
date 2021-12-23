@@ -11,6 +11,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import { CitizenContext } from "../../../../contexts/citizenContext";
+import { getDOB } from "../../../../utils/constant";
 
 function Individual() {
   const { personID } = useParams();
@@ -63,9 +64,7 @@ function Individual() {
     }
 
     if (DOB) {
-      const arr_date = DOB.split("/");
-
-      setDateForm(arr_date[2] + "-" + arr_date[1] + "-" + arr_date[0]);
+      setDateForm(getDOB(DOB));
     }
   }, [isEdit, infor, DOB]);
 

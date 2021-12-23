@@ -13,6 +13,12 @@ import GppGoodIcon from "@mui/icons-material/GppGood";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import ChangePassword from "./ChangeSubPassword/ChangeSubPassword";
 import ChangeSubStatus from "./ChangeSubStatus/ChangeSubStatus";
+import DonutLargeIcon from "@mui/icons-material/DonutLarge";
+import SchoolIcon from "@mui/icons-material/School";
+import DomainIcon from "@mui/icons-material/Domain";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import EventBusyIcon from "@mui/icons-material/EventBusy";
+
 const Account = ({ accountID }) => {
   const [subAccount, setSubAccount] = useState({
     id: "",
@@ -78,7 +84,7 @@ const Account = ({ accountID }) => {
 
   // Change Password
   const [formChangePass, setFormChangePass] = useState(false);
-  const [formChangeStatus , setFormChangeStatus] = useState(false);
+  const [formChangeStatus, setFormChangeStatus] = useState(false);
 
   return (
     <div className="account">
@@ -125,7 +131,7 @@ const Account = ({ accountID }) => {
 
             <div className="accountShowInfo">
               <span className="accountShowInfoTitle">
-                <PermIdentity className="accountShowIcon" />
+                <DomainIcon className="accountShowIcon" />
                 <span> {`${locations[subAccount.role - 1]}:`} </span>
               </span>
               <span> {subAccount.name}</span>
@@ -133,7 +139,7 @@ const Account = ({ accountID }) => {
             {subAccount.role > 1 && (
               <div className="accountShowInfo">
                 <span className="accountShowInfoTitle">
-                  <PermIdentity className="accountShowIcon" />
+                  <DomainIcon className="accountShowIcon" />
                   <span>Thuộc :</span>
                 </span>
                 <span>{subAccount.address}</span>
@@ -141,7 +147,7 @@ const Account = ({ accountID }) => {
             )}
             <div className="accountShowInfo">
               <span className="accountShowInfoTitle">
-                <CalendarToday className="accountShowIcon" />
+                <SchoolIcon className="accountShowIcon" />
                 <span>Cấp bậc tài khoản :</span>
               </span>
               <span> {levels[subAccount.role]}</span>
@@ -156,6 +162,7 @@ const Account = ({ accountID }) => {
           </div>
         </div>
 
+        {/* ----------------------------------------------------------------- */}
         <div className="accountUpdate">
           <span className="accountUpdateTitle">Edit</span>
           <form className="accountUpdateForm">
@@ -194,6 +201,33 @@ const Account = ({ accountID }) => {
           </form>
         </div>
       </div>
+
+      {/* --------------------------------------------------------------------------- */}
+      <div>
+        <div className="accountShowInfo">
+          <span className="accountShowInfoTitle">
+            <EventAvailableIcon className="accountShowIcon" />
+            <span>Thời gian bắt đầu khai báo:</span>
+          </span>
+          <span>{"NaN"}</span>
+        </div>
+        <div className="accountShowInfo">
+          <span className="accountShowInfoTitle">
+            <EventBusyIcon className="accountShowIcon" />
+            <span>Thời gian kết thúc khai báo:</span>
+          </span>
+          <span>{"NaN"}</span>
+        </div>
+      </div>
+      <div className="accountShowInfo">
+        <span className="accountShowInfoTitle">
+          <DonutLargeIcon className="accountShowIcon" />
+          <span>Tiến độ khai báo:</span>
+        </span>
+        <span>{subAccount.progress ? "Hoàn thành" : "Chưa hoàn thành"}</span>
+      </div>
+
+      {/*----------------------------------------------------------------------------------------*/}
       <div className="containerButton">
         <Button
           variant="contained"
@@ -234,8 +268,9 @@ const Account = ({ accountID }) => {
         </div>
       )}
 
-      { formChangeStatus &&  <ChangeSubStatus subId={subAccount.id} setOpen={setFormChangeStatus}/> }
-     
+      {formChangeStatus && (
+        <ChangeSubStatus subId={subAccount.id} setOpen={setFormChangeStatus} />
+      )}
     </div>
   );
 };

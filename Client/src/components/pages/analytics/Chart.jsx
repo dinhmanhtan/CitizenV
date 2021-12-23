@@ -47,7 +47,7 @@ const Chart = () => {
     if (ID_MODE === 0) {
       if (IdModeOne !== null) {
         const ID = IdModeOne === 0 ? account.id : IdModeOne;
-        console.log(ID);
+        // console.log(ID);
         getInForLocations(ID);
         //  const data = analytic(ID, popList);
         //  setAnalyticData(data);
@@ -57,7 +57,12 @@ const Chart = () => {
         setAlert(true);
         setTimeout(() => setAlert(false), 4000);
       } else {
-        // setIsClickPT(true);
+        if (ID_MODE_MANY.length === 1) {
+          getInForLocations(ID_MODE_MANY[0]);
+        } else {
+          var x = analytic(ID_MODE_MANY, popList, ID_MODE_MANY);
+          setAnalyticData(x);
+        }
       }
     }
     // console.log(subLocations, analyticData);
@@ -87,8 +92,10 @@ const Chart = () => {
           return [acc.id, acc.name];
         });
       const x = Object.fromEntries(arr);
-      setNameLocations(x);
-      setIdSubLocation1(arr_ID);
+      if (ID_MODE === 0 || (ID_MODE === 1 && ID_MODE_MANY.length === 1)) {
+        setNameLocations(x);
+        setIdSubLocation1(arr_ID);
+      }
     }
   };
 
@@ -111,18 +118,39 @@ const Chart = () => {
   });
   const { tableGT, chartGT } = dataGT;
 
+  //biến lưu dữ liệu pt độ tuổi
+
+  const [dataAge, setDataAge] = useState({
+    tableAge: null,
+    chartAge: null,
+  });
+  const { tableAge, chartAge } = dataAge;
+
   useEffect(() => {
-    if (ID_MODE === 0 && isGetSuccess && idSubLocation1) {
-      const ID = IdModeOne === 0 ? account.id : IdModeOne;
+    if (
+      (ID_MODE === 0 ||
+        (ID_MODE === 1 && ID_MODE_MANY && ID_MODE_MANY.length === 1)) &&
+      isGetSuccess &&
+      idSubLocation1
+    ) {
+      var ID;
+      if (ID_MODE === 0) ID = IdModeOne === 0 ? account.id : IdModeOne;
+      else ID = ID_MODE_MANY[0];
+
       const data = analytic(ID, popList, idSubLocation1);
       setAnalyticData(data);
     }
-  }, [isGetSuccess, idSubLocation1]);
+  }, [idSubLocation1]);
 
   // Mode ONE
 
   useEffect(() => {
-    if (ID_MODE === 0 && analyticData && nameLocations) {
+    if (
+      (ID_MODE === 0 ||
+        (ID_MODE === 1 && ID_MODE_MANY && ID_MODE_MANY.length === 1)) &&
+      analyticData &&
+      nameLocations
+    ) {
       // console.log(analyticData);
       const perData = analyticData[1];
       const totalData = analyticData[0];
@@ -130,10 +158,14 @@ const Chart = () => {
       var quantiTable = [];
       var gtChart = [];
       var gtTable = [];
+      var ageChart = [];
+      var ageTable = [];
+
       for (let i = 0; i < perData.length; i++) {
+        // quantity table
         quantiChart.push({
           name: nameLocations[perData[i].id],
-          quantity: analyticData[1][i].quantity,
+          quantity: perData[i].quantity,
         });
         quantiTable.push([
           nameLocations[perData[i].id],
@@ -141,10 +173,21 @@ const Chart = () => {
           perData[i].percent,
         ]);
 
+        // GT table
         gtTable.push([
           nameLocations[perData[i].id],
           perData[i].male,
           perData[i].female,
+        ]);
+
+        // Age table
+        const DataAge = perData[i].DataAge;
+        ageTable.push([
+          nameLocations[perData[i].id],
+          DataAge["0-20"],
+          DataAge["20-40"],
+          DataAge["40-60"],
+          DataAge["> 60"],
         ]);
       }
 
@@ -160,7 +203,7 @@ const Chart = () => {
         totalData.percentMale,
         totalData.percentFemale,
       ]);
-      console.log(gtTable);
+      // console.log(gtTable);
       setDataGT({ ...dataGT, chartGT: gtChart, tableGT: gtTable });
 
       //
@@ -170,8 +213,93 @@ const Chart = () => {
         tableQuan: quantiTable,
         chartQuan: quantiChart,
       });
+
+      // Age Chart
+      const totalDataAge = totalData.totalDataAge;
+      const keyName = Object.keys(totalDataAge);
+
+      for (let i = 0; i < keyName.length; i++)
+        ageChart.push({ name: keyName[i], value: totalDataAge[keyName[i]] });
+
+      // Age Table
+      const p = totalData.percentDataAge;
+      ageTable.push([
+        "Tổng",
+        totalDataAge["0-20"],
+        totalDataAge["20-40"],
+        totalDataAge["40-60"],
+        totalDataAge["> 60"],
+      ]);
+      ageTable.push(["Phần trăm", p[0], p[1], p[2], p[3]]);
+      setDataAge({ ...dataAge, chartAge: ageChart, tableAge: ageTable });
     }
-  }, [analyticData, nameLocations]);
+  }, [analyticData]);
+
+  /// MODE 2 --------------------------------------------------------------
+
+  useEffect(() => {
+    if (
+      ID_MODE === 1 &&
+      ID_MODE_MANY &&
+      ID_MODE_MANY.length > 1 &&
+      analyticData
+    ) {
+      const arr =
+        valueModeMany &&
+        valueModeMany.map((acc) => {
+          return [acc.id, acc.label];
+        });
+      const nameFromID = Object.fromEntries(arr);
+      var quantiChart = [];
+      var quantiTable = [];
+      var gtChart = [];
+      var gtTable = [];
+      var ageChart = [];
+      var ageTable = [];
+
+      analyticData.map((data) => {
+        quantiChart.push({
+          name: nameFromID[data.id],
+          quantity: data.quantity,
+        });
+        quantiTable.push([nameFromID[data.id], data.quantity]);
+
+        gtChart.push({
+          name: nameFromID[data.id],
+          Nam: data.male,
+          Nữ: data.female,
+        });
+        gtTable.push([nameFromID[data.id], data.male, data.female]);
+
+        const DataAge = data.DataAge;
+        ageChart.push({
+          name: nameFromID[data.id],
+          "0-20": DataAge["0-20"],
+          "20-40": DataAge["20-40"],
+          "40-60": DataAge["40-60"],
+          "> 60": DataAge["> 60"],
+        });
+        ageTable.push([
+          nameFromID[data.id],
+          DataAge["0-20"],
+          DataAge["20-40"],
+          DataAge["40-60"],
+          DataAge["> 60"],
+        ]);
+      });
+
+      setDataQuantity({
+        ...dataQuantity,
+        chartQuan: quantiChart,
+        tableQuan: quantiTable,
+      });
+
+      setDataGT({ ...dataGT, chartGT: gtChart, tableGT: gtTable });
+      setDataAge({ ...dataAge, chartAge: ageChart, tableAge: ageTable });
+
+      console.log(ageChart, ageTable);
+    }
+  }, [analyticData]);
 
   //// GET SIZE WINDOWS
   const getSize = () => {
@@ -196,7 +324,7 @@ const Chart = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   ///
-
+  // console.log(valueModeMany);
   return (
     <div className="analytic">
       <CustomSelect
@@ -214,7 +342,9 @@ const Chart = () => {
       <Button variant="contained" color="success" onClick={showPopuTable}>
         Phân tích
       </Button>
-      <h2 style={{ margin: "40px 0 20px 20px" }}>Phân tích theo số lượng</h2>
+
+      {/*---------------------------------------------------------------------------------------------- */}
+      <h2>Phân tích theo số lượng</h2>
       <div className="container-quantity">
         {chartQuan && (
           <div className="quantity-chart">
@@ -229,7 +359,7 @@ const Chart = () => {
                   left: 20,
                   bottom: 20,
                 }}
-                maxBarSize={60}
+                maxBarSize={50}
               >
                 {/* <CartesianGrid strokeDasharray="3 3" /> */}
                 <XAxis dataKey="name" />
@@ -246,46 +376,153 @@ const Chart = () => {
         {tableQuan && (
           <div className="warraper-table-quan">
             <BasicTable
-              headers={["Địa điểm ", "Số Lượng ", "Phần Trăm"]}
+              headers={
+                ID_MODE === 1 && ID_MODE_MANY && ID_MODE_MANY.length > 1
+                  ? ["Địa điểm ", "Số Lượng "]
+                  : ["Địa điểm ", "Số Lượng ", "Phần Trăm"]
+              }
               rows={tableQuan}
             />
             <h3> Bảng thể hiện số lượng dân số </h3>
           </div>
         )}
       </div>
-      <h2 style={{ margin: "40px 0 20px 20px" }}>Phân tích theo giới tính</h2>
-      <div>
-        {chartGT && (
+
+      {/*---------------------------------------------------------------------------------------- */}
+      <h2>Phân tích theo giới tính</h2>
+      <div className="container-quantity">
+        {chartGT &&
+          (ID_MODE === 0 ||
+            (ID_MODE === 1 && ID_MODE_MANY && ID_MODE_MANY.length === 1)) && (
+            <div className="quantity-chart">
+              <ResponsiveContainer width="100%" height="90%">
+                <PieChart width={400} height={300}>
+                  <Pie
+                    data={chartGT}
+                    // cx="50%"
+                    // cy="50%"
+                    labelLine={false}
+                    label={renderCustomizedLabel}
+                    outerRadius={outerRadius}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {chartGT.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+              <h3> Biểu đồ Giới Tính </h3>
+            </div>
+          )}
+        {chartGT && ID_MODE === 1 && ID_MODE_MANY && ID_MODE_MANY.length > 1 && (
           <div className="quantity-chart">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart width={400} height={400}>
-                <Pie
-                  data={chartGT}
-                  // cx="50%"
-                  // cy="50%"
-                  labelLine={false}
-                  label={renderCustomizedLabel}
-                  outerRadius={outerRadius}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {chartGT.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Legend />
-              </PieChart>
+            <ResponsiveContainer width="100%" height="90%">
+              <BarChart
+                width={500}
+                height={400}
+                data={chartGT}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 20,
+                }}
+                maxBarSize={40}
+              >
+                {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend verticalAlign="top" height={36} />
+                <Bar dataKey="Nam" fill="#8884d8" />
+                <Bar dataKey="Nữ" fill="#82ca9d" />
+              </BarChart>
             </ResponsiveContainer>
             <h3> Biểu đồ Giới Tính </h3>
           </div>
         )}
+        {/*--------- ----------------------------------- */}
         {tableGT && (
           <div className="warraper-table-quan">
             <BasicTable headers={["Địa điểm ", "Nam ", "Nữ"]} rows={tableGT} />
             <h3> Bảng thể hiện giới tính </h3>
+          </div>
+        )}
+      </div>
+
+      {/*--------------------------------------------------------------------- */}
+      <h2>Phân tích theo độ tuổi</h2>
+      <div className="container-quantity">
+        {chartAge &&
+          (ID_MODE === 0 ||
+            (ID_MODE === 1 && ID_MODE_MANY && ID_MODE_MANY.length === 1)) && (
+            <div className="quantity-chart">
+              <ResponsiveContainer width="100%" height="95%">
+                <BarChart
+                  width={600}
+                  height={400}
+                  data={chartAge}
+                  margin={{
+                    top: 5,
+                    right: 0,
+                    left: 0,
+                    bottom: 20,
+                  }}
+                  maxBarSize={50}
+                >
+                  {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+
+                  <Bar dataKey="value" fill="#8884d8" />
+                </BarChart>
+              </ResponsiveContainer>
+              <h3> Biểu đồ biểu diễn độ tuổi </h3>
+            </div>
+          )}
+        {chartAge && ID_MODE === 1 && ID_MODE_MANY && ID_MODE_MANY.length > 1 && (
+          <div className="quantity-chart">
+            <ResponsiveContainer width="100%" height="90%">
+              <BarChart
+                width={800}
+                height={400}
+                data={chartAge}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 10,
+                }}
+                maxBarSize={30}
+              >
+                {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend verticalAlign="top" height={36} />
+                <Bar dataKey="0-20" fill="#8884d8" />
+                <Bar dataKey="20-40" fill="#00C49F" />
+                <Bar dataKey="40-60" fill="#FFBB28" />
+                <Bar dataKey="> 60" fill="#FF8042" />
+              </BarChart>
+            </ResponsiveContainer>
+            <h3> Biểu đồ độ tuổi </h3>
+          </div>
+        )}
+        {tableAge && (
+          <div className="warraper-table-quan">
+            <BasicTable
+              headers={["Địa điểm ", "0-20", "20-40", "40-60", "> 60"]}
+              rows={tableAge}
+            />
+            <h3> Bảng thể hiện độ tuổi </h3>
           </div>
         )}
       </div>

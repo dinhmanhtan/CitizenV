@@ -13,16 +13,17 @@ function AccountList() {
   const navigate = useNavigate();
   const { setIdSubAccount } = useContext(AccContext);
   const columns = [
-    { field: "id", headerName: "Account ID", width: 240 },
-    { field: "city", headerName: "Tỉnh/Thành phố", width: 250 },
-    { field: "district", headerName: "Quận/Huyện", width: 250 },
-    { field: "xa", headerName: "Xã/Phường", width: 250 },
-    { field: "xom", headerName: "Thôn/Xóm", width: 250 },
-    { field: "status", headerName: "Trạng Thái", width: 250 },
+    { field: "id", headerName: "ID", width: 70 },
+    { field: "city", headerName: "Tỉnh/Thành phố", width: 150 },
+    { field: "district", headerName: "Quận/Huyện", width: 150 },
+    { field: "xa", headerName: "Xã/Phường", width: 150 },
+    { field: "xom", headerName: "Thôn/Xóm", width: 150 },
+    { field: "status", headerName: "Quyền khai báo", width: 150 },
+    { field: "progress", headerName: "Tiến độ khai báo", width: 190 },
     {
       field: "action",
       headerName: " ",
-      width: 250,
+      width: 100,
       renderCell: (params) => {
         return (
           <>
@@ -54,13 +55,15 @@ function AccountList() {
   const cols = [
     columns[0],
     columns[role + 1],
-    columns[columns.length - 2],
+    columns[5],
+    columns[6],
     columns[columns.length - 1],
   ];
   const Getdata = async () => {
     try {
       const data = await getAllSubAccounts();
       if (data.success && data.account.length > 0) {
+        console.log(data.account);
         var acc =
           data.account &&
           data.account.map((account) => {
@@ -68,6 +71,7 @@ function AccountList() {
               [cols[0].field, account.id],
               [cols[1].field, account.name],
               [cols[2].field, account.state ? "Active" : "Disabled"],
+              [cols[3].field, "Chưa mở khai báo"],
             ]);
 
             const obj = Object.fromEntries(entry);
@@ -89,12 +93,12 @@ function AccountList() {
   }, []);
 
   // Style csstable
-  const [styleTable, setStyleTable] = useState({
-    marginTop: "100px",
-    // height: 66 * users.length + "px",
-    width: "1000px",
-    display: "flex",
-  });
+  // const [styleTable, setStyleTable] = useState({
+  //   marginTop: "100px",
+  //   // height: 66 * users.length + "px",
+  //   width: "1000px",
+  //   display: "flex",
+  // });
 
   // Search
 
@@ -126,13 +130,13 @@ function AccountList() {
       {isData ? (
         <div className="wrap-container">
           <div className="top-container">
-            <SearchBar search={() => search} Submit={filterSearch} />
+            {/* <SearchBar search={() => search} Submit={filterSearch} /> */}
 
             <Link to="/newAccount">
               <button className="btnCreateAccount"> New Account</button>
             </Link>
           </div>
-          <div id="datatable" style={styleTable}>
+          <div id="datatable">
             <DataGrid
               rows={users}
               columns={cols}

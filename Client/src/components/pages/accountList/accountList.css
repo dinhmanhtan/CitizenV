@@ -79,6 +79,19 @@
 }
 
 #datatable {
-  margin-left: 50%;
-  transform: translateX(-50%);
+  margin: auto;
+  margin-top: 100px;
+  width: 900px;
+}
+
+@media screen and (max-width: 950px) {
+  #datatable {
+    width: 670px;
+  }
+}
+
+@media screen and (max-width: 675px) {
+  #datatable {
+    width: 98%;
+  }
 }

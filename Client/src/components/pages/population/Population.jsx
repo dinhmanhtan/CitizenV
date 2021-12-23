@@ -16,6 +16,7 @@ import FormControl from "@mui/material/FormControl";
 // import FormLabel from "@mui/material/FormLabel";
 import { locations, getDOB } from "../../../utils/constant";
 import Alert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
 
 const ModeOptions = [
   { id: 0, value: "One", label: "Theo từng vùng" },
@@ -53,6 +54,7 @@ const columns = [
 const Population = () => {
   const search = () => {};
   const submit = () => {};
+  const navigate = useNavigate();
 
   const {
     authState: { account },
@@ -238,9 +240,9 @@ const Population = () => {
             disableSelectionOnClick
             autoHeight
             density="comfortable"
-            // onRowClick={(param, event) => {
-
-            // }}
+            onRowClick={(param, event) => {
+              navigate(`/population/${param.id}`);
+            }}
           />
         </div>
       )}
