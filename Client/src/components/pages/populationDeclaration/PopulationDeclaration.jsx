@@ -1,6 +1,7 @@
-import { useContext, useState, useRef, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import "./popuDeclaration.css";
 import {
+  apiURL,
   apiURLCitizen,
   LOCAL_STORAGE_TOKEN_NAME,
   socketIO
@@ -12,6 +13,8 @@ import { CitizenContext } from "../../../contexts/citizenContext";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const PopulationDeclaration = () => {
+
+  const [dataList, setDataList] = useState([]);
   
   const navigate = useNavigate();
   const {
@@ -22,56 +25,83 @@ const PopulationDeclaration = () => {
     name: "",
     CCCD: "",
     DOB: "",
-    idAddress: account.id,
+    idAddress: "",
     academicLevel: "",
     job: "",
     religion: "",
     sex: "",
   });
 
-  const { role } = account;
-
-  if (role !== 3 && role !== 4) {
-    return <Navigate to="/%2Fdeclaration%5E%25" />;
-  }
-
+  const { role, id, name } = account;
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    async function createNewPerson(data) {
-      const dataResult = await fetch(`${apiURLCitizen}/addPerson`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization:
-            "Bearer " + localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME),
-        },
-        body: JSON.stringify(data),
-      });
+    console.log(data);
 
-      return dataResult.json();
-    }
+    // async function createNewPerson(data) {
+    //   const dataResult = await fetch(`${apiURLCitizen}/addPerson`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization:
+    //         "Bearer " + localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME),
+    //     },
+    //     body: JSON.stringify(data),
+    //   });
 
-    createNewPerson(data)
-      .then((response) => {
-        console.log(response);
-        if (response.message === "success") {
-          socketIO.emit('sendDataClient', {id : account.id});
-          navigate("/population");
-        } else {
-          // alert(response.message);
-          console.log(response);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    //   return dataResult.json();
+    // }
+
+    // createNewPerson(data)
+    //   .then((response) => {
+    //     console.log(response);
+    //     if (response.message === "success") {
+    //       socketIO.emit('sendDataClient', {id : account.id});
+    //       navigate("/population");
+    //     } else {
+    //       // alert(response.message);
+    //       console.log(response);
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
   };
 
   const handleClose = () => {
     navigate("/population");
   };
+
+  useEffect(() => {
+    async function getDataAuth() {
+      const dataResult = await fetch(`${apiURL}/auth/${id}/getAllSubAccounts`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer " + localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME),
+        },
+      });
+
+      return dataResult.json();
+    }
+
+    getDataAuth()
+      .then((dataTest) => {
+        console.log(dataTest);
+        if (dataTest.success) { 
+          setDataList(dataTest.account);
+        }
+      })
+      .catch( err => console.error(err));
+  }, [id])
+
+
+  if (role !== 3 && role !== 4) {
+    return <Navigate to="/%2Fdeclaration%5E%25" />;
+  }
+  
 
   return (
     <div className="container-declaration">
@@ -97,11 +127,10 @@ const PopulationDeclaration = () => {
               name="DOB"
               type="date"
               required
-              value={null}
               onChange={(e) =>
                 setData({
                   ...data,
-                  [e.target.name]: e.currentTarget.valueAsDate,
+                  [e.target.name]: e.currentTarget.value,
                 })
               }
             />
@@ -122,15 +151,24 @@ const PopulationDeclaration = () => {
 
           <div className="inputBox">
             <span className="details"> Địa chỉ</span>
-            <input
-              name="idAddress"
-              type="text"
-              required
-              value={data.idAddress}
-              onChange={(e) =>
-                setData({ ...data, [e.target.name]: e.target.value })
-              }
-            />
+            {role === 4 ? (
+              <input
+                name="idAddress"
+                type="text"
+                required
+                value={id}
+                readOnly
+              />
+            ) : (
+              <select name="idAddress" id="" onChange={(e) => setData({ ...data, [e.target.name] : e.target.value})}>
+                <option value="">--- Chọn địa điểm ---</option>
+                {dataList.map( (data) => (
+                  <option key={data.id} value={data.id}>{data.name}</option>
+                ))}
+              </select>
+            )}
+              
+            
           </div>
 
           <div className="inputBox">

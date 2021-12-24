@@ -238,4 +238,9 @@
   .title-name {
     margin: 0;
   }
+
+  .wrap-notify {
+    width: 100vw;
+    right: -101px;
+  }
 }
