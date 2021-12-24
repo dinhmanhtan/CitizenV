@@ -3,18 +3,13 @@ import { HiSearch } from "react-icons/hi";
 import "./search.css";
 import { useState, useEffect } from "react";
 
-function SearchBar({ search, Submit }) {
-  const [value, setValue] = useState("");
+function SearchBar(props) {
+  const { input, setInput, setIsSearch } = props;
   const [classNameIcon, setClassNameIcon] = useState("search-icon-default");
-
-  useEffect(() => {
-    search(value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      Submit();
+      if (input && input !== "") setIsSearch(true);
     }
   };
 
@@ -25,12 +20,17 @@ function SearchBar({ search, Submit }) {
         className="input"
         type="text"
         placeholder=" "
-        value={value}
+        value={input}
         onFocus={() => setClassNameIcon("search-icon-focus")}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => setInput(e.target.value)}
       />
       <span className="label-form"> Search</span>
-      <HiSearch className={classNameIcon} onClick={() => Submit()} />
+      <HiSearch
+        className={classNameIcon}
+        onClick={() => {
+          if (input && input !== "") setIsSearch(true);
+        }}
+      />
     </div>
   );
 }

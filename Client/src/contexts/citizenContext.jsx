@@ -10,6 +10,7 @@ const CitizenContextProvider = ({ children }) => {
     popList: [], // danh sách dân số
     isLoading: true,
     isGetSuccess: false,
+    searchPopList: null,
   });
 
   const { popList } = { citizenState };
@@ -137,6 +138,45 @@ const CitizenContextProvider = ({ children }) => {
       });
   };
 
+  const searchPerson = (input) => {
+    citizenDispatch({
+      type: "SET_IS_LOADING",
+      payload: { isLoading: true, isGetSuccess: false },
+    });
+    async function search() {
+      const data = await fetch(`${apiURL}/citizen/searchPerson`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer " + localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME),
+        },
+        body: JSON.stringify(input),
+      });
+
+      return data.json();
+    }
+
+    search()
+      .then((response) => {
+        console.log(response);
+        if (response.success) {
+          citizenDispatch({
+            type: "SEARCH_PERSON",
+            payload: {
+              searchPopList: response.data,
+              isLoading: false,
+              isGetSuccess: true,
+            },
+          });
+        } else {
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   const citizenContextData = {
     citizenState,
     getAllPopulation,
@@ -144,6 +184,7 @@ const CitizenContextProvider = ({ children }) => {
     citizenDispatch,
     getInforPerson,
     updateInforPerson,
+    searchPerson,
   };
   return (
     <CitizenContext.Provider value={citizenContextData}>

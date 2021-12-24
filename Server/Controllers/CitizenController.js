@@ -77,18 +77,18 @@ class citizenController {
 
       req.io.on("connection", (socket) => {
         console.log("Connect " + socket.id);
-      
+
         socket.emit("getId", socket.id);
 
-        socket.on('sendDataClient', (data) => {
-          console.log('data');
-          req.io.emit('getNoti', data)
-        })
-      
-        socket.on('disconnect', () => {
+        socket.on("sendDataClient", (data) => {
+          console.log("data");
+          req.io.emit("getNoti", data);
+        });
+
+        socket.on("disconnect", () => {
           console.log("Disconnect" + socket.id);
-        })
-      })
+        });
+      });
     } catch (err) {
       return next(err);
     }
@@ -117,19 +117,31 @@ class citizenController {
       .catch((err) => next(err));
   }
 
-  // GET api/citizen/searchPerson
+  // POST api/citizen/searchPerson
   async searchPerson(req, res, next) {
-    const query = req.query;
+    const query = req.body;
     if (query.name) {
       try {
         const name = query.name;
-        const person = await Citizen.find({ name });
+        const people = await Citizen.find({
+          idAddress: {
+            $regex: req.authId !== "00" ? `^${req.authId}` : `^0`,
+          },
+        });
+
+        const person =
+          people &&
+          people.filter((person) =>
+            person.name.toLowerCase().includes(name.toLowerCase())
+          );
 
         if (!person) {
-          return res.status(200).json({ message: "Could not find person" });
+          return res
+            .status(200)
+            .json({ success: false, message: "Could not find person" });
         } else {
           return res.status(200).json({
-            message: "success",
+            success: true,
             data: person,
           });
         }
@@ -138,7 +150,7 @@ class citizenController {
       }
     } else {
       return res.status(500).json({
-        message: "failer",
+        message: "failed",
       });
     }
   }

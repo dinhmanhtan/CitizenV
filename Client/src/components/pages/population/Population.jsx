@@ -17,6 +17,7 @@ import FormControl from "@mui/material/FormControl";
 import { locations, getDOB } from "../../../utils/constant";
 import Alert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
+import SearchBar from "../../pages/home/SearchBar";
 
 const ModeOptions = [
   { id: 0, value: "One", label: "Theo từng vùng" },
@@ -60,9 +61,9 @@ const Population = () => {
     authState: { account },
   } = useContext(AuthContext);
 
-  const { citizenState, getAllPopulation, getInforSubAccount } =
+  const { citizenState, getAllPopulation, getInforSubAccount, searchPerson } =
     useContext(CitizenContext);
-  const { popList, isLoading } = citizenState;
+  const { popList, isLoading, searchPopList } = citizenState;
 
   const idAddress = account.id;
 
@@ -154,10 +155,59 @@ const Population = () => {
     return a;
   };
 
+  // Search
+
+  const [input, setInput] = useState("");
+  const [isSearch, setIsSearch] = useState(false);
+
+  useEffect(() => {
+    if (isSearch && input) {
+      searchPerson({ name: input });
+    }
+    console.log(input, isSearch);
+  }, [isSearch]);
+
+  useEffect(() => {
+    if (searchPopList && isSearch) {
+      var personRows = searchPopList.map((person) => {
+        // const dob = getDOB(new Date(person.DOB));
+
+        const dob = getDOB(person.DOB);
+        const entry = new Map([
+          ["id", person._id],
+          [columns[0].field, person.idAddress],
+          [columns[1].field, person.name],
+          [columns[2].field, dob],
+          [columns[3].field, person.thuongtru],
+          [
+            columns[4].field,
+            `${person.sex[0].toUpperCase()}${person.sex.slice(1)}`,
+          ],
+        ]);
+
+        const obj = Object.fromEntries(entry);
+        return obj;
+      });
+      setPopuRows(personRows);
+      setIsSearch(false);
+      setisHiddenData(false);
+    }
+  }, [searchPopList]);
+  // console.log(searchPopList);
+
   return (
     <div className="popu-container">
       <h1> Dữ liệu dân số</h1>
 
+      <div className="search-bar">
+        <SearchBar
+          TYPE="population"
+          input={input}
+          setInput={setInput}
+          setIsSearch={setIsSearch}
+        />
+      </div>
+      <h2 style={{ margin: "60px 0 0 30px" }}>Tra dữ liệu theo địa điểm</h2>
       <div className="select-mode-container">
         <Select
           options={ModeOptions}

@@ -5,6 +5,10 @@
   margin: 0;
 }
 
+.popu-container .search-bar {
+  margin: 50px 0 0 20px;
+}
+
 .select-mode-container {
   display: flex;
 }
@@ -84,5 +88,11 @@
 @media screen and (max-width: 700px) {
   .select-mode-container {
     display: block;
+  }
+}
+
+@media screen and (max-width: 330px) {
+  .popu-container {
+    margin-left: 10px;
   }
 }

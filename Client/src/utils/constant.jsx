@@ -10,6 +10,7 @@ export const locations = [
   "Xã/Phường",
   "Thôn/Xóm",
 ];
+export const levels = ["A1", "A2", "A3", "B1", "B2"];
 
 // epxort const levels = ["Tổng cục Dân số  Bộ Y tế ","Chi cục dân số Sở Y tế tỉnh ","Phòng Y tế huyện ", "Trạm Y tế xã"]
 
@@ -35,9 +36,8 @@ export const compare = (a, b) => {
 
   if (date1.getTime() < date2.getTime()) {
     return 1;
-  }
-  else return -1;
-}
+  } else return -1;
+};
 
 // 2001-11-06T00:00:00.000Z
 // export const getDOB = (dateStr) => {

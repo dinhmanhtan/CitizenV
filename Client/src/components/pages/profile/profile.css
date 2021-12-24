@@ -1,15 +1,13 @@
 .wrapper-profile {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 550px;
+  margin: auto;
+  margin-top: 40px;
+  width: 1000px;
   display: flex;
   box-shadow: 0 1px 20px 0 rgba(69, 90, 100, 0.08);
 }
 
 .wrapper-profile .left {
-  width: 35%;
+  width: 20%;
   background: linear-gradient(
     90deg,
     rgba(70, 75, 167, 1) 12%,
@@ -23,13 +21,8 @@
   color: #fff;
 }
 
-.wrapper-profile .left img {
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-
 .wrapper-profile .left h4 {
-  margin-bottom: 10px;
+  margin-top: 20px;
 }
 
 .wrapper-profile .left p {
@@ -37,7 +30,7 @@
 }
 
 .wrapper-profile .right {
-  width: 65%;
+  width: 80%;
   background: #fff;
   padding: 30px 25px;
   border-top-right-radius: 5px;
@@ -49,8 +42,8 @@
   margin-bottom: 25px;
 }
 
-.wrapper-profile .right .info h3,
-.wrapper-profile .right .authorization h3 {
+.wrapper-profile .right .info h2,
+.wrapper-profile .right .authorization h2 {
   margin-bottom: 15px;
   padding-bottom: 5px;
   border-bottom: 1px solid #e0e0e0;
@@ -61,24 +54,43 @@
 
 .wrapper-profile .right .info-data,
 .wrapper-profile .right .authorization-data {
-  display: flex;
-  justify-content: space-between;
+  padding: 5px 0;
 }
 
 .wrapper-profile .right .info-data .data,
 .wrapper-profile .right .authorization-data .data {
-  width: 45%;
+  display: flex;
+
+  padding: 10px 0;
 }
 
 .wrapper-profile .right .info-data .data h4,
 .wrapper-profile .right .authorization-data .data h4 {
   color: #353c4e;
-  margin-bottom: 5px;
+  margin-right: 20px;
+  width: 220px;
 }
 
-.wrapper-profile .right .info-data .data p,
-.wrapper-profile .right .authorization-data .data p {
-  font-size: 13px;
-  margin-bottom: 10px;
-  color: #919aa3;
+.wrapper-profile .right .info-data .data span,
+.wrapper-profile .right .authorization-data .data span {
+  font-size: 16px;
+  color: rgb(7, 33, 179);
+}
+
+@media screen and (max-width: 1100px) {
+  .wrapper-profile {
+    width: 95%;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .wrapper-profile .right .info-data .data h4,
+  .wrapper-profile .right .authorization-data .data h4 {
+    margin-right: 20px;
+    width: auto;
+  }
+  .info-data data,
+  .authorization-data .data {
+    flex-direction: column;
+  }
 }

@@ -46,3 +46,13 @@ content-type: application/json
 ###
 GET http://localhost:5555/api/citizen/0101/population
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiIwMCIsInJvbGUiOjAsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTYzOTczNDk1OCwiZXhwIjoxNjM5NzQyMTU4fQ.39f_HKVJLMCMOaDkpEpAwDE2rhWIUhnkt8mqeUWMDyo
+
+###
+GET http://localhost:5555/api/citizen/searchPerson
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiIwMCIsInJvbGUiOjAsIm5hbWUiOiJj4bulYyBEw6JuIHPhu5EiLCJpYXQiOjE2NDAzMTM2ODUsImV4cCI6MTY0MDMyMDg4NX0.Oe_swe7EaiBn1VrIkPbhVu9labdhL265VFLUL7ic1wg
+content-type: application/json
+
+{
+    "name": "a"
+}
+

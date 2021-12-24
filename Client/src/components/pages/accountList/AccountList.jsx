@@ -13,7 +13,7 @@ function AccountList() {
   const navigate = useNavigate();
   const { setIdSubAccount } = useContext(AccContext);
   const columns = [
-    { field: "id", headerName: "ID", width: 70 },
+    { field: "id", headerName: "ID", width: 90 },
     { field: "city", headerName: "Tỉnh/Thành phố", width: 150 },
     { field: "district", headerName: "Quận/Huyện", width: 150 },
     { field: "xa", headerName: "Xã/Phường", width: 150 },
