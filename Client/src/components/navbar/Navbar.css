@@ -246,4 +246,9 @@
   .logo {
     display: none;
   }
+
+  .wrap-notify {
+    width: 100vw;
+    right: -101px;
+  }
 }

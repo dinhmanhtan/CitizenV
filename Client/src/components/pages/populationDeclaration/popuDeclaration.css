@@ -34,7 +34,8 @@ form .info .inputBox {
   margin-bottom: 5px;
 }
 
-.info .inputBox input {
+.info .inputBox input,
+.info .inputBox select {
   height: 45px;
   width: 100%;
   outline: none;
