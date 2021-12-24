@@ -37,36 +37,34 @@ const PopulationDeclaration = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(data);
+    async function createNewPerson(data) {
+      const dataResult = await fetch(`${apiURLCitizen}/addPerson`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer " + localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME),
+        },
+        body: JSON.stringify(data),
+      });
 
-    // async function createNewPerson(data) {
-    //   const dataResult = await fetch(`${apiURLCitizen}/addPerson`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization:
-    //         "Bearer " + localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME),
-    //     },
-    //     body: JSON.stringify(data),
-    //   });
+      return dataResult.json();
+    }
 
-    //   return dataResult.json();
-    // }
-
-    // createNewPerson(data)
-    //   .then((response) => {
-    //     console.log(response);
-    //     if (response.message === "success") {
-    //       socketIO.emit('sendDataClient', {id : account.id});
-    //       navigate("/population");
-    //     } else {
-    //       // alert(response.message);
-    //       console.log(response);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //   });
+    createNewPerson(data)
+      .then((response) => {
+        console.log(response);
+        if (response.message === "success") {
+          socketIO.emit('sendDataClient', {id : account.id});
+          navigate("/population");
+        } else {
+          // alert(response.message);
+          console.log(response);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const handleClose = () => {
