@@ -1,7 +1,7 @@
 function citizenReducer(state, action) {
   const {
     type,
-    payload: { popList, isLoading, isGetSuccess },
+    payload: { popList, isLoading, isGetSuccess, searchPopList },
   } = action;
   switch (type) {
     case "GET_ALL_POPULATION":
@@ -15,6 +15,14 @@ function citizenReducer(state, action) {
       return {
         ...state,
         isLoading,
+        isGetSuccess,
+      };
+
+    case "SEARCH_PERSON":
+      return {
+        ...state,
+        searchPopList,
+        isLoading: false,
         isGetSuccess,
       };
 

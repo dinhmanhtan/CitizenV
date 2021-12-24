@@ -1,41 +1,84 @@
-import React from "react";
+import { useContext } from "react";
 import "./profile.css";
 import { Avatar } from "@mui/material";
+import { AuthContext } from "../../../contexts/authContext";
+import { levels, getDOB } from "../../../utils/constant";
 
 const Profile = () => {
+  const {
+    authState: { account },
+  } = useContext(AuthContext);
+  console.log(account);
+
+  const { name, id, role, state, progress, deadTime, address } = account;
+
   return (
     <div className="wrapper-profile">
-      <div class="left">
-        <Avatar src="https://github.com/dinhmanhtan/CitizenV/blob/869912aafb2beb215e1651555212ded6563b57b6/Client/src/utils/avatar.jpg" />
+      <div className="left">
+        <Avatar
+          src="https://file.vfo.vn/hinh/2013/12/co-viet-nam-2.jpg"
+          sx={{ width: 60, height: 60, margin: "auto" }}
+        />
 
-        <h4>user1</h4>
+        <h4>{`Tài khoản ${name}`}</h4>
       </div>
 
-      <div class="right">
-        <div class="info">
-          <h3> Thông tin tài khoản</h3>
+      <div className="right">
+        <div className="info">
+          <h2> Thông tin tài khoản</h2>
 
-          <div class="info-data">
-            <div class="data">
-              <h4> Mã tài khoản</h4>
-              <p> user1</p>
+          <div className="info-data">
+            <div className="data">
+              <h4> Mã tài khoản:</h4>
+              <span> {id}</span>
             </div>
           </div>
+          {address && (
+            <div className="info-data">
+              <div className="data">
+                <h4> Thuộc:</h4>
+                <span> {address}</span>
+              </div>
+            </div>
+          )}
+          {role === 0 && (
+            <div className="info-data">
+              <div className="data">
+                <h4> Thuộc Bộ y tế</h4>
+              </div>
+            </div>
+          )}
         </div>
 
-        <div class="authorization">
-          <h3> Quyền hạn</h3>
+        <div className="authorization">
+          <h2> Quyền hạn</h2>
 
-          <div class="authorization-data">
-            <div class="data">
-              <h4> Vai trò</h4>
-              <p> A1</p>
+          <div className="authorization-data">
+            <div className="data">
+              <h4> Vai trò: </h4>
+              <span> {levels[role]}</span>
             </div>
 
-            <div class="data">
-              <h4> Quyền khai báo</h4>
-              <p> Được phép</p>
+            <div className="data">
+              <h4> Quyền khai báo :</h4>
+              <span> {state ? "Được phép" : "Tạm khóa"}</span>
             </div>
+            {role !== 0 && (
+              <>
+                <div className="data">
+                  <h4> Thời gian bắt đầu khai báo :</h4>
+                  <span> {getDOB(deadTime)}</span>
+                </div>
+                <div className="data">
+                  <h4> Thời gian kết thúc khai báo :</h4>
+                  <span> {getDOB(deadTime)}</span>
+                </div>
+                <div className="data">
+                  <h4> Tiến độ khai báo :</h4>
+                  <span> {progress ? "Hoàn thành" : "Chưa hoàn thành"}</span>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

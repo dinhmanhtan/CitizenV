@@ -18,7 +18,11 @@ import { useNavigate } from "react-router-dom";
 import { AccContext } from "../../contexts/accContext";
 import NoteAltIcon from "@mui/icons-material/NoteAlt";
 import NotifiList from "./NotifiList";
-import { apiURL, LOCAL_STORAGE_TOKEN_NAME, compare } from "../../utils/constant";
+import {
+  apiURL,
+  LOCAL_STORAGE_TOKEN_NAME,
+  compare,
+} from "../../utils/constant";
 import socketIOClient from "socket.io-client";
 
 function Navbar(props) {
@@ -31,7 +35,7 @@ function Navbar(props) {
 
   const socketRef = useRef();
 
-  const [id1 , setId1] = useState();
+  const [id1, setId1] = useState();
 
   // console.log(id1);
   // console.log(noti, '123');
@@ -63,17 +67,17 @@ function Navbar(props) {
     logOut();
   };
 
-
   useEffect(() => {
-    socketRef.current = socketIOClient.connect('http://localhost:5555')
+    socketRef.current = socketIOClient.connect("http://localhost:5555");
 
-    socketRef.current.on('getId', data => {
-      setId1(data)
-    })
+    socketRef.current.on("getId", (data) => {
+      setId1(data);
+    });
 
-    socketRef.current.on(`sendNoti${id}`, data => setDataOne(d => [...d,data]));
-
-  }, [])
+    socketRef.current.on(`sendNoti${id}`, (data) =>
+      setDataOne((d) => [...d, data])
+    );
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -126,7 +130,7 @@ function Navbar(props) {
           <div className="topbarWrapper">
             <div className="topLeft">
               <span className="logo">CitizenV</span>
-              <span className="title-name"> {name}</span>
+              <span className="title-name">Tài khoản {name}</span>
             </div>
             <div className="topRight">
               <div className="topbarIconContainer">

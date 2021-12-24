@@ -231,11 +231,19 @@
   text-align: right;
 }
 
-@media screen and (max-width: 426px) {
-  .logo {
+@media screen and (max-width: 510px) {
+  /* .logo {
     display: none;
-  }
+  } */
   .title-name {
     margin: 0;
+    top: 55px;
+    position: absolute;
+    left: 70px;
+  }
+}
+@media screen and (max-width: 350px) {
+  .logo {
+    display: none;
   }
 }

@@ -1,8 +1,10 @@
 .form-field {
-  margin: 20px 0 20px 50px;
+  margin: 20px 0;
   position: relative;
   display: flex;
   align-items: center;
+  padding: 0;
+  width: 430px;
 }
 
 .input {
@@ -41,22 +43,63 @@ input:focus {
 }
 
 .search-icon-default {
-  position: relative;
+  position: absolute;
   font-size: 25px !important;
-  left: -35px;
+  right: 20px;
 }
 
 .search-icon-focus {
-  position: relative;
+  position: absolute;
   font-size: 25px !important;
-  left: -35px;
+  right: 20px;
   color: #6a5af9;
 }
 
 /*  placeholder-shown  */
 
 @media screen and (max-width: 600px) {
+  .form-field {
+    width: 380px;
+  }
   .input {
     width: 300px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .form-field {
+    width: 285px;
+  }
+
+  .input {
+    width: 220px;
+    padding-left: 15px;
+    padding-right: 40px;
+  }
+  .search-icon-default {
+    right: 23px;
+  }
+
+  .search-icon-focus {
+    right: 23px;
+  }
+}
+
+@media screen and (max-width: 311px) {
+  .form-field {
+    width: 240px;
+  }
+
+  .input {
+    width: 180px;
+    padding-left: 15px;
+    padding-right: 30px;
+  }
+  .search-icon-default {
+    right: 20px;
+  }
+
+  .search-icon-focus {
+    right: 20px;
   }
 }
