@@ -25,6 +25,7 @@ module.exports = async function (req, res, next) {
     req.role = role;
     req.state = authData.state;
     req.deadTime = authData.deadTime;
+    req.startTime = authData.startTime;
     req.name = name;
     req.address = address;
     return next();

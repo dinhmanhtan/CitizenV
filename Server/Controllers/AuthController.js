@@ -288,7 +288,7 @@ class AuthController {
             id: {
               $regex: `[^00]`,
             }
-          }, { state: false, deadTime: Date.now() });
+          }, { state: false, deadTime: Date.now(), startTime : Date.now() });
         } else {
           await Auth.updateMany(
             {
@@ -296,7 +296,7 @@ class AuthController {
                 $regex: `^${req.authId}[0-9][0-9]`,
               },
             },
-            { state: false, deadTime: Date.now() }
+            { state: false, deadTime: Date.now(), startTime : Date.now() }
           );
         }
 
@@ -304,7 +304,7 @@ class AuthController {
           type: 1,
           name: req.name,
           idAddress : req.authId,
-          content: 'Tắt quyền khai báo',
+          content: 'Tắt quyền khai báo dân số',
           date : Date.now(),
         })
 
@@ -317,7 +317,7 @@ class AuthController {
               $regex: `^${req.authId}[0-9][0-9]$`,
             },
           },
-          {state: req.body.state, deadTime: req.requestTime }
+          {state: req.body.state, deadTime: req.requestTime, startTime : req.requestStartTime }
         );
 
         const notify = new Notifications({
@@ -326,26 +326,27 @@ class AuthController {
           idAddress : req.authId,
           content: 'Mở quyền khai báo',
           date : req.requestTime,
+          start : req.requestStartTime,
         })
 
         notiSocket = await notify.save();
       }
 
-      console.log(notiSocket);
-      req.io.on("connection", (socket) => {
-        console.log("Connect " + socket.id);
+      // console.log(notiSocket);
+      // req.io.on("connection", (socket) => {
+      //   console.log("Connect " + socket.id);
       
-        socket.emit("getId", socket.id);
+      //   socket.emit("getId", socket.id);
 
-        socket.on('sendDataClient', () => {
-          console.log('data');
-          req.io.emit('getNoti', notiSocket)
-        })
+      //   socket.on('sendDataClient', () => {
+      //     console.log('data');
+      //     req.io.emit('getNoti', notiSocket)
+      //   })
       
-        socket.on('disconnect', () => {
-          console.log("Disconnect" + socket.id);
-        })
-      })
+      //   socket.on('disconnect', () => {
+      //     console.log("Disconnect" + socket.id);
+      //   })
+      // })
 
       res.status(200).json({
         message: "sucessfully",
@@ -361,13 +362,13 @@ class AuthController {
         if (req.authId === "00") {
           await Auth.updateOne({
             id: req.params.id,
-          }, { state: false, deadTime: Date.now() });
+          }, { state: false, deadTime: Date.now(), startTime : Date.now() });
         } else {
           await Auth.updateOne(
             {
               id: req.params.id
             },
-            { state: false, deadTime: Date.now() }
+            { state: false, deadTime: Date.now(), startTime : Date.now()  }
           );
         }
 
@@ -376,7 +377,7 @@ class AuthController {
           name: req.name,
           idAddress : req.authId,
           subId : req.params.id,
-          content: 'Tắt quyền khai báo',
+          content: 'Tắt quyền khai báo dân số',
           date : Date.now(),
         })
 
@@ -387,7 +388,7 @@ class AuthController {
           {
             id: req.params.id,
           },
-          {state: req.body.state, deadTime: req.requestTime }
+          {state: req.body.state, deadTime: req.requestTime, startTime: req.requestStartTime }
         );
 
         const notify = new Notifications({
@@ -397,6 +398,7 @@ class AuthController {
           subId : req.params.id,
           content: 'Mở quyền khai báo',
           date : req.requestTime,
+          start: req.requestStartTime,
         })
 
         await notify.save();
@@ -416,7 +418,7 @@ class AuthController {
       let notiSocket;
       await Auth.updateOne({ id: req.authId }, { progress: req.body.progress })
 
-      const content = req.body.progress === true ? 'Thành công' : 'Thất bại';
+      const content = req.body.progress === true ? 'Hoàn thành' : 'Chưa hoàn thành';
 
       const notify = new Notifications({
         type: 2,

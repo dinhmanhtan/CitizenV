@@ -10,6 +10,7 @@ const Notifications = new Schema(
     content : {type : String, require},
     subId : {type : String},
     date : {type : Date},
+    start : {type : Date},
   },
   {
     timestamps: true,

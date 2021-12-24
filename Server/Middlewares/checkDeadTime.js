@@ -5,15 +5,16 @@ module.exports = async function (req, res, next) {
     return next();
   }
 
-  let isCheckTime = true;
+  let isCheckTime = false;
 
   console.log(req.deadTime, "Checking");
   const deadTime = new Date(req.deadTime);
+  const startTime = new Date(req.startTime);
 
-  if (deadTime.getTime() < Date.now()) isCheckTime = false;
+  if (deadTime.getTime() > Date.now() && Date.now() > startTime.getTime()) isCheckTime = true;
 
   if (!isCheckTime) {
-    const err = new Error("Hết thời gian quyền thêm người");
+    const err = new Error("Hết thời gian quyền thêm người hoặc chưa đến hạn");
     err.statusCode = 403;
     return next(err);
   } else {

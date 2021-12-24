@@ -17,13 +17,18 @@ export default function NotifiList({ datas }) {
                 {datas.map( (data, index) => {
                     const time = getDOB(data.createdAt);
                     const time2 = getDOB(data.date);
+                    const startTime = getDOB(data.start);
                     const isType = data.type === 1 || data.type === 3;
                     return (
                         <li key={index} className="item-notify">
                             <p className="noti-address">{data.name}</p>
                             <h4 className="noti-content">{data.content}</h4>
-                            { isType  && 
-                                <p>Hạn: {time2}</p>
+                            { isType  && (
+                                    <>
+                                        <p>Bắt đầu: {startTime}</p>
+                                        <p>Hạn: {time2}</p>
+                                    </>
+                                )
                             }
                             <p className="noti-date">{time}</p>
                         </li>

@@ -58,6 +58,7 @@ socketIO.on("connection", (socket) => {
       name : data.name,
       content : data.state ? "Mở quyền khai báo" : "Tắt quyền khai báo",
       date : data.deadTime || Date.now(),
+      start : data.startTime || Date.now(),
       createdAt : Date.now(), 
     }
     socketIO.emit(`sendNoti${data.subId}`, dt)

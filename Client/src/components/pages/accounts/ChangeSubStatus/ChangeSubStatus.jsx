@@ -10,6 +10,7 @@ import { AuthContext } from "../../../../contexts/authContext";
 function ChangeSubStatus({ subId, setOpen }) {
     const [valueStatus, setValueStatus] = useState(false);
     const [date, setDate] = useState();
+    const [start, setStart] = useState();
     const [isError, setIsError] = useState(false);
 
     const navigate = useNavigate();
@@ -26,6 +27,12 @@ function ChangeSubStatus({ subId, setOpen }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        console.log({
+            state : valueStatus,
+            deadTime : date,
+            startTime : start,
+        });
+
         async function changeSubStatus () {
             const data = await fetch(`${apiURL}/auth/changeStatus/${subId}`, {
                 method: 'PATCH',
@@ -37,6 +44,7 @@ function ChangeSubStatus({ subId, setOpen }) {
                 body : JSON.stringify({
                     state : valueStatus,
                     deadTime : date,
+                    startTime : start,
                 })
             });
 
@@ -55,6 +63,7 @@ function ChangeSubStatus({ subId, setOpen }) {
                         subId : subId,
                         state : valueStatus,
                         deadTime : date,
+                        startTime : start,
                     });
                     navigate(`/accounts/`)
                 }
@@ -98,6 +107,15 @@ function ChangeSubStatus({ subId, setOpen }) {
                 </div>
 
                 <div className="status-event">
+                    <p>Ngày bắt đầu</p>
+                    <input 
+                        type="date" 
+                        className="status-date" 
+                        onChange={(e) => setStart(e.target.valueAsDate)}
+                        onFocus={() => setIsError(false)}
+                        disabled={!valueStatus}
+                    />
+                    <p>Ngày kết thúc</p>
                     <input 
                         type="date" 
                         className="status-date" 
