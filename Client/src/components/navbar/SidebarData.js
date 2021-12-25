@@ -26,11 +26,4 @@ export const SidebarData = [
     cName: "nav-text",
     role: 4,
   },
-
-  {
-    title: "Population",
-    path: "/population",
-    icon: <GroupsIcon />,
-    cName: "nav-text",
-  },
 ];

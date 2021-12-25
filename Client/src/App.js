@@ -29,7 +29,7 @@ function App() {
                 <Route exact path="/" element={<Login />} />
                 <Route exact path="/login" element={<Login />} />
                 <Route exact path="/" element={<ProtectedRoute />}>
-                  <Route exact path="home" element={<Home />} />
+                  <Route exact path="home" element={<Population />} />
                   <Route path="accounts" element={<AccountList />} />
                   <Route
                     path="accounts/:accountID"
@@ -37,7 +37,7 @@ function App() {
                   />
                   <Route path="newAccount" element={<NewAccount />} />
                   <Route exact path="analytics" element={<Chart />} />
-                  <Route exact path="population" element={<Population />} />
+
                   <Route path="population/:personID" element={<Individual />} />
                   <Route path="profile" element={<Profile />} />
                   <Route

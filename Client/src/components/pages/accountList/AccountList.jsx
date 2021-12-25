@@ -29,7 +29,7 @@ function AccountList() {
     { field: "xa", headerName: "Xã/Phường", width: 150 },
     { field: "xom", headerName: "Thôn/Xóm", width: 150 },
     { field: "status", headerName: "Quyền khai báo", width: 150 },
-    { field: "progress", headerName: "Tiến độ khai báo", width: 190 },
+    { field: "progress", headerName: "Tiến độ khai báo", width: 210 },
     {
       field: "action",
       headerName: " ",
@@ -72,11 +72,23 @@ function AccountList() {
         var acc =
           data.account &&
           data.account.map((account) => {
+            const d1 = new Date();
+            const d2 = new Date(account.startTime);
+            console.log(d1, d2, d1.getTime() < d2.getTime());
+            var str;
+
+            if (account.progress) str = "Hoàn thành";
+            else if (d1.getTime() < d2.getTime() || (!d1 && !d2)) {
+              if (d1.getTime() < d2.getTime())
+                str = "Chưa tới thời gian khai báo";
+              else str = "Chưa mở khai báo";
+            } else str = "Chưa hoàn thành";
+
             const entry = new Map([
               [cols[0].field, account.id],
               [cols[1].field, account.name],
               [cols[2].field, account.state ? "Active" : "Disabled"],
-              [cols[3].field, "Chưa mở khai báo"],
+              [cols[3].field, str],
             ]);
 
             const obj = Object.fromEntries(entry);

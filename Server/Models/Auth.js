@@ -9,10 +9,11 @@ const Auth = new Schema(
     password: { type: String, require: [true] },
     role: { type: Number, require: [true] },
     state: { type: Boolean, require: [true], default: false },
-    startTime: { type: Date },
-    deadTime: { type: Date },
+    startTime: { type: Date, default: null },
+    deadTime: { type: Date, default: null },
     address: { type: String },
     progress: { type: Boolean, default: false },
+    levelName: { type: String },
   },
   {
     timestamps: true,

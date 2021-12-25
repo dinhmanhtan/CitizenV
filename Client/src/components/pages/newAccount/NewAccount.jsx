@@ -5,7 +5,12 @@ import AlertMessage from "../login/AlertMessage";
 import TextField from "@mui/material/TextField";
 import { AccContext } from "../../../contexts/accContext";
 import { useNavigate, Navigate } from "react-router-dom";
-import { locations } from "../../../utils/constant";
+import { locations, levelNames } from "../../../utils/constant";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 
 const NewAccount = () => {
   const {
@@ -16,6 +21,10 @@ const NewAccount = () => {
   const navigate = useNavigate();
 
   const { id, role, state } = account;
+
+  const levelName = levelNames[role];
+
+  const [LevelName, setLevelName] = useState(levelName[0]);
 
   const [form, setForm] = useState({
     sub_id: "",
@@ -42,6 +51,7 @@ const NewAccount = () => {
         password: pass,
         name: location,
         role: role + 1,
+        levelName: LevelName,
       };
 
       try {
@@ -85,9 +95,27 @@ const NewAccount = () => {
                 onChange={handleChangeValue}
               />
             </div>
-
+            <FormControl component="fieldset" sx={{ marginTop: "30px" }}>
+              <RadioGroup
+                row
+                name="controlled-radio-buttons-group"
+                defaultValue={levelName[0]}
+              >
+                {levelName.map((name, key) => {
+                  return (
+                    <FormControlLabel
+                      value={name}
+                      control={<Radio />}
+                      label={name}
+                      key={key}
+                      onChange={(event) => setLevelName(event.target.value)}
+                    />
+                  );
+                })}
+              </RadioGroup>
+            </FormControl>
             <div className="newUserItem">
-              <label>{locations[role]}</label>
+              {/* <label>{locations[role]}</label> */}
               <input
                 name="location"
                 type="text"

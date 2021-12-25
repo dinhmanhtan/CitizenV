@@ -65,19 +65,23 @@ class AuthController {
       const hashPassword = await bcrypt.hash(req.body.password, salt);
 
       if (
-        (req.authId == "00" || id.startsWith(req.authId)) &&
-        id.length === req.authId.length + 2
+        (req.authId == "00" && id.length == 2 && id <= 63) ||
+        (id.startsWith(req.authId) && id.length === req.authId.length + 2)
       ) {
-        const addr =
-          !req.address || req.address === undefined
-            ? `${req.name}`
-            : `${req.name}-${req.address}`;
+        var addr = null;
+        if (req.role !== 0 && req.role !== 1) {
+          addr =
+            !req.address || req.address === undefined
+              ? `${req.name}`
+              : `${req.name}-${req.address}`;
+        }
         const auth = new Auth({
           id: req.body.id,
           name: req.body.name,
           password: hashPassword,
           role: req.body.role, // 0 1 2 3 4
           address: addr,
+          levelName: req.body.levelName,
         });
         const newAuth = await auth.save();
         res.status(200).json({
@@ -151,8 +155,8 @@ class AuthController {
   async destroy(req, res, next) {
     const subId = req.params.subId;
     if (
-      (req.authId === "00" || subId.startsWith(req.authId)) &&
-      subId.length === req.authId.length + 2
+      req.authId === "00" ||
+      (subId.startsWith(req.authId) && subId.length === req.authId.length + 2)
     ) {
       try {
         await Auth.deleteMany({

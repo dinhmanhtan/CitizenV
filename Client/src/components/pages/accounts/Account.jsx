@@ -227,14 +227,18 @@ const Account = ({ accountID }) => {
             <EventAvailableIcon className="accountShowIcon" />
             <span>Thời gian bắt đầu khai báo:</span>
           </span>
-          <span>{subAccount.startTime}</span>
+          <span>
+            {subAccount.startTime ? subAccount.startTime : "Chưa mở khai báo"}
+          </span>
         </div>
         <div className="accountShowInfo">
           <span className="accountShowInfoTitle">
             <EventBusyIcon className="accountShowIcon" />
             <span>Thời gian kết thúc khai báo:</span>
           </span>
-          <span>{subAccount.endTime}</span>
+          <span>
+            {subAccount.endTime ? subAccount.endTime : "Chưa mở khai báo"}
+          </span>
         </div>
         <div className="accountShowInfo">
           <span className="accountShowInfoTitle">

@@ -13,8 +13,16 @@ export const locations = [
 export const levels = ["A1", "A2", "A3", "B1", "B2"];
 
 // epxort const levels = ["Tổng cục Dân số  Bộ Y tế ","Chi cục dân số Sở Y tế tỉnh ","Phòng Y tế huyện ", "Trạm Y tế xã"]
+export const levelNames = [
+  ["Tỉnh", "Thành phố"],
+  ["Quận", "Huyện"],
+  ["Xã", "Phường"],
+  ["Thôn", "Bản", "Xóm", "Tổ dân phố"],
+];
 
 export const getDOB = (dateTest) => {
+  if (!dateTest) return dateTest;
+
   const date = new Date(dateTest);
   // console.log(date);
   const day =

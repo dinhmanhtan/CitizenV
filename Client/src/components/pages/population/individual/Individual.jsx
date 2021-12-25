@@ -227,7 +227,7 @@ function Individual() {
               <TextField
                 variant="standard"
                 value={academicLevel}
-                name="academic"
+                name="academicLevel"
                 onChange={handleChangeInput}
                 className="text-field"
               />
@@ -298,18 +298,17 @@ function Individual() {
             >
               Hủy Bỏ
             </Button>
+            <Button
+              variant="contained"
+              onClick={() => {
+                setOpenDel(true);
+              }}
+            >
+              Xóa thông tin
+            </Button>
           </div>
         )}
       </Paper>
-      <Button
-        variant="contained"
-        style={{ margin: "20px" }}
-        onClick={() => {
-          setOpenDel(true);
-        }}
-      >
-        Xóa thông tin
-      </Button>
     </div>
   );
 }
