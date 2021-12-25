@@ -51,6 +51,23 @@ socketIO.on("connection", (socket) => {
 
   socket.emit("getId", socket.id);
 
+  socket.on("sendClientData", data => {
+    console.log(data);
+    const dt = {
+      type: 2,
+      name: data.name,
+      content: "Hoàn thành",
+      createdAt : Date.now(),
+      idAddress : data.id,
+    }
+
+    const parentId = data.id.length === 2 ? '00' : data.id.substring(0, data.id.length - 2);
+    console.log(data, parentId)
+
+    socketIO.emit(`sendSubAccountFinish${parentId}`, dt)
+    
+  })
+
   socket.on("sendSubNoti", data => {
     console.log(data);
     const dt = {

@@ -10,7 +10,7 @@ const Profile = () => {
   } = useContext(AuthContext);
   console.log(account);
 
-  const { name, id, role, state, progress, deadTime, address, startTime } =
+  const { name, id, role, state, progress, startTime, deadTime, address } =
     account;
 
   return (
