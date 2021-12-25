@@ -10,7 +10,7 @@ const Profile = () => {
   } = useContext(AuthContext);
   console.log(account);
 
-  const { name, id, role, state, progress, deadTime, address } = account;
+  const { name, id, role, state, progress, startTime, deadTime, address } = account;
 
   return (
     <div className="wrapper-profile">
@@ -67,7 +67,7 @@ const Profile = () => {
               <>
                 <div className="data">
                   <h4> Thời gian bắt đầu khai báo :</h4>
-                  <span> {getDOB(deadTime)}</span>
+                  <span> {getDOB(startTime)}</span>
                 </div>
                 <div className="data">
                   <h4> Thời gian kết thúc khai báo :</h4>

@@ -77,6 +77,10 @@ function Navbar(props) {
     socketRef.current.on(`sendNoti${id}`, (data) =>
       setDataOne((d) => [...d, data])
     );
+
+    socketRef.current.on(`sendSubAccountFinish${id}`, data => {
+      setDataTwo((d) => [...d, data])
+    })
   }, []);
 
   useEffect(() => {

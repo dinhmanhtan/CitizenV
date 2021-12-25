@@ -65,8 +65,8 @@ class AuthController {
       const hashPassword = await bcrypt.hash(req.body.password, salt);
 
       if (
-        (req.authId == "00" || id.startsWith(req.authId)) &&
-        id.length === req.authId.length + 2
+        (req.authId == "00" ||
+         (id.startsWith(req.authId)  && id.length === req.authId.length + 2))
       ) {
         const addr =
           !req.address || req.address === undefined
