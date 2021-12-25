@@ -22,6 +22,11 @@ export const accReducer = (state, action) => {
         isGetSubAccount: false,
         subAccount: null,
       };
+    case "RESET_":
+      return {
+        ...state,
+        isGetSubAccount: false,
+      };
 
     default:
       return state;

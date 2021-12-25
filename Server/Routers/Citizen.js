@@ -6,7 +6,7 @@ const verifyToken = require("../Middlewares/verifyToken");
 
 router.put(
   "/:id/changeInfoPerson",
-  verifyToken,
+
   CitizenController.changeInfoPerson
 );
 router.get(

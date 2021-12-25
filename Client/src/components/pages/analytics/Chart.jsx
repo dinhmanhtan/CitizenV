@@ -20,12 +20,17 @@ import {
 } from "recharts";
 import BasicTable from "./CustomSelect/BasicTable";
 import { COLORS, renderCustomizedLabel } from "./CustomSelect/BasicTable";
+import { useNavigate } from "react-router-dom";
 
 const Chart = () => {
   const {
     authState: { account },
   } = useContext(AuthContext);
+  const navigate = useNavigate();
 
+  if (account.role === 4) {
+    navigate("/notfound");
+  }
   const { getAllPopulation, citizenState, getInforSubAccount } =
     useContext(CitizenContext);
 
@@ -325,207 +330,222 @@ const Chart = () => {
   }, []);
   ///
   // console.log(valueModeMany);
+
   return (
     <div className="analytic">
-      <CustomSelect
-        ID_MODE={ID_MODE}
-        setID_MODE={setID_MODE}
-        IdModeOne={IdModeOne}
-        setIdModOne={setIdModOne}
-        ID_MODE_MANY={ID_MODE_MANY}
-        setID_MODE_MANY={setID_MODE_MANY}
-        setIsClickPT={setIsClickPT}
-        alert={alert}
-        setAlert={setAlert}
-        setValueModeMany={setValueModeMany}
-      />
-      <Button variant="contained" color="success" onClick={showPopuTable}>
-        Phân tích
-      </Button>
-
-      {/*---------------------------------------------------------------------------------------------- */}
-      <h2>Phân tích theo số lượng</h2>
-      <div className="container-quantity">
-        {chartQuan && (
-          <div className="quantity-chart">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                width={500}
-                height={400}
-                data={chartQuan}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 20,
-                }}
-                maxBarSize={50}
-              >
-                {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-
-                <Bar dataKey="quantity" fill="#8884d8" />
-              </BarChart>
-            </ResponsiveContainer>
-            <h3> Biểu đồ biểu diễn số lượng dân số </h3>
-          </div>
-        )}
-
-        {tableQuan && (
-          <div className="warraper-table-quan">
-            <BasicTable
-              headers={
-                ID_MODE === 1 && ID_MODE_MANY && ID_MODE_MANY.length > 1
-                  ? ["Địa điểm ", "Số Lượng "]
-                  : ["Địa điểm ", "Số Lượng ", "Phần Trăm"]
-              }
-              rows={tableQuan}
-            />
-            <h3> Bảng thể hiện số lượng dân số </h3>
-          </div>
-        )}
-      </div>
-
-      {/*---------------------------------------------------------------------------------------- */}
-      <h2>Phân tích theo giới tính</h2>
-      <div className="container-quantity">
-        {chartGT &&
-          (ID_MODE === 0 ||
-            (ID_MODE === 1 && ID_MODE_MANY && ID_MODE_MANY.length === 1)) && (
-            <div className="quantity-chart">
-              <ResponsiveContainer width="100%" height="90%">
-                <PieChart width={400} height={300}>
-                  <Pie
-                    data={chartGT}
-                    // cx="50%"
-                    // cy="50%"
-                    labelLine={false}
-                    label={renderCustomizedLabel}
-                    outerRadius={outerRadius}
-                    fill="#8884d8"
-                    dataKey="value"
+      {account.role !== 4 && (
+        <>
+          <CustomSelect
+            ID_MODE={ID_MODE}
+            setID_MODE={setID_MODE}
+            IdModeOne={IdModeOne}
+            setIdModOne={setIdModOne}
+            ID_MODE_MANY={ID_MODE_MANY}
+            setID_MODE_MANY={setID_MODE_MANY}
+            setIsClickPT={setIsClickPT}
+            alert={alert}
+            setAlert={setAlert}
+            setValueModeMany={setValueModeMany}
+          />
+          <Button variant="contained" color="success" onClick={showPopuTable}>
+            Phân tích
+          </Button>
+          {/*---------------------------------------------------------------------------------------------- */}
+          <h2>Phân tích theo số lượng</h2>
+          <div className="container-quantity">
+            {chartQuan && (
+              <div className="quantity-chart">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    width={500}
+                    height={400}
+                    data={chartQuan}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 20,
+                    }}
+                    maxBarSize={50}
                   >
-                    {chartGT.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-              <h3> Biểu đồ Giới Tính </h3>
-            </div>
-          )}
-        {chartGT && ID_MODE === 1 && ID_MODE_MANY && ID_MODE_MANY.length > 1 && (
-          <div className="quantity-chart">
-            <ResponsiveContainer width="100%" height="90%">
-              <BarChart
-                width={500}
-                height={400}
-                data={chartGT}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 20,
-                }}
-                maxBarSize={40}
-              >
-                {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend verticalAlign="top" height={36} />
-                <Bar dataKey="Nam" fill="#8884d8" />
-                <Bar dataKey="Nữ" fill="#82ca9d" />
-              </BarChart>
-            </ResponsiveContainer>
-            <h3> Biểu đồ Giới Tính </h3>
-          </div>
-        )}
-        {/*--------- ----------------------------------- */}
-        {tableGT && (
-          <div className="warraper-table-quan">
-            <BasicTable headers={["Địa điểm ", "Nam ", "Nữ"]} rows={tableGT} />
-            <h3> Bảng thể hiện giới tính </h3>
-          </div>
-        )}
-      </div>
+                    {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
 
-      {/*--------------------------------------------------------------------- */}
-      <h2>Phân tích theo độ tuổi</h2>
-      <div className="container-quantity">
-        {chartAge &&
-          (ID_MODE === 0 ||
-            (ID_MODE === 1 && ID_MODE_MANY && ID_MODE_MANY.length === 1)) && (
-            <div className="quantity-chart">
-              <ResponsiveContainer width="100%" height="95%">
-                <BarChart
-                  width={600}
-                  height={400}
-                  data={chartAge}
-                  margin={{
-                    top: 5,
-                    right: 0,
-                    left: 0,
-                    bottom: 20,
-                  }}
-                  maxBarSize={50}
-                >
-                  {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
+                    <Bar dataKey="quantity" fill="#8884d8" />
+                  </BarChart>
+                </ResponsiveContainer>
+                <h3> Biểu đồ biểu diễn số lượng dân số </h3>
+              </div>
+            )}
 
-                  <Bar dataKey="value" fill="#8884d8" />
-                </BarChart>
-              </ResponsiveContainer>
-              <h3> Biểu đồ biểu diễn độ tuổi </h3>
-            </div>
-          )}
-        {chartAge && ID_MODE === 1 && ID_MODE_MANY && ID_MODE_MANY.length > 1 && (
-          <div className="quantity-chart">
-            <ResponsiveContainer width="100%" height="90%">
-              <BarChart
-                width={800}
-                height={400}
-                data={chartAge}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 10,
-                }}
-                maxBarSize={30}
-              >
-                {/* <CartesianGrid strokeDasharray="3 3" /> */}
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend verticalAlign="top" height={36} />
-                <Bar dataKey="0-20" fill="#8884d8" />
-                <Bar dataKey="20-40" fill="#00C49F" />
-                <Bar dataKey="40-60" fill="#FFBB28" />
-                <Bar dataKey="> 60" fill="#FF8042" />
-              </BarChart>
-            </ResponsiveContainer>
-            <h3> Biểu đồ độ tuổi </h3>
+            {tableQuan && (
+              <div className="warraper-table-quan">
+                <BasicTable
+                  headers={
+                    ID_MODE === 1 && ID_MODE_MANY && ID_MODE_MANY.length > 1
+                      ? ["Địa điểm ", "Số Lượng "]
+                      : ["Địa điểm ", "Số Lượng ", "Phần Trăm"]
+                  }
+                  rows={tableQuan}
+                />
+                <h3> Bảng thể hiện số lượng dân số </h3>
+              </div>
+            )}
           </div>
-        )}
-        {tableAge && (
-          <div className="warraper-table-quan">
-            <BasicTable
-              headers={["Địa điểm ", "0-20", "20-40", "40-60", "> 60"]}
-              rows={tableAge}
-            />
-            <h3> Bảng thể hiện độ tuổi </h3>
+          {/*---------------------------------------------------------------------------------------- */}
+          <h2>Phân tích theo giới tính</h2>
+          <div className="container-quantity">
+            {chartGT &&
+              (ID_MODE === 0 ||
+                (ID_MODE === 1 &&
+                  ID_MODE_MANY &&
+                  ID_MODE_MANY.length === 1)) && (
+                <div className="quantity-chart">
+                  <ResponsiveContainer width="100%" height="90%">
+                    <PieChart width={400} height={300}>
+                      <Pie
+                        data={chartGT}
+                        // cx="50%"
+                        // cy="50%"
+                        labelLine={false}
+                        label={renderCustomizedLabel}
+                        outerRadius={outerRadius}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {chartGT.map((entry, index) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                          />
+                        ))}
+                      </Pie>
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <h3> Biểu đồ Giới Tính </h3>
+                </div>
+              )}
+            {chartGT &&
+              ID_MODE === 1 &&
+              ID_MODE_MANY &&
+              ID_MODE_MANY.length > 1 && (
+                <div className="quantity-chart">
+                  <ResponsiveContainer width="100%" height="90%">
+                    <BarChart
+                      width={500}
+                      height={400}
+                      data={chartGT}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 20,
+                      }}
+                      maxBarSize={40}
+                    >
+                      {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend verticalAlign="top" height={36} />
+                      <Bar dataKey="Nam" fill="#8884d8" />
+                      <Bar dataKey="Nữ" fill="#82ca9d" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                  <h3> Biểu đồ Giới Tính </h3>
+                </div>
+              )}
+            {/*--------- ----------------------------------- */}
+            {tableGT && (
+              <div className="warraper-table-quan">
+                <BasicTable
+                  headers={["Địa điểm ", "Nam ", "Nữ"]}
+                  rows={tableGT}
+                />
+                <h3> Bảng thể hiện giới tính </h3>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+          {/*--------------------------------------------------------------------- */}
+          <h2>Phân tích theo độ tuổi</h2>
+          <div className="container-quantity">
+            {chartAge &&
+              (ID_MODE === 0 ||
+                (ID_MODE === 1 &&
+                  ID_MODE_MANY &&
+                  ID_MODE_MANY.length === 1)) && (
+                <div className="quantity-chart">
+                  <ResponsiveContainer width="100%" height="95%">
+                    <BarChart
+                      width={600}
+                      height={400}
+                      data={chartAge}
+                      margin={{
+                        top: 5,
+                        right: 0,
+                        left: 0,
+                        bottom: 20,
+                      }}
+                      maxBarSize={50}
+                    >
+                      {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+
+                      <Bar dataKey="value" fill="#8884d8" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                  <h3> Biểu đồ biểu diễn độ tuổi </h3>
+                </div>
+              )}
+            {chartAge &&
+              ID_MODE === 1 &&
+              ID_MODE_MANY &&
+              ID_MODE_MANY.length > 1 && (
+                <div className="quantity-chart">
+                  <ResponsiveContainer width="100%" height="90%">
+                    <BarChart
+                      width={800}
+                      height={400}
+                      data={chartAge}
+                      margin={{
+                        top: 5,
+                        right: 30,
+                        left: 20,
+                        bottom: 10,
+                      }}
+                      maxBarSize={30}
+                    >
+                      {/* <CartesianGrid strokeDasharray="3 3" /> */}
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend verticalAlign="top" height={36} />
+                      <Bar dataKey="0-20" fill="#8884d8" />
+                      <Bar dataKey="20-40" fill="#00C49F" />
+                      <Bar dataKey="40-60" fill="#FFBB28" />
+                      <Bar dataKey="> 60" fill="#FF8042" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                  <h3> Biểu đồ độ tuổi </h3>
+                </div>
+              )}
+            {tableAge && (
+              <div className="warraper-table-quan">
+                <BasicTable
+                  headers={["Địa điểm ", "0-20", "20-40", "40-60", "> 60"]}
+                  rows={tableAge}
+                />
+                <h3> Bảng thể hiện độ tuổi </h3>
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };

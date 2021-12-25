@@ -100,11 +100,21 @@
 
   margin-left: 0;
   color: black;
-  width: 150px;
+  width: 160px;
+  font-weight: 600;
 }
 
 .accountShowInfoTitle span {
   margin-left: 6px;
+}
+
+.infor-declaration .accountShowInfo .accountShowInfoTitle {
+  width: 230px;
+  display: flex;
+  align-items: center;
+  margin-left: 0;
+  color: black;
+  font-weight: 600;
 }
 
 /* ----- Update Form CSS ------  */

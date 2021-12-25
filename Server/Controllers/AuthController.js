@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const Auth = require("../Models/Auth");
-const Notifications = require("../Models/Notification")
+const Notifications = require("../Models/Notification");
 const jwt = require("jsonwebtoken");
 
 class AuthController {
@@ -215,7 +215,11 @@ class AuthController {
 
   async getSubAccount(req, res, next) {
     const idFiled = req.params.id;
-    if (req.role === 0 || idFiled.startsWith(req.authId)) {
+    if (
+      (req.role === 0 && idFiled.length === 2) ||
+      (idFiled.startsWith(req.authId) &&
+        req.authId.length + 2 === idFiled.length)
+    ) {
       try {
         const subAccount = await Auth.findOne({ id: idFiled }).select(
           "-password"
@@ -284,11 +288,14 @@ class AuthController {
 
       if (req.body.state === false) {
         if (req.authId === "00") {
-          await Auth.updateMany({
-            id: {
-              $regex: `[^00]`,
-            }
-          }, { state: false, deadTime: Date.now(), startTime : Date.now() });
+          await Auth.updateMany(
+            {
+              id: {
+                $regex: `[^00]`,
+              },
+            },
+            { state: false, deadTime: Date.now(), startTime: Date.now() }
+          );
         } else {
           await Auth.updateMany(
             {
@@ -296,20 +303,21 @@ class AuthController {
                 $regex: `^${req.authId}[0-9][0-9]`,
               },
             },
-            { state: false, deadTime: Date.now(), startTime : Date.now() }
+            { state: false, deadTime: Date.now(), startTime: Date.now() }
           );
         }
 
         const notify = new Notifications({
           type: 1,
           name: req.name,
-          idAddress : req.authId,
-          content: 'Tắt quyền khai báo dân số',
-          date : Date.now(),
-        })
+          idAddress: req.authId,
+          content: "Tắt quyền khai báo dân số",
+          date: Date.now(),
+        });
 
         notiSocket = await notify.save();
-      } else {    // state = true
+      } else {
+        // state = true
         console.log(req.requestTime);
         await Auth.updateOne(
           {
@@ -317,17 +325,21 @@ class AuthController {
               $regex: `^${req.authId}[0-9][0-9]$`,
             },
           },
-          {state: req.body.state, deadTime: req.requestTime, startTime : req.requestStartTime }
+          {
+            state: req.body.state,
+            deadTime: req.requestTime,
+            startTime: req.requestStartTime,
+          }
         );
 
         const notify = new Notifications({
           type: 1,
           name: req.name,
-          idAddress : req.authId,
-          content: 'Mở quyền khai báo',
-          date : req.requestTime,
-          start : req.requestStartTime,
-        })
+          idAddress: req.authId,
+          content: "Mở quyền khai báo",
+          date: req.requestTime,
+          start: req.requestStartTime,
+        });
 
         notiSocket = await notify.save();
       }
@@ -335,14 +347,14 @@ class AuthController {
       // console.log(notiSocket);
       // req.io.on("connection", (socket) => {
       //   console.log("Connect " + socket.id);
-      
+
       //   socket.emit("getId", socket.id);
 
       //   socket.on('sendDataClient', () => {
       //     console.log('data');
       //     req.io.emit('getNoti', notiSocket)
       //   })
-      
+
       //   socket.on('disconnect', () => {
       //     console.log("Disconnect" + socket.id);
       //   })
@@ -360,46 +372,54 @@ class AuthController {
     try {
       if (req.body.state === false) {
         if (req.authId === "00") {
-          await Auth.updateOne({
-            id: req.params.id,
-          }, { state: false, deadTime: Date.now(), startTime : Date.now() });
+          await Auth.updateOne(
+            {
+              id: req.params.id,
+            },
+            { state: false, deadTime: Date.now(), startTime: Date.now() }
+          );
         } else {
           await Auth.updateOne(
             {
-              id: req.params.id
+              id: req.params.id,
             },
-            { state: false, deadTime: Date.now(), startTime : Date.now()  }
+            { state: false, deadTime: Date.now(), startTime: Date.now() }
           );
         }
 
         const notify = new Notifications({
           type: 3,
           name: req.name,
-          idAddress : req.authId,
-          subId : req.params.id,
-          content: 'Tắt quyền khai báo dân số',
-          date : Date.now(),
-        })
+          idAddress: req.authId,
+          subId: req.params.id,
+          content: "Tắt quyền khai báo dân số",
+          date: Date.now(),
+        });
 
         await notify.save();
-      } else {    // state = true
+      } else {
+        // state = true
         console.log(req.requestTime);
         await Auth.updateOne(
           {
             id: req.params.id,
           },
-          {state: req.body.state, deadTime: req.requestTime, startTime: req.requestStartTime }
+          {
+            state: req.body.state,
+            deadTime: req.requestTime,
+            startTime: req.requestStartTime,
+          }
         );
 
         const notify = new Notifications({
           type: 3,
           name: req.name,
-          idAddress : req.authId,
-          subId : req.params.id,
-          content: 'Mở quyền khai báo',
-          date : req.requestTime,
+          idAddress: req.authId,
+          subId: req.params.id,
+          content: "Mở quyền khai báo",
+          date: req.requestTime,
           start: req.requestStartTime,
-        })
+        });
 
         await notify.save();
       }
@@ -416,39 +436,39 @@ class AuthController {
   async changeProgress(req, res, next) {
     try {
       let notiSocket;
-      await Auth.updateOne({ id: req.authId }, { progress: req.body.progress })
+      await Auth.updateOne({ id: req.authId }, { progress: req.body.progress });
 
-      const content = req.body.progress === true ? 'Hoàn thành' : 'Chưa hoàn thành';
+      const content =
+        req.body.progress === true ? "Hoàn thành" : "Chưa hoàn thành";
 
       const notify = new Notifications({
         type: 2,
-        name : req.name,
-        idAddress : req.authId,
+        name: req.name,
+        idAddress: req.authId,
         content: content,
-        date : Date.now(),
-      })
+        date: Date.now(),
+      });
 
       notiSocket = await notify.save();
 
       res.status(200).json({
         success: true,
-      })
+      });
 
       // req.io.on("connection", (socket) => {
       //   console.log("Connect " + socket.id);
-      
+
       //   socket.emit("getId", socket.id);
 
       //   socket.on('sendDataClient', (data) => {
       //     console.log(data);
       //     req.io.emit('getNoti', data)
       //   })
-      
+
       //   socket.on('disconnect', () => {
       //     console.log("Disconnect" + socket.id);
       //   })
       // })
-
     } catch (err) {
       return next(err);
     }

@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const Citizen = new Schema(
   {
     name: { type: String, require },
-    DOB: { type: Date, require, default: Date.now() },
+    DOB: { type: Date, require },
     idAddress: { type: String, require }, // id 010205 -> check auths
     sex: { type: String, require },
     CCCD: { type: String, default: "" },

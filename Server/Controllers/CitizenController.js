@@ -113,7 +113,7 @@ class citizenController {
     const idPerson = req.params.id;
 
     Citizen.deleteOne({ _id: idPerson })
-      .then(() => res.status(200).json({ message: "deleted" }))
+      .then(() => res.status(200).json({ success: true }))
       .catch((err) => next(err));
   }
 

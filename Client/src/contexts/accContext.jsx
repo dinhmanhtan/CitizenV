@@ -13,6 +13,9 @@ const AccContextProvider = ({ children }) => {
   });
 
   const getSubAccount = async (ID_Sub) => {
+    dispatch({
+      type: "RESET_",
+    });
     try {
       const response = await axios.get(
         `${apiURL}/auth/getSubAccount/${ID_Sub}`

@@ -11,6 +11,7 @@ const CitizenContextProvider = ({ children }) => {
     isLoading: true,
     isGetSuccess: false,
     searchPopList: null,
+    updatedInforSuccess: false,
   });
 
   const { popList } = { citizenState };
@@ -106,7 +107,11 @@ const CitizenContextProvider = ({ children }) => {
   };
 
   const updateInforPerson = (data, _id, setIsEdit) => {
-    async function createNewPerson(data) {
+    citizenDispatch({
+      type: "UPDATE_INFOR_PERSON",
+      payload: { updatedInforSuccess: false },
+    });
+    async function update(data) {
       const dataResult = await fetch(
         `${apiURL}/citizen/${_id}/changeInfoPerson`,
         {
@@ -123,15 +128,42 @@ const CitizenContextProvider = ({ children }) => {
       return dataResult.json();
     }
 
-    createNewPerson(data)
+    update(data)
       .then((response) => {
-        console.log(response);
         if (response.message === "success") {
-          alert("success");
+          citizenDispatch({
+            type: "UPDATE_INFOR_PERSON",
+            payload: { updatedInforSuccess: true },
+          });
           setIsEdit(false);
         } else {
-          alert("failed");
+          citizenDispatch({
+            type: "UPDATE_INFOR_PERSON",
+            payload: { updatedInforSuccess: false },
+          });
         }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+  const deletePerson = (_id) => {
+    async function Delete() {
+      const data = await fetch(`${apiURL}/citizen/${_id}/deletePerson`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer " + localStorage.getItem(LOCAL_STORAGE_TOKEN_NAME),
+        },
+      });
+
+      return data.json();
+    }
+
+    Delete()
+      .then((response) => {
+        console.log(response);
       })
       .catch((err) => {
         console.error(err);
@@ -185,6 +217,7 @@ const CitizenContextProvider = ({ children }) => {
     getInforPerson,
     updateInforPerson,
     searchPerson,
+    deletePerson,
   };
   return (
     <CitizenContext.Provider value={citizenContextData}>

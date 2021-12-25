@@ -8,7 +8,7 @@
 
 .paperStyle {
   padding: 20px 32px;
-  height: 55%;
+  height: 350px;
   width: 280px;
   position: absolute;
   top: 45%;
@@ -25,4 +25,19 @@
 
 .paperStyle h2 {
   margin-bottom: 15px;
+}
+
+@media screen and (max-width: 375px) {
+  .paperStyle {
+    width: 90%;
+    padding: 20px 10px;
+  }
+}
+
+@media screen and (max-height: 450px) {
+  .paperStyle {
+    height: 80%;
+    position: relative;
+    margin-top: 0;
+  }
 }

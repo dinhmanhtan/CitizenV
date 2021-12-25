@@ -18,8 +18,12 @@ import SchoolIcon from "@mui/icons-material/School";
 import DomainIcon from "@mui/icons-material/Domain";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import EventBusyIcon from "@mui/icons-material/EventBusy";
+import { AuthContext } from "../../../contexts/authContext";
+import { getDOB } from "../../../utils/constant";
 
 const Account = ({ accountID }) => {
+  const navigate = useNavigate();
+
   const [subAccount, setSubAccount] = useState({
     id: "",
     name: "",
@@ -27,6 +31,8 @@ const Account = ({ accountID }) => {
     state: "",
     role: "",
     address: "",
+    startTime: "",
+    endTime: "",
   });
 
   const levels = ["A1", "A2", "A3", "B1", "B2"];
@@ -38,9 +44,18 @@ const Account = ({ accountID }) => {
     try {
       const DataSubAccount = await getSubAccount(accountID);
       if (DataSubAccount.success) {
-        const { name, id, progress, role, state, address } =
-          DataSubAccount.subAccount;
+        const {
+          name,
+          id,
+          progress,
+          role,
+          state,
+          address,
+          startTime,
+          deadTime,
+        } = DataSubAccount.subAccount;
         const addr = address && address.split("-");
+        console.log(DataSubAccount.subAccount);
 
         setSubAccount({
           ...subAccount,
@@ -50,10 +65,13 @@ const Account = ({ accountID }) => {
           role,
           state,
           address,
+          startTime: getDOB(startTime),
+          endTime: getDOB(deadTime),
         });
       }
     } catch (error) {
       console.log(error);
+      console.log("error");
     }
   };
   useEffect(() => {
@@ -64,7 +82,6 @@ const Account = ({ accountID }) => {
   const [open, setOpen] = useState(false);
 
   // func delete account
-  const navigate = useNavigate();
 
   const handleClickDelBtn = () => {
     setOpen(true);
@@ -86,6 +103,7 @@ const Account = ({ accountID }) => {
   const [formChangePass, setFormChangePass] = useState(false);
   const [formChangeStatus, setFormChangeStatus] = useState(false);
 
+  if (!accState.isGetSubAccount) return <></>;
   return (
     <div className="account">
       <AlertDialog
@@ -98,9 +116,9 @@ const Account = ({ accountID }) => {
         action={deleteAccount}
       />
       <div className="accountTitleContainer">
-        <h1 className="accountTitle">Edit Account</h1>
+        <h1 className="accountTitle">Edit Tài khoản</h1>
         <Link to="/newAccount">
-          <button className="accountAddButton">New Account</button>
+          <button className="accountAddButton">Tạo tài khoản mới</button>
         </Link>
       </div>
       <div className="accountContainer">
@@ -157,14 +175,14 @@ const Account = ({ accountID }) => {
                 <CalendarToday className="accountShowIcon" />
                 <span>Quyền khai báo:</span>
               </span>
-              <span>{subAccount.state ? "Active" : "Disabled"}</span>
+              <span>{subAccount.state ? "Mở" : "Tắt"}</span>
             </div>
           </div>
         </div>
 
         {/* ----------------------------------------------------------------- */}
         <div className="accountUpdate">
-          <span className="accountUpdateTitle">Edit</span>
+          <span className="accountUpdateTitle">Chỉnh sửa</span>
           <form className="accountUpdateForm">
             <div className="accountUpdateLeft">
               <div className="accountUpdateItem">
@@ -196,35 +214,35 @@ const Account = ({ accountID }) => {
                 </label>
                 <input type="file" id="file" style={{ display: "none" }} />
               </div>
-              <button className="accountUpdateButton">Update</button>
+              <button className="accountUpdateButton">Cập nhật</button>
             </div>
           </form>
         </div>
       </div>
 
       {/* --------------------------------------------------------------------------- */}
-      <div>
+      <div className="infor-declaration">
         <div className="accountShowInfo">
           <span className="accountShowInfoTitle">
             <EventAvailableIcon className="accountShowIcon" />
             <span>Thời gian bắt đầu khai báo:</span>
           </span>
-          <span>{"NaN"}</span>
+          <span>{subAccount.startTime}</span>
         </div>
         <div className="accountShowInfo">
           <span className="accountShowInfoTitle">
             <EventBusyIcon className="accountShowIcon" />
             <span>Thời gian kết thúc khai báo:</span>
           </span>
-          <span>{"NaN"}</span>
+          <span>{subAccount.endTime}</span>
         </div>
-      </div>
-      <div className="accountShowInfo">
-        <span className="accountShowInfoTitle">
-          <DonutLargeIcon className="accountShowIcon" />
-          <span>Tiến độ khai báo:</span>
-        </span>
-        <span>{subAccount.progress ? "Hoàn thành" : "Chưa hoàn thành"}</span>
+        <div className="accountShowInfo">
+          <span className="accountShowInfoTitle">
+            <DonutLargeIcon className="accountShowIcon" />
+            <span>Tiến độ khai báo:</span>
+          </span>
+          <span>{subAccount.progress ? "Hoàn thành" : "Chưa hoàn thành"}</span>
+        </div>
       </div>
 
       {/*----------------------------------------------------------------------------------------*/}

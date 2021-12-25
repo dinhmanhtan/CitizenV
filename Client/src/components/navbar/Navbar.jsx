@@ -245,6 +245,7 @@ function Navbar(props) {
               </Link>
             </li>
             {SidebarData.map((item, index) => {
+              if (item.role === 4 && role === 4) return;
               return (
                 <li key={index} className={item.cName}>
                   <Link to={item.path} className="row-nav">

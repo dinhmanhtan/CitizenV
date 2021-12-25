@@ -17,12 +17,14 @@ export const SidebarData = [
     path: "/analytics",
     icon: <IoAnalyticsSharp />,
     cName: "nav-text",
+    role: 4,
   },
   {
     title: "Accounts",
     path: "/accounts",
     icon: <MdAccountBox />,
     cName: "nav-text",
+    role: 4,
   },
 
   {

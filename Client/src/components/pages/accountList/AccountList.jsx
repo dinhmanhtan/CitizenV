@@ -7,10 +7,20 @@ import SearchBar from "../home/SearchBar";
 import { AuthContext } from "../../../contexts/authContext";
 import Progress from "../login/Progress";
 import { AccContext } from "../../../contexts/accContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 
 function AccountList() {
   const navigate = useNavigate();
+
+  const { authState, getAllSubAccounts } = useContext(AuthContext);
+  const { getSubAccLoading, account } = authState;
+  // eslint-disable-next-line
+  const { id, name, state, role } = account;
+
+  if (role === 4) {
+    navigate("/%2@account%1");
+  }
+
   const { setIdSubAccount } = useContext(AccContext);
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
@@ -42,11 +52,6 @@ function AccountList() {
   ];
 
   // set up table
-
-  const { authState, getAllSubAccounts } = useContext(AuthContext);
-  const { getSubAccLoading, account } = authState;
-  // eslint-disable-next-line
-  const { id, name, state, role } = account;
 
   // set up params for table
   const [users, setUsers] = useState([]);

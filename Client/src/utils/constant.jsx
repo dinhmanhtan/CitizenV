@@ -22,7 +22,7 @@ export const getDOB = (dateTest) => {
       ? date.getDate()
       : `0${date.getDate()}`;
   const month =
-    date.getMonth().toString().length === 2
+    (date.getMonth() + 1).toString().length === 2
       ? date.getMonth() + 1
       : `0${date.getMonth() + 1}`;
   const year = date.getFullYear();

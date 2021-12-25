@@ -4,7 +4,7 @@ import { AuthContext } from "../../../contexts/authContext";
 import AlertMessage from "../login/AlertMessage";
 import TextField from "@mui/material/TextField";
 import { AccContext } from "../../../contexts/accContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { locations } from "../../../utils/constant";
 
 const NewAccount = () => {
@@ -65,71 +65,76 @@ const NewAccount = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  if (role === 4) return <Navigate to="/notfound" />;
+
   return (
     <div className="new-account">
-      <h1 className="newUserTitle">Tạo Tài Khoản Mới</h1>
+      {role !== 4 && (
+        <>
+          <h1 className="newUserTitle">Tạo Tài Khoản Mới</h1>
+          <form className="newUserForm" onSubmit={submit}>
+            <AlertMessage info={mssgAlert} />
+            <div className="newUserItem">
+              <label>Tài Khoản - ID</label>
+              <input
+                name="sub_id"
+                type="text"
+                placeholder=""
+                required
+                value={sub_id}
+                onChange={handleChangeValue}
+              />
+            </div>
 
-      <form className="newUserForm" onSubmit={submit}>
-        <AlertMessage info={mssgAlert} />
-        <div className="newUserItem">
-          <label>Tài Khoản - ID</label>
-          <input
-            name="sub_id"
-            type="text"
-            placeholder=""
-            required
-            value={sub_id}
-            onChange={handleChangeValue}
-          />
-        </div>
+            <div className="newUserItem">
+              <label>{locations[role]}</label>
+              <input
+                name="location"
+                type="text"
+                placeholder=""
+                required
+                value={location}
+                onChange={handleChangeValue}
+              />
+            </div>
 
-        <div className="newUserItem">
-          <label>{locations[role]}</label>
-          <input
-            name="location"
-            type="text"
-            placeholder=""
-            required
-            value={location}
-            onChange={handleChangeValue}
-          />
-        </div>
+            <div className="newUserItem">
+              <label>Mật Khẩu</label>
+              <input
+                name="pass"
+                type="password"
+                placeholder=""
+                required
+                value={pass}
+                onChange={handleChangeValue}
+              />
+            </div>
 
-        <div className="newUserItem">
-          <label>Mật Khẩu</label>
-          <input
-            name="pass"
-            type="password"
-            placeholder=""
-            required
-            value={pass}
-            onChange={handleChangeValue}
-          />
-        </div>
+            <div className="newUserItem">
+              <label>Nhập Lại Mật Khẩu</label>
+              <input
+                name="rePass"
+                type="password"
+                placeholder=""
+                required
+                value={rePass}
+                onChange={handleChangeValue}
+              />
+            </div>
 
-        <div className="newUserItem">
-          <label>Nhập Lại Mật Khẩu</label>
-          <input
-            name="rePass"
-            type="password"
-            placeholder=""
-            required
-            value={rePass}
-            onChange={handleChangeValue}
-          />
-        </div>
-
-        {/* <div className="newUserItem">
+            {/* <div className="newUserItem">
           <label>Quyền Khai báo</label>
           <select className="newUserSelect" name="active" id="active">
             <option value="yes">Có</option>
             <option value="no">Không</option>
           </select>
         </div> */}
-        <button className="newUserButton" type="submit">
-          Xác Nhận
-        </button>
-      </form>
+            <button className="newUserButton" type="submit">
+              Xác Nhận
+            </button>
+          </form>
+        </>
+      )}
     </div>
   );
 };
