@@ -10,7 +10,7 @@ const SelectModeOne = (props) => {
 
   // set params for selecting option
 
-  const { setIdModOne, idAddress, role } = props;
+  const { setIdModOne, idAddress, role, setValModeOne } = props;
 
   const [option1, setOption1] = useState([
     { id: 0, value: "all", label: "Toàn vùng" },
@@ -131,6 +131,7 @@ const SelectModeOne = (props) => {
 
   useEffect(() => {
     setIdModOne(id4 || id3 || id2 || id1);
+    setValModeOne(value4 || value3 || value2 || value1);
   }, [idOptionOne]);
 
   const style = {

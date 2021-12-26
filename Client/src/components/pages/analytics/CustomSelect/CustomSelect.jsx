@@ -30,6 +30,7 @@ const CustomSelect = (props) => {
     alert,
     setAlert,
     setValueModeMany,
+    setValModeOne,
   } = props;
 
   // Chose mode option (one - many)
@@ -98,6 +99,7 @@ const CustomSelect = (props) => {
           setIdModOne={setIdModOne}
           idAddress={account.id}
           role={account.role}
+          setValModeOne={setValModeOne}
         />
       ) : (
         <SelectModeMany

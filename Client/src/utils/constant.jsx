@@ -8,7 +8,7 @@ export const locations = [
   "Tỉnh/Thành Phố",
   "Quận/Huyện",
   "Xã/Phường",
-  "Thôn/Xóm",
+  "Thôn/Xóm/Bản/Tổ dân phố",
 ];
 export const levels = ["A1", "A2", "A3", "B1", "B2"];
 

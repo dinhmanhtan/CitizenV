@@ -298,7 +298,7 @@ class AuthController {
                 $regex: `[^00]`,
               },
             },
-            { state: false, deadTime: Date.now(), startTime: Date.now() }
+            { state: false }
           );
         } else {
           await Auth.updateMany(
@@ -307,7 +307,7 @@ class AuthController {
                 $regex: `^${req.authId}[0-9][0-9]`,
               },
             },
-            { state: false, deadTime: Date.now(), startTime: Date.now() }
+            { state: false }
           );
         }
 

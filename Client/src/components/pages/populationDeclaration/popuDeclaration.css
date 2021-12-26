@@ -2,7 +2,7 @@
   border: solid 1px black;
   max-width: 700px;
   background: #ffff;
-  padding: 25px 30px 110px 30px;
+  padding: 35px 30px 110px 30px;
   border-radius: 5px;
   margin: 40px auto;
   position: relative;
@@ -13,6 +13,7 @@
   font-size: 25px;
   font-weight: 500;
   position: relative;
+  padding: 10px 0;
 }
 
 .container-declaration form .info {
@@ -96,7 +97,7 @@ form .gender-info .option {
   margin: 45px 0;
 }
 
-.form-declaration .button input, 
+.form-declaration .button input,
 .form-declaration .button a {
   margin-bottom: 10px;
   height: 100%;
@@ -160,4 +161,9 @@ form .gender-info .option {
 .notification-reason {
   padding-top: 30px;
   text-align: center;
+}
+
+.btn-download {
+  text-decoration: none;
+  margin-bottom: 10px;
 }

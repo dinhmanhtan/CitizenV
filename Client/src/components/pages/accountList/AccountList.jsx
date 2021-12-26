@@ -24,10 +24,10 @@ function AccountList() {
   const { setIdSubAccount } = useContext(AccContext);
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
-    { field: "city", headerName: "Tỉnh/Thành phố", width: 150 },
+    { field: "city", headerName: "Tỉnh/Thành phố", width: 160 },
     { field: "district", headerName: "Quận/Huyện", width: 150 },
     { field: "xa", headerName: "Xã/Phường", width: 150 },
-    { field: "xom", headerName: "Thôn/Xóm", width: 150 },
+    { field: "xom", headerName: "Thôn/Xóm/Bản/Tổ dân phố", width: 220 },
     { field: "status", headerName: "Quyền khai báo", width: 150 },
     { field: "progress", headerName: "Tiến độ khai báo", width: 210 },
     {

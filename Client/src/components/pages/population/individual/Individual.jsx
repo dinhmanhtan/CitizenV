@@ -13,10 +13,17 @@ import FormControl from "@mui/material/FormControl";
 import { CitizenContext } from "../../../../contexts/citizenContext";
 import AlertDialog from "../../accountList/AlertDialog";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../../../contexts/authContext";
 
 function Individual() {
   const { personID } = useParams();
   const navigate = useNavigate();
+
+  const {
+    authState: {
+      account: { state },
+    },
+  } = useContext(AuthContext);
 
   const {
     getInforPerson,
@@ -85,6 +92,7 @@ function Individual() {
 
   const [open, setOpen] = useState(false);
   const [openDel, setOpenDel] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
 
   useEffect(() => {
     if (updatedInforSuccess) setOpen(true);
@@ -93,6 +101,14 @@ function Individual() {
       payload: { updatedInforSuccess: false },
     });
   }, [updatedInforSuccess]);
+
+  const handleClickEdit = () => {
+    if (state) {
+      setIsEdit(true);
+    } else {
+      setOpenEdit(true);
+    }
+  };
 
   return (
     <div>
@@ -115,7 +131,15 @@ function Individual() {
           }}
         />
 
-        <EditIcon className="edit-icon" onClick={() => setIsEdit(true)} />
+        <AlertDialog
+          title={"Thông báo"}
+          content={"Tài khoản bị khóa quyền khai báo "}
+          open={openEdit}
+          setOpen={setOpenEdit}
+          action={() => {}}
+        />
+
+        <EditIcon className="edit-icon" onClick={handleClickEdit} />
         <div className="title">
           <span>Thông tin cá nhân</span>
         </div>

@@ -4,18 +4,19 @@ import {
   apiURL,
   apiURLCitizen,
   LOCAL_STORAGE_TOKEN_NAME,
-  socketIO
+  socketIO,
 } from "../../../utils/constant";
 import { AuthContext } from "../../../contexts/authContext";
-// import TextField from "@mui/material/TextField";
 import { CitizenContext } from "../../../contexts/citizenContext";
 // import NotFound from "../NotFound404/NotFound";
 import { Navigate, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Button } from "@mui/material";
+import DownloadIcon from "@mui/icons-material/Download";
 
 const PopulationDeclaration = () => {
-
   const [dataList, setDataList] = useState([]);
-  
+
   const navigate = useNavigate();
   const {
     authState: { account },
@@ -25,7 +26,7 @@ const PopulationDeclaration = () => {
     name: "",
     CCCD: "",
     DOB: "",
-    idAddress: "",
+    idAddress: account.role === 4 ? account.id : "",
     academicLevel: "",
     job: "",
     religion: "",
@@ -57,8 +58,8 @@ const PopulationDeclaration = () => {
       .then((response) => {
         console.log(response);
         if (response.message === "success") {
-          socketIO.emit('sendDataClient', {id : account.id});
-          navigate("/population");
+          socketIO.emit("sendDataClient", { id: account.id });
+          navigate("/home");
         } else {
           // alert(response.message);
           console.log(response);
@@ -100,10 +101,10 @@ const PopulationDeclaration = () => {
       .catch((err) => {
         console.error(err);
       });
-  }
+  };
 
   const handleClose = () => {
-    navigate("/population");
+    navigate("/home");
   };
 
   useEffect(() => {
@@ -123,24 +124,32 @@ const PopulationDeclaration = () => {
     getDataAuth()
       .then((dataTest) => {
         console.log(dataTest);
-        if (dataTest.success) { 
+        if (dataTest.success) {
           setDataList(dataTest.account);
         }
       })
-      .catch( err => console.error(err));
-  }, [id])
-
+      .catch((err) => console.error(err));
+  }, [id]);
 
   if (role !== 3 && role !== 4) {
     return <Navigate to="/%2Fdeclaration%5E%25" />;
   }
-  
 
   return (
-    
-    <div className={'container-declaration'}>
-      { state === true ? (
+    <div className="container-declaration">
+      {state === true ? (
         <>
+          <Link
+            to="/PhieuDieuTra.pdf"
+            target="_blank"
+            download
+            className="btn-download"
+          >
+            <Button variant="contained">
+              <DownloadIcon />
+              <span style={{ padding: "1px 2px" }}>Tải phiếu Điều tra</span>
+            </Button>
+          </Link>
           <div className="title"> Nhập liệu về dân số</div>
           <form className="form-declaration" onSubmit={(e) => handleSubmit(e)}>
             <div className="info">
@@ -196,10 +205,18 @@ const PopulationDeclaration = () => {
                     readOnly
                   />
                 ) : (
-                  <select name="idAddress" id="" onChange={(e) => setData({ ...data, [e.target.name] : e.target.value})}>
+                  <select
+                    name="idAddress"
+                    id=""
+                    onChange={(e) =>
+                      setData({ ...data, [e.target.name]: e.target.value })
+                    }
+                  >
                     <option value="">--- Chọn địa điểm ---</option>
-                    {dataList.map( (data) => (
-                      <option key={data.id} value={data.id}>{data.name}</option>
+                    {dataList.map((data) => (
+                      <option key={data.id} value={data.id}>
+                        {data.name}
+                      </option>
                     ))}
                   </select>
                 )}
@@ -301,23 +318,29 @@ const PopulationDeclaration = () => {
                   <span className="gender"> Nữ</span>
                 </label>
               </div>
-
             </div>
 
-              <div className="button">
-                <input type="submit" value="Nhập" />
-                <input type="button" value="Hủy" onClick={handleClose} />
-                <input type="button" className="finished" value="Hoàn thành khai báo" onClick={handleChangeProgress} />
-              </div>
+            <div className="button">
+              <input type="submit" value="Nhập" />
+              <input type="button" value="Hủy" onClick={handleClose} />
+              <input
+                type="button"
+                className="finished"
+                value="Hoàn thành khai báo"
+                onClick={handleChangeProgress}
+              />
+            </div>
           </form>
         </>
       ) : (
         <>
           <h2 className="notification-header">Không được khai báo !!!</h2>
-          <p className="notification-reason">Tài khoản của bạn hiện chưa được cấp quyền khai báo hoặc chưa tới thời điểm khai báo</p>
+          <p className="notification-reason">
+            Tài khoản của bạn hiện chưa được cấp quyền khai báo hoặc chưa tới
+            thời điểm khai báo
+          </p>
         </>
       )}
-      
     </div>
   );
 };

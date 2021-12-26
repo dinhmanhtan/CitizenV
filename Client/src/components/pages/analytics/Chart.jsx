@@ -51,11 +51,14 @@ const Chart = () => {
   const showPopuTable = () => {
     if (ID_MODE === 0) {
       if (IdModeOne !== null) {
-        const ID = IdModeOne === 0 ? account.id : IdModeOne;
-        // console.log(ID);
-        getInForLocations(ID);
-        //  const data = analytic(ID, popList);
-        //  setAnalyticData(data);
+        if (IdModeOne.length !== 8) {
+          const ID = IdModeOne === 0 ? account.id : IdModeOne;
+          getInForLocations(ID);
+        } else {
+          const x = Object.fromEntries([[IdModeOne, valueModeOne.label]]);
+          setNameLocations(x);
+          setIdSubLocation1([IdModeOne]);
+        }
       }
     } else if (ID_MODE === 1) {
       if (!ID_MODE_MANY) {
@@ -63,15 +66,19 @@ const Chart = () => {
         setTimeout(() => setAlert(false), 4000);
       } else {
         if (ID_MODE_MANY.length === 1) {
-          getInForLocations(ID_MODE_MANY[0]);
+          if (ID_MODE_MANY[0].length === 8) {
+            const x = Object.fromEntries([
+              [ID_MODE_MANY[0], valueModeMany[0].label],
+            ]);
+            setNameLocations(x);
+            setIdSubLocation1([ID_MODE_MANY[0]]);
+          } else getInForLocations(ID_MODE_MANY[0]);
         } else {
           var x = analytic(ID_MODE_MANY, popList, ID_MODE_MANY);
           setAnalyticData(x);
         }
       }
     }
-    // console.log(subLocations, analyticData);
-    // console.log(dataQuantity);
   };
 
   // Lấy dữ liệu mặc định khi tải trang
@@ -83,6 +90,7 @@ const Chart = () => {
   // Mode 1
   const [nameLocations, setNameLocations] = useState(null);
   const [idSubLocation1, setIdSubLocation1] = useState(null);
+  const [valueModeOne, setValModeOne] = useState(null);
 
   const getInForLocations = async (id) => {
     const response = await getInforSubAccount(id);
@@ -329,7 +337,6 @@ const Chart = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   ///
-  // console.log(valueModeMany);
 
   return (
     <div className="analytic">
@@ -346,6 +353,7 @@ const Chart = () => {
             alert={alert}
             setAlert={setAlert}
             setValueModeMany={setValueModeMany}
+            setValModeOne={setValModeOne}
           />
           <Button variant="contained" color="success" onClick={showPopuTable}>
             Phân tích

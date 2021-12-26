@@ -251,6 +251,7 @@ const Population = () => {
           setIdModOne={setIdModOne}
           idAddress={idAddress}
           role={account.role}
+          setValModeOne={(a) => a}
         />
       ) : (
         <SelectModeMany
