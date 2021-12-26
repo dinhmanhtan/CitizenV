@@ -323,14 +323,18 @@ const Chart = () => {
   };
   const [outerRadius, setRadius] = useState(130);
 
+  const [hideBysize, setHideBySize] = useState(false);
+
   useEffect(() => {
     const handleResize = () => {
       const size = getSize();
       // console.log(size.width);
       if (size.width > 610) {
         setRadius(130);
+        setHideBySize(false);
       } else {
         setRadius(100);
+        setHideBySize(true);
       }
     };
     window.addEventListener("resize", handleResize);
@@ -361,7 +365,7 @@ const Chart = () => {
           {/*---------------------------------------------------------------------------------------------- */}
           <h2>Phân tích theo số lượng</h2>
           <div className="container-quantity">
-            {chartQuan && (
+            {chartQuan && !hideBysize && (
               <div className="quantity-chart">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
@@ -406,6 +410,7 @@ const Chart = () => {
           <h2>Phân tích theo giới tính</h2>
           <div className="container-quantity">
             {chartGT &&
+              !hideBysize &&
               (ID_MODE === 0 ||
                 (ID_MODE === 1 &&
                   ID_MODE_MANY &&
@@ -437,6 +442,7 @@ const Chart = () => {
                 </div>
               )}
             {chartGT &&
+              !hideBysize &&
               ID_MODE === 1 &&
               ID_MODE_MANY &&
               ID_MODE_MANY.length > 1 && (
@@ -481,6 +487,7 @@ const Chart = () => {
           <h2>Phân tích theo độ tuổi</h2>
           <div className="container-quantity">
             {chartAge &&
+              !hideBysize &&
               (ID_MODE === 0 ||
                 (ID_MODE === 1 &&
                   ID_MODE_MANY &&
@@ -511,6 +518,7 @@ const Chart = () => {
                 </div>
               )}
             {chartAge &&
+              !hideBysize &&
               ID_MODE === 1 &&
               ID_MODE_MANY &&
               ID_MODE_MANY.length > 1 && (
@@ -524,7 +532,7 @@ const Chart = () => {
                         top: 5,
                         right: 30,
                         left: 20,
-                        bottom: 10,
+                        bottom: 20,
                       }}
                       maxBarSize={30}
                     >

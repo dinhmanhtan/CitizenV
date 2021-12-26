@@ -307,7 +307,7 @@ class AuthController {
                 $regex: `^${req.authId}[0-9][0-9]`,
               },
             },
-            { state: false }
+            { state: false, deadTime: null, startTime: null }
           );
         }
 
@@ -378,12 +378,12 @@ class AuthController {
         await Auth.updateMany(
           {
             id: {
-              $regex: `^${req.params.id}`
+              $regex: `^${req.params.id}`,
             },
           },
-          { state: false, deadTime: Date.now(), startTime: Date.now() }
+          { state: false, deadTime: null, startTime: null }
         );
-        
+
         const notify = new Notifications({
           type: 3,
           name: req.name,
