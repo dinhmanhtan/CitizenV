@@ -375,22 +375,15 @@ class AuthController {
   async changeSubStatus(req, res, next) {
     try {
       if (req.body.state === false) {
-        if (req.authId === "00") {
-          await Auth.updateOne(
-            {
-              id: req.params.id,
+        await Auth.updateMany(
+          {
+            id: {
+              $regex: `^${req.params.id}`
             },
-            { state: false, deadTime: Date.now(), startTime: Date.now() }
-          );
-        } else {
-          await Auth.updateOne(
-            {
-              id: req.params.id,
-            },
-            { state: false, deadTime: Date.now(), startTime: Date.now() }
-          );
-        }
-
+          },
+          { state: false, deadTime: Date.now(), startTime: Date.now() }
+        );
+        
         const notify = new Notifications({
           type: 3,
           name: req.name,
@@ -458,21 +451,6 @@ class AuthController {
       res.status(200).json({
         success: true,
       });
-
-      // req.io.on("connection", (socket) => {
-      //   console.log("Connect " + socket.id);
-
-      //   socket.emit("getId", socket.id);
-
-      //   socket.on('sendDataClient', (data) => {
-      //     console.log(data);
-      //     req.io.emit('getNoti', data)
-      //   })
-
-      //   socket.on('disconnect', () => {
-      //     console.log("Disconnect" + socket.id);
-      //   })
-      // })
     } catch (err) {
       return next(err);
     }
