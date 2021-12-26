@@ -83,7 +83,7 @@ const CitizenContextProvider = ({ children }) => {
 
     fetchDataPerson()
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (data.message === "success") {
           const Infor = data.data;
 

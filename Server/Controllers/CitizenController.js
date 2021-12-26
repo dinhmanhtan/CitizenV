@@ -21,7 +21,7 @@ class citizenController {
       ) {
         const people = await Citizen.find({
           idAddress: {
-            $regex: idArea !== "00" ? `^${idArea}` : `^0`,
+            $regex: idArea !== "00" ? `^${idArea}` : `^`,
           },
         });
 
@@ -97,7 +97,7 @@ class citizenController {
   // PUT api/citizen/:id/changeInfoPerson
   changeInfoPerson(req, res, next) {
     const idPerson = req.params.id;
-
+    console.log(req.body);
     Citizen.updateOne({ _id: idPerson }, req.body)
       .then((data) =>
         res.status(200).json({
@@ -105,7 +105,10 @@ class citizenController {
           data: data,
         })
       )
-      .catch((err) => next(err));
+      .catch((err) => {
+        console.log(err);
+        next(err);
+      });
   }
 
   // DELETE api/citizen/:id/deletePerson

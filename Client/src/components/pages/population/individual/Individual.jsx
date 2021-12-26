@@ -14,6 +14,7 @@ import { CitizenContext } from "../../../../contexts/citizenContext";
 import AlertDialog from "../../accountList/AlertDialog";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../../contexts/authContext";
+import { getDOB } from "../../../../utils/constant";
 
 function Individual() {
   const { personID } = useParams();
@@ -46,6 +47,7 @@ function Individual() {
     TamTru: "",
     ThuongTru: "",
     idAddress: "",
+    origin: "",
   });
   const {
     name,
@@ -58,6 +60,7 @@ function Individual() {
     tamTru,
     thuongTru,
     idAddress,
+    origin,
   } = infor;
 
   const [temptValues, setTemptValues] = useState(infor);
@@ -71,6 +74,7 @@ function Individual() {
 
   const handleChangeInput = (event) => {
     setInfor({ ...infor, [event.target.name]: event.target.value });
+    // console.log(event.target.value);
   };
 
   const [dateForm, setDateForm] = useState(null);
@@ -86,8 +90,26 @@ function Individual() {
     }
   }, [isEdit, infor, DOB]);
 
+  // console.log(DOB);
   const updateInfor = () => {
-    updateInforPerson(infor, personID, setIsEdit);
+    const INFOR = {
+      name,
+      DOB: DOB.includes("-") ? DOB : dateForm,
+      CCCD,
+      sex,
+      religion,
+      academicLevel,
+      job,
+      tamTru,
+      thuongTru,
+      idAddress,
+      origin,
+    };
+    updateInforPerson(INFOR, personID, setIsEdit);
+
+    if (DOB.includes("-")) {
+      setInfor({ ...infor, DOB: getDOB(DOB) });
+    }
   };
 
   const [open, setOpen] = useState(false);
@@ -216,12 +238,12 @@ function Individual() {
           <div className="specific-info">
             <label className="title-label"> Quê Quán:</label>
             {!isEdit ? (
-              <span> {}</span>
+              <span> {origin}</span>
             ) : (
               <TextField
                 variant="standard"
-                value={""}
-                name=""
+                value={origin}
+                name="origin"
                 onChange={handleChangeInput}
                 className="text-field"
               />

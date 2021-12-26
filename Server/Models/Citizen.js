@@ -14,6 +14,7 @@ const Citizen = new Schema(
     job: { type: String, default: "" },
     tamTru: { type: String, default: "" },
     thuongTru: { type: String, default: "" },
+    origin: { type: String, default: "" },
   },
   {
     timestamps: true,
